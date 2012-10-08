@@ -22,16 +22,52 @@ public class Camera {
 	 * matrix places the camera at (0,0,10) in world space, facing towards
 	 * the origin (0,0,0) of world space, i.e., towards the negative z-axis.
 	 */
-	public Camera()
+	
+	public Camera(Vector3f centerOfProjection, Vector3f lookAtPoint, Vector3f upVector)
 	{
 		cameraMatrix = new Matrix4f();
-		float f[] = {1.f, 0.f, 0.f, 0.f,
-					 0.f, 1.f, 0.f, 0.f,
-					 0.f, 0.f, 1.f, -10.f,
-					 0.f, 0.f, 0.f, 1.f};
-		cameraMatrix.set(f);
+		this.centerOfProjection = new Vector3f(centerOfProjection);
+		this.lookAtPoint = new Vector3f(lookAtPoint);
+		this.upVector = new Vector3f(upVector);
+		
+		computeCameraMatrix();	
 	}
 	
+	public Camera(){
+		cameraMatrix = new Matrix4f();
+		float f[] = {1.f, 0.f, 0.f, 0.f,
+		0.f, 1.f, 0.f, 0.f,
+		0.f, 0.f, 1.f, -10.f,
+		0.f, 0.f, 0.f, 1.f};
+		cameraMatrix.set(f);
+	}
+	private void computeCameraMatrix() {
+		Vector3f zAxis = new Vector3f(this.centerOfProjection);
+		Vector3f xAxis = new Vector3f();
+		Vector3f yAxis = new Vector3f();
+		
+		zAxis.sub(lookAtPoint);
+		zAxis.normalize();
+		
+		xAxis.cross(upVector,zAxis);
+		xAxis.normalize();
+		
+		yAxis.cross(zAxis,xAxis);
+		
+		Vector4f translationVector = new Vector4f(centerOfProjection);
+		translationVector.setW(1);
+		
+		Matrix4f newCameraMatrix = new Matrix4f();
+		newCameraMatrix.setColumn(0, new Vector4f(xAxis));
+		newCameraMatrix.setColumn(1, new Vector4f(yAxis));
+		newCameraMatrix.setColumn(2, new Vector4f(zAxis));
+		newCameraMatrix.setColumn(3, translationVector);
+		
+		newCameraMatrix.invert();
+		
+		this.cameraMatrix.set(newCameraMatrix);
+	}
+
 	/**
 	 * Return the camera matrix, i.e., the world-to-camera transform. For example, 
 	 * this is used by the renderer.
@@ -57,14 +93,17 @@ public class Camera {
 
 	public void setCenterOfProjection(Vector3f centerOfProjection) {
 		this.centerOfProjection = centerOfProjection;
+		computeCameraMatrix();
 	}
 
 	public void setLookAtPoint(Vector3f lookAtPoint) {
 		this.lookAtPoint = lookAtPoint;
+		computeCameraMatrix();
 	}
 
 	public void setUpVector(Vector3f upVector) {
 		this.upVector = upVector;
+		computeCameraMatrix();
 	}
 	
 }
