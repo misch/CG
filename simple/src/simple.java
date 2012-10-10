@@ -2,6 +2,8 @@ import jrtr.*;
 import javax.swing.*;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+
 import javax.vecmath.*;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -80,8 +82,9 @@ public class simple
 	/**
 	 * The main function opens a 3D rendering window, constructs a simple 3D
 	 * scene, and starts a timer task to generate an animation.
+	 * @throws IOException 
 	 */
-	public static void main(String[] args)
+	public static void main(String[] args) throws IOException
 	{		
 		// Make a simple geometric object: a cube
 		
@@ -120,6 +123,7 @@ public class simple
 		// Make a scene manager and add the object
 		sceneManager = new SimpleSceneManager();
 		shape = new Shape(vertexData);
+//		shape = new Shape(ObjReader.read("teapot.obj", 1));
 		sceneManager.addShape(shape);
 
 		// Make a render panel. The init function of the renderPanel
