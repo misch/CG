@@ -72,28 +72,31 @@ public class Trackball {
 	*/
 	public static class SimpleMouseListener implements MouseListener, MouseMotionListener
 	{
-//	    private Vector3f initialVec; 
-		private float posX;
-		private float posY;
+	    private Vector3f initialVec; 
+//		private float posX;
+//		private float posY;
 		
 		public void mousePressed(MouseEvent e) {
-//			initialVec = projectMousePositionToSphere(e.getX(), e.getY());
-			posX = e.getX();
-			posY = e.getY();
+			initialVec = projectMousePositionToSphere(e.getX(), e.getY());
+//			posX = e.getX();
+//			posY = e.getY();
 		}
 	    public void mouseReleased(MouseEvent e) {}
 	    public void mouseEntered(MouseEvent e) {}
 	    public void mouseExited(MouseEvent e) {}
 	    public void mouseClicked(MouseEvent e) {}
 		
-	    @Override
+
 		public void mouseDragged(MouseEvent e) {
-			float oldPosX = this.posX;
-			float oldPosY = this.posY;
-			float newPosX = e.getX();
-			float newPosY = e.getY();
+//			float oldPosX = this.posX;
+//			float oldPosY = this.posY;
 			
-			executeRotation(oldPosX, oldPosY, newPosX, newPosY);
+	    	Vector3f newVec = projectMousePositionToSphere(e.getX(),e.getY());
+//			float newPosX = e.getX();
+//			float newPosY = e.getY();
+			
+//			executeRotation(oldPosX, oldPosY, newPosX, newPosY);
+	    	executeRotation(newVec);
 			
 		}
 		@Override
@@ -113,10 +116,12 @@ public class Trackball {
 			return sphereVector;
 		}
 		
-		private void executeRotation(float oldPosX, float oldPosY, float posX, float posY){
+//		private void executeRotation(float oldPosX, float oldPosY, float posX, float posY){
+		private void executeRotation(Vector3f newVec){
 			Vector3f rotAxis = new Vector3f();
-			Vector3f initialVec = projectMousePositionToSphere(oldPosX, oldPosY);
-			Vector3f newVec = projectMousePositionToSphere(posX, posY);
+//			Vector3f initialVec = projectMousePositionToSphere(oldPosX, oldPosY);
+			
+//			Vector3f newVec = projectMousePositionToSphere(posX, posY);
 			initialVec.normalize();
 			newVec.normalize();
 			
@@ -129,8 +134,10 @@ public class Trackball {
 			
 			initMatrix.mul(rotMatrix,initMatrix);
 			renderPanel.getCanvas().repaint();
-			this.posX = posX;
-			this.posY = posY;
+
+			initialVec = newVec;
+//			this.posX = posX;
+//			this.posY = posY;
 		}
 	}
 	
@@ -139,10 +146,20 @@ public class Trackball {
 	* scene, and starts a timer task to generate an animation.
 	 * @throws IOException 
 	*/
-	public static void main(String[] args) throws IOException
+	public static void main(String[] args)
 	{	
-	shape = new Shape(ObjReader.read("teapot.obj", 1));
-
+	
+	VertexData vertexData;
+	try {
+		vertexData = ObjReader.read("teapot.obj",1);
+	} catch (IOException e) {
+		vertexData = null;// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+//	shape = new Shape(ObjReader.read("teapot.obj", 1));
+	Shape shapey = new Shape(vertexData);
+	shape = shapey;
 	// Make a scene manager and add the object
 	sceneManager = new SimpleSceneManager(new Camera(),new Frustum());
 	sceneManager.addShape(shape);

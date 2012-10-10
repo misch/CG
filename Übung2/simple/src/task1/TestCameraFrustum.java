@@ -100,12 +100,12 @@ shape = makeHouse();
 //frustum = new Frustum();
 
 // ===== Task 1, Szene 1 =====
-//Camera camera = new Camera(new Vector3f(0,0,40), new Vector3f(0,0,0), new Vector3f(0,1,0));
-//Frustum frustum = new Frustum(1,100,1,(float)(Math.PI/3));
+Camera camera = new Camera(new Vector3f(0,0,40), new Vector3f(0,0,0), new Vector3f(0,1,0));
+Frustum frustum = new Frustum(1,100,1,(float)(Math.PI/3));
 
 // ===== Task 1, Szene 2 =====
-Camera camera = new Camera(new Vector3f(-10,40,40), new Vector3f(-5,0,0), new Vector3f(0,1,0));
-Frustum frustum = new Frustum(1,100,1,(float)(Math.PI/3));
+//Camera camera = new Camera(new Vector3f(-10,40,40), new Vector3f(-5,0,0), new Vector3f(0,1,0));
+//Frustum frustum = new Frustum(1,100,1,(float)(Math.PI/3));
 
 sceneManager = new SimpleSceneManager(camera,frustum);
 sceneManager.addShape(shape);
