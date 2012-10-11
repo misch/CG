@@ -6,5 +6,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jogl"/>
 	<classpathentry kind="lib" path="/jrtr/bin"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jrtr"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/exercise1"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
