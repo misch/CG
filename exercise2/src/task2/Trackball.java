@@ -4,14 +4,15 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
+//import java.util.Timer;
+//import java.util.TimerTask;
 
 import javax.swing.JFrame;
 import javax.vecmath.AxisAngle4f;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 
+import jogamp.graph.math.MathFloat;
 import jrtr.Camera;
 import jrtr.Frustum;
 import jrtr.GLRenderPanel;
@@ -21,14 +22,14 @@ import jrtr.RenderPanel;
 import jrtr.SWRenderPanel;
 import jrtr.Shape;
 import jrtr.SimpleSceneManager;
-import jrtr.VertexData;
+//import jrtr.VertexData;
 
 public class Trackball {
 	static RenderPanel renderPanel;
 	static RenderContext renderContext;
 	static SimpleSceneManager sceneManager;
 	static Shape shape;
-	static float angle;
+//	static float angle;
 	
 	/**
 	* An extension of {@link GLRenderPanel} or {@link SWRenderPanel} to
@@ -47,23 +48,23 @@ public class Trackball {
 			renderContext.setSceneManager(sceneManager);
 
 			// Register a timer task
-			Timer timer = new Timer();
-			angle = 0.01f;
-			timer.scheduleAtFixedRate(new AnimationTask(), 0, 10);
-		}
+//			Timer timer = new Timer();
+//			angle = 0.01f;
+//			timer.scheduleAtFixedRate(new AnimationTask(), 0, 10);
+		}		
 	}
 	
 	/**
 	* A timer task that generates an animation. This task triggers
 	* the redrawing of the 3D scene every time it is executed.
 	*/
-	public static class AnimationTask extends TimerTask
-	{
-		public void run()
-		{  
-			renderPanel.getCanvas().repaint();
-		}
-	}
+//	public static class AnimationTask extends TimerTask
+//	{
+//		public void run()
+//		{  
+////			renderPanel.getCanvas().repaint();
+//		}
+//	}
 	
 	/**
 	* A mouse listener for the main window of this application. This can be
@@ -76,7 +77,7 @@ public class Trackball {
 			initialVec = projectMousePositionToSphere(e.getX(), e.getY());
 		}
 	    public void mouseReleased(MouseEvent e) {
-//	    	newVec = projectMousePositionToSphere(e.getX(), e.getY());
+	    	initialVec = null;
 	    }
 	    public void mouseEntered(MouseEvent e) {}
 	    public void mouseExited(MouseEvent e) {}
@@ -96,9 +97,24 @@ public class Trackball {
 			float width = renderPanel.getCanvas().getWidth();
 			float height = renderPanel.getCanvas().getHeight();
 			
-			float sphereX = (2*posX/width)-1;
-			float sphereY = 1- (2*posY/height);
-			float sphereZ = 1- sphereX*sphereX - sphereY*sphereY;
+			float uniformScale = Math.min(width,height);
+			float uniformWidth = width/uniformScale;
+			float uniformHeight = height/uniformScale;
+			
+//			float sphereX = (2*posX/width)-1;
+//			float sphereY = 1- 2*posY/height;
+//			float sphereZ = MathFloat.sqrt(1-sphereX*sphereX-sphereY*sphereY);
+				
+			float sphereX = (2*posX/uniformScale)- uniformWidth;
+			float sphereY = uniformHeight- 2*posY/uniformScale;
+			float sphereZ = 1-sphereX*sphereX-sphereY*sphereY;
+			
+			if (sphereZ > 0){
+				sphereZ = MathFloat.sqrt(sphereZ);
+			}
+			else{
+				sphereZ = 0;
+			}
 			
 			Vector3f sphereVector = new Vector3f(sphereX,sphereY,sphereZ);
 			sphereVector.normalize();
