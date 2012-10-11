@@ -12,6 +12,8 @@ import javax.vecmath.AxisAngle4f;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 
+import ex1.Cube;
+
 import jogamp.graph.math.MathFloat;
 import jrtr.Camera;
 import jrtr.Frustum;
@@ -128,6 +130,7 @@ public class ShowLandScape {
 			newVec.normalize();
 			
 			rotAxis.cross(initialVec, newVec);
+			rotAxis.normalize();
 			float angle = (float)(Math.acos(initialVec.dot(newVec)));
 			
 			Matrix4f initMatrix = shape.getTransformation();
@@ -151,10 +154,10 @@ public class ShowLandScape {
 	public static void main(String[] args){	
 
 		int size = 2;
-		float cornorHeight = 1;
+		float cornerHeight = 1;
 		float granularity = 1;
 
-		shape = new Shape(new FractalLandscape(size, cornorHeight, granularity).getVertexData());
+		shape = new Shape(new FractalLandscape(size, cornerHeight, granularity).getVertexData());
 
 		sceneManager = new SimpleSceneManager(new Camera(),new Frustum());
 		sceneManager.addShape(shape);
