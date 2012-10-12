@@ -32,8 +32,9 @@ public class FractalLandscape extends AbstractSimpleShape{
 	private int size;
 	private Selectable heights[][];
 	private float granularity;
-	private ArrayList<Float> v;
-	private ArrayList<Integer> i;
+	private ArrayList<Float> v = new ArrayList<Float>();
+	private ArrayList<Integer> ind = new ArrayList<Integer>();
+	private int iTopLeft, iTopRight, iBottomLeft, iBottomRight;
 	
 	/** The constructor has only one parameter "cornorHeight": all
 	 * four corner will have the same height for now.
@@ -41,37 +42,71 @@ public class FractalLandscape extends AbstractSimpleShape{
 	 * @param cornerHeight
 	 */
 	public FractalLandscape(int size, float cornerHeight, float granularity){
+//		ArrayList<Float> v = new ArrayList<Float>();
+//		ArrayList<Integer> indices = new ArrayList<Integer>();
 		
 		this.size = (int)Math.pow(2, size)+1;
 		this.heights = new Selectable[this.size][this.size];
 		
 		this.granularity = granularity;
 			
-		heights[0][0].setVal(cornerHeight);
-		heights[size-1][0].setVal(cornerHeight);
-		heights[0][size-1].setVal(cornerHeight);
-		heights[size-1][size-1].setVal(cornerHeight);
+		heights[0][0] = new Selectable();
+		heights[0][0].setVal(0);
+		iTopLeft = addVertex(v, new Point3f(0,heights[0][0].val(),0));
 		
-		diamondSquareComputation();
+		heights[this.size-1][0] = new Selectable();
+		heights[this.size-1][0].setVal(0);
+		iTopRight = addVertex(v,new Point3f(this.size-1,heights[this.size-1][0].val(),0));
+		
+		heights[0][this.size-1] = new Selectable();
+		heights[0][this.size-1].setVal(0);
+		iBottomLeft = addVertex(v,new Point3f(0,heights[0][this.size-1].val(),this.size-1));
+		
+		heights[this.size-1][this.size-1] = new Selectable();
+		heights[this.size-1][this.size-1].setVal(cornerHeight);
+		iBottomRight = addVertex(v,new Point3f(this.size-1,heights[this.size-1][this.size-1].val(),this.size-1));
+		
+//		addTriangle(indices, iTopLeft,iBottomLeft,iTopRight);
+//		addTriangle(indices, iBottomLeft,iTopRight,iBottomRight);
+		squareStep(this.size);
+		
+		this.vertices = v;
+		this.indices = ind;
+		setColors();
 	}
 	
-	private void diamondSquareComputation() {
-				
-		for (int i = 0; i<this.size; i++){
-			for(int j = 0; j<this.size; j++){
-				
-			}
-		}
-		
-	}
+//	private void diamondSquareComputation() {
+//				
+//		for (int i = 0; i<this.size; i++){
+//			for(int j = 0; j<this.size; j++){
+//				
+//			}
+//		}
+//		
+//	}
 	
 	private void squareStep(int width){
-		for (int i = 0; i < this.size; i+=width)	// TODO: adjust boundaries
+		
+		for (int i = 0; i < this.size; i+=width)
 			for (int j = 0; j < this.size; j+=width){
+				
 				float height1 = heights[i][j].val();
-				float height2 = heights[i+width][j].val();
-				float height3 = heights[i][j+width].val();
-				float height4 = heights[i+width][j+width].val();
+				float height2 = heights[i+width-1][j].val();
+				float height3 = heights[i][j+width-1].val();
+				float height4 = heights[i+width-1][j+width-1].val();
+				
+				float avg = (height1+height2+height3+height4)/4;
+				int halfWidth = width/2;
+				
+				heights[i+halfWidth][j+halfWidth] = new Selectable();
+				heights[i+halfWidth][j+halfWidth].setVal(avg);
+				
+				int iMiddle = addVertex(v, new Point3f(i+halfWidth, heights[i+halfWidth][j+halfWidth].val(), j+halfWidth));
+				
+				addTriangle(ind, iTopLeft, iBottomLeft, iMiddle);
+				addTriangle(ind, iBottomLeft, iBottomRight, iMiddle);
+				addTriangle(ind, iBottomRight, iTopRight, iMiddle);
+				addTriangle(ind, iTopRight, iTopLeft, iMiddle);
 			}
 	}
 	private class Selectable{
@@ -90,6 +125,17 @@ public class FractalLandscape extends AbstractSimpleShape{
 			this.val = val;
 			this.selected = true;
 		}
+	}
+	
+	protected void setColors(){
+		
+		ArrayList<Float> c = new ArrayList<Float>();
+		
+		for(int i=0;i<vertices.size()/3;i++){
+			Color3f col = new Color3f(0,1,0);
+			addColor(c,col);
+		}
+		this.colors = c;
 	}
 	
 	private float getHeight(int i, int j){
