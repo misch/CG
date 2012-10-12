@@ -52,10 +52,28 @@ public class FractalLandscape extends AbstractSimpleShape{
 		heights[0][size-1].setVal(cornerHeight);
 		heights[size-1][size-1].setVal(cornerHeight);
 		
-//		setUpCorners(cornerHeight);
-//		setColors();
+		diamondSquareComputation();
 	}
 	
+	private void diamondSquareComputation() {
+				
+		for (int i = 0; i<this.size; i++){
+			for(int j = 0; j<this.size; j++){
+				
+			}
+		}
+		
+	}
+	
+	private void squareStep(int width){
+		for (int i = 0; i < this.size; i+=width)	// TODO: adjust boundaries
+			for (int j = 0; j < this.size; j+=width){
+				float height1 = heights[i][j].val();
+				float height2 = heights[i+width][j].val();
+				float height3 = heights[i][j+width].val();
+				float height4 = heights[i+width][j+width].val();
+			}
+	}
 	private class Selectable{
 		private boolean selected = false;
 		private float val;
@@ -63,10 +81,6 @@ public class FractalLandscape extends AbstractSimpleShape{
 		public boolean getSelected(){
 			return selected;
 		}
-		
-//		public void setSelected(Boolean computed){
-//			this.selected = computed;
-//		}
 		
 		public float val(){
 			return val;
@@ -77,60 +91,11 @@ public class FractalLandscape extends AbstractSimpleShape{
 			this.selected = true;
 		}
 	}
-	private void setUpCorners(float cornerHeight) {
-		ArrayList<Float> v = new ArrayList<Float>();
-		ArrayList<Integer> indices = new ArrayList<Integer>();
-		ArrayList<Float> c = new ArrayList<Float>();
-		
-//		heights[0][0] = cornerHeight;
-//		heights[size-1][0] = cornerHeight;
-//		heights[0][size-1] = cornerHeight;
-//		heights[size-1][size-1] = cornerHeight;
-		
-//		int index1 = addVertex(v,new Point3f(0,heights[0][0],0));
-//		addColor(c,new Color3f(0,1,0));
-//		
-//		int index2 = addVertex(v,new Point3f(0,heights[0][size-1],size-1));
-//		addColor(c,new Color3f(0,0,1));
-//		
-//		int index3 = addVertex(v,new Point3f(size-1,heights[size-1][0],0));
-//		addColor(c,new Color3f(0,1,0));
-//		int index4 = addVertex(v, new Point3f(size-1,heights[size-1][size-1],size-1));
-//		addColor(c,new Color3f(0,0,1));
-//		
-//		addTriangle(indices,index1, index2, index3);
-//		addTriangle(indices, index3, index2, index4);
-		
-		this.vertices = v;
-		this.indices = indices;	
-		this.colors = c;
-	}
 	
 	private float getHeight(int i, int j){
 		return heights[i][j].val();
 	}
-	
-	protected void setColors(){
 		
-		ArrayList<Float> c = new ArrayList<Float>();
-		
-		for(int i=0;i<vertices.size()/3;i++){
-			Color3f col = new Color3f(1,1,0);
-			addColor(c,col);
-		}
-		this.colors = c;
-	}
-//	protected void setColors(){
-//		
-//		ArrayList<Float> c = new ArrayList<Float>();
-//		
-//		for(int i=0;i<vertices.size()/3;i++){
-//			Color3f col = new Color3f(1,0,1);
-//			addColor(c,col);
-//		}
-//		this.colors = c;
-//	}
-	
 	private void diamondStep(int x, int z, int size){
 		
 	}
