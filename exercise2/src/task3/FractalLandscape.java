@@ -47,12 +47,11 @@ public class FractalLandscape extends AbstractSimpleShape{
 		
 		this.size = (int)Math.pow(2, size)+1;
 		this.heights = new Selectable[this.size][this.size];
-		
 		this.granularity = granularity;
 			
 		heights[0][0] = new Selectable();
 		heights[0][0].setVal(0);
-		iTopLeft = addVertex(v, new Point3f(0,heights[0][0].val(),0));
+		iTopLeft = addVertex(v, new Point3f(0,heights[0][0].val(),0)); // TODO: a global "addVertices"-Method which might accept some param to scale the distance between two points
 		
 		heights[this.size-1][0] = new Selectable();
 		heights[this.size-1][0].setVal(0);
@@ -103,12 +102,16 @@ public class FractalLandscape extends AbstractSimpleShape{
 				
 				int iMiddle = addVertex(v, new Point3f(i+halfWidth, heights[i+halfWidth][j+halfWidth].val(), j+halfWidth));
 				
-				addTriangle(ind, iTopLeft, iBottomLeft, iMiddle);
+				addTriangle(ind, iTopLeft, iBottomLeft, iMiddle);	// TODO: a global "addTriangles-function" at the end of the algorithm
 				addTriangle(ind, iBottomLeft, iBottomRight, iMiddle);
 				addTriangle(ind, iBottomRight, iTopRight, iMiddle);
 				addTriangle(ind, iTopRight, iTopLeft, iMiddle);
 			}
 	}
+	
+	private addVerticesAndTriangles(){
+	}
+	
 	private class Selectable{
 		private boolean selected = false;
 		private float val;
