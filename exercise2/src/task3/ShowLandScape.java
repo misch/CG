@@ -103,10 +103,6 @@ public class ShowLandScape {
 			float uniformWidth = width/uniformScale;
 			float uniformHeight = height/uniformScale;
 			
-//			float sphereX = (2*posX/width)-1;
-//			float sphereY = 1- 2*posY/height;
-//			float sphereZ = MathFloat.sqrt(1-sphereX*sphereX-sphereY*sphereY);
-				
 			float sphereX = (2*posX/uniformScale)- uniformWidth;
 			float sphereY = uniformHeight- 2*posY/uniformScale;
 			float sphereZ = 1-sphereX*sphereX-sphereY*sphereY;
@@ -153,7 +149,7 @@ public class ShowLandScape {
 	*/
 	public static void main(String[] args){	
 
-		int size = 2;
+		int size = 1;
 		float cornerHeight = 1;
 		float granularity = 1;
 
