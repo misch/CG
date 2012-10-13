@@ -109,7 +109,23 @@ public class FractalLandscape extends AbstractSimpleShape{
 			}
 	}
 	
-	private addVerticesAndTriangles(){
+	private void addVerticesAndTriangles(){
+		ArrayList<Float> v = new ArrayList<Float>();
+		ArrayList<Integer> ind = new ArrayList<Integer>();
+		
+		for(int i = 0; i<this.size-1; i++){
+			for(int j = 0; j<this.size-1;j++){
+				int indTopLeft = addVertex(v, new Point3f(i,heights[i][j].val(),j));
+				int indBottomLeft = addVertex(v, new Point3f(i,heights[i][j+1].val(), j+1));
+				int indBottomRight = addVertex(v, new Point3f(i+1,heights[i+1][j+1].val(), j+1));
+				int indTopRight = addVertex(v, new Point3f(i+1, heights[i+1][j].val(),j));
+				
+				addTriangle(ind, indTopLeft, indBottomLeft, indBottomRight);
+				addTriangle(ind, indBottomLeft, indBottomRight, indTopRight);
+			}
+		}
+		this.vertices = v;
+		this.indices = ind;
 	}
 	
 	private class Selectable{
