@@ -23,7 +23,7 @@ public class FractalLandscape extends AbstractSimpleShape{
 	 */
 	public FractalLandscape(int size, float cornerHeight, float granularity){
 		
-		this.cycles = size;
+//		this.cycles = size;
 		this.size = (int)Math.pow(2, size)+1;
 		this.heights = new float[this.size][this.size];
 //		this.granularity = granularity;
@@ -151,12 +151,13 @@ public class FractalLandscape extends AbstractSimpleShape{
 		this.vertices = v;
 		this.indices = ind;
 		this.colors = c;
+		this.normals = n;
 		
-		float[] normals = new float[n.size()];
-		for (int i=0; i<n.size(); i++){
-			normals[i] = n.get(i);
-		}
-		this.vertexData.addElement(normals, VertexData.Semantic.NORMAL, 3);
+//		float[] normals = new float[n.size()];
+//		for (int i=0; i<n.size(); i++){
+//			normals[i] = n.get(i);
+//		}
+//		this.vertexData.addElement(normals, VertexData.Semantic.NORMAL, 3);
 	}
 	
 	private void addNormal(ArrayList<Float> n, Vector3f normal) {
