@@ -12,28 +12,11 @@ import jrtr.Shape;
 
 import ex1.AbstractSimpleShape;
 
-/* Konzept:
- * 1. Berechne die Array-Grösse (2^n + 1, n Natürliche Zahl) und deklariere einen entsprechenden 2D-Array.
- * 2. Das 2D-Array soll mit null initialisiert werden (oder sonst einem Wert, der als "to ignore" betrachtet werden könnte).
- * 3. Die Ecken sollen mit einem Wert gefüllt werden (Random-Wert oder auch für den Anfang derselbe Wert für alle Ecken)
- * 4. Aus den bisher berechneten Punkten sollen nun 2 Dinge berechnet werden:
- * 		- Die Indizes der Punkte, die neu berechnet werden müssen (also Mittelpunkte)
- * 		- Der Wert der Punkte, die neu berechnet werden müssen
- * 		
- * 5. Schritt 4. so oft wiederholen, bis alle nötigen Punkte berechnet sind, d.h. 2^n mal.
- * 6. Jeden Punkt zu den Vertices hinzufügen mit Koordinaten x=i, y=Array[i][j], z=j
- * 	  gleichzeitig eine von z abhängige Farbe zuordnen.
- * 7. Dreiecke bilden
- * 8. VertexData heraufbeschwören
- */
-
 //public class FractalLandscape extends AbstractSimpleShape{
 public class FractalLandscape extends AbstractSimpleShape{
 	private int size;
 	private Selectable heights[][];
 	private float granularity;
-//	private ArrayList<Float> v = new ArrayList<Float>();
-//	private ArrayList<Integer> ind = new ArrayList<Integer>();
 	private int iTopLeft, iTopRight, iBottomLeft, iBottomRight;
 	
 	/** The constructor has only one parameter "cornorHeight": all
@@ -59,33 +42,20 @@ public class FractalLandscape extends AbstractSimpleShape{
 		heights[this.size-1][this.size-1] = new Selectable();
 		heights[this.size-1][this.size-1].setVal(cornerHeight);
 
-		squareStep(0,0,this.size-1, this.size-1, this.size);
+		squareStep(0,0,this.size-1, this.size-1, this.size-1);
+		diamondStep(0,0,this.size-1,this.size-1);
 		
 		addVerticesAndTriangles();
 		setColors();
 		
 	}
-	
-//	private void diamondSquareComputation() {
-//				
-//		for (int i = 0; i<this.size; i++){
-//			for(int j = 0; j<this.size; j++){
-//				
-//			}
-//		}
-//		
-//	}
-	
-//	private void squareStep(int width){
+
 	private void squareStep(int iTopLeft, int jTopLeft, int iBottomRight, int jBottomRight, int länge){
 		
-		// gehe [länge] nach unten, um den punkt unten links zu finden
-		// gehe [länge] nach rechts, um den punkt oben rechts zu finden
-		// gehe [länge] nach unten und [länge] nach rechts, um den punkt unten rechts zu finden
-		//
-		// 
-		// berechne den Durchschnitt der Höhenwerte
-		// finde den mittelpunkt
+		// Abbruch-Bedingung:
+//		if(länge<=1){
+//			return;
+//		}
 		
 		int iBottomLeft = iTopLeft;
 		int jBottomLeft = jTopLeft+länge;
@@ -109,23 +79,20 @@ public class FractalLandscape extends AbstractSimpleShape{
 		heights[iMiddle][jMiddle] = new Selectable();
 		heights[iMiddle][jMiddle].setVal(heightMiddle);
 		
-		diamondStep(iTopLeft, jTopLeft, iBottomRight, jBottomRight);
-//		diamondStep(iTopLeft,jTopLeft,iBottomLeft,jBottomLeft);
-//		diamondStep(iTopLeft, jTopLeft, iTopRight, jTopRight);
-//		diamondStep(iTopRight, jTopRight, iBottomRight, jBottomRight);
-//		diamondStep(iBottomLeft, jBottomLeft, iBottomRight, jBottomRight);
-		
+//		diamondStep(iTopLeft, jTopLeft, iBottomRight, jBottomRight);		
 	}
 	
 	private void diamondStep(int i1, int j1, int i2, int j2){
 		
 		// finde Mittelpunkt
-//		int iMiddle = (Math.max(i1, i2)+Math.min(i1, i2))/2;
-//		int jMiddle = (Math.max(j1,j2)+Math.min(j1, j2))/2;
 		int iMiddle = (i1+i2)/2;
 		int jMiddle = (j1+j2)/2;
 		
 		int distance = Math.abs(iMiddle - i1);
+		
+		if(distance < 1){
+			return;
+		}
 		
 		setDiamondHeight(iMiddle, jMiddle-distance, distance);
 		setDiamondHeight(iMiddle, jMiddle+distance, distance);
@@ -136,6 +103,11 @@ public class FractalLandscape extends AbstractSimpleShape{
 		squareStep(iMiddle, jMiddle-distance,iMiddle+distance, jMiddle, distance );
 		squareStep(iMiddle, jMiddle, i2, j2, distance);
 		squareStep(iMiddle-distance, jMiddle, iMiddle, jMiddle+distance, distance);
+		
+		diamondStep(i1,j1,iMiddle,jMiddle);
+		diamondStep(iMiddle,jMiddle-distance,iMiddle+distance,jMiddle);
+		diamondStep(iMiddle,jMiddle,i2,j2);
+		diamondStep(iMiddle-distance,jMiddle,iMiddle,jMiddle+distance);
 	}
 	
 	private void setDiamondHeight(int iDiamond, int jDiamond, int distance) {

@@ -149,7 +149,7 @@ public class ShowLandScape {
 	*/
 	public static void main(String[] args){	
 
-		int size = 1;
+		int size = 2;
 		float cornerHeight = 1;
 		float granularity = 1;
 
