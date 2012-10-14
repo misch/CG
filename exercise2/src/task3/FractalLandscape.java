@@ -132,20 +132,59 @@ public class FractalLandscape extends AbstractSimpleShape{
 	}
 	
 //	private void diamondStep(int[] left, int[] right){
-	private void diamondStep(zwei gegenüberliegende Punkte){
+	private void diamondStep(int i1, int j1, int i2, int j2){
 		
 		// finde Mittelpunkt
-		// finde Nachbaren
-		// berechne Durchschnitt und setze Höhenwert
-		int halfWidth = width/2;	
-		for (int i = halfWidth ;i<this.size; i+=width){
-			for(int j = (i+halfWidth)%width; j < this.size; j+=width){
-				float height1 = (heights[i-1][j] == null) ? null : heights[i-1][j].val();
-				float height2 = (heights[i+1][j] == null) ? null : heights[i+1][j].val();
-				float height3 = (heights[i][j-1] == null) ? null : heights[i][j-1].val();
-				float height4 = (heights[i][j+1] == null) ? null : heights[i][j+1].val();
-			}
+		int iMiddle = (Math.max(i1, i2)+Math.min(i1, i2))/2;
+		int jMiddle = (Math.max(j1,j2)+Math.min(j1, j2))/2;
+		
+		int dividers = 0;
+		float sum = 0;
+		// finde Nachbar(en)
+		int distance = Math.abs(iMiddle - i1);
+		if (iMiddle>0){
+			float heightLinkerNachbar = heights[iMiddle-distance][jMiddle].val();
+			dividers++;
+			sum += heightLinkerNachbar;
 		}
+		
+		if (iMiddle < this.size-1){
+			// finde rechten Nachbar
+			float heightRechterNachbar = heights[iMiddle+distance][jMiddle].val();
+			dividers++;
+			sum += heightRechterNachbar;
+		}
+		
+		if (jMiddle > 0){
+			// finde oberen Nachba
+			float heightObererNachbar = heights[iMiddle][jMiddle-distance];
+			dividers ++;
+			sum += heightObererNachbar;
+		}
+		
+		if (jMiddle < this.size-1){
+			// finde unteren Nachbar
+			float heightUntererNachbar = heights[iMiddle][jMiddle+distance];
+			dividers++;
+			sum+=  heightObererNachbar;
+		}
+		
+		// berechne Durchschnitt...
+		float avg = sum/dividers;
+		
+		//...und setze Höhenwert
+		heights[iMiddle][jMiddle] = new Selectable();
+		heights[iMiddle][jMiddle].setVal(avg);
+		
+//		int halfWidth = width/2;	
+//		for (int i = halfWidth ;i<this.size; i+=width){
+//			for(int j = (i+halfWidth)%width; j < this.size; j+=width){
+//				float height1 = (heights[i-1][j] == null) ? null : heights[i-1][j].val();
+//				float height2 = (heights[i+1][j] == null) ? null : heights[i+1][j].val();
+//				float height3 = (heights[i][j-1] == null) ? null : heights[i][j-1].val();
+//				float height4 = (heights[i][j+1] == null) ? null : heights[i][j+1].val();
+//			}
+//		}
 	
 	}
 	
