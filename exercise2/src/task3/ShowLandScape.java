@@ -24,14 +24,14 @@ import jrtr.RenderPanel;
 import jrtr.SWRenderPanel;
 import jrtr.Shape;
 import jrtr.SimpleSceneManager;
-//import jrtr.VertexData;
+
 
 public class ShowLandScape {
 	static RenderPanel renderPanel;
 	static RenderContext renderContext;
 	static SimpleSceneManager sceneManager;
 	static Shape shape;
-//	static float angle;
+
 	
 	/**
 	* An extension of {@link GLRenderPanel} or {@link SWRenderPanel} to
@@ -60,13 +60,6 @@ public class ShowLandScape {
 	* A timer task that generates an animation. This task triggers
 	* the redrawing of the 3D scene every time it is executed.
 	*/
-//	public static class AnimationTask extends TimerTask
-//	{
-//		public void run()
-//		{  
-////			renderPanel.getCanvas().repaint();
-//		}
-//	}
 	
 	/**
 	* A mouse listener for the main window of this application. This can be
@@ -149,7 +142,7 @@ public class ShowLandScape {
 	*/
 	public static void main(String[] args){	
 
-		int size = 2;
+		int size = 4;
 		float cornerHeight = 1;
 		float granularity = 1;
 

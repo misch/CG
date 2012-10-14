@@ -66,39 +66,27 @@ public class FractalLandscape extends AbstractSimpleShape{
 //			}
 //		}
 		
-		for (int i = 0; i<=this.size-2; i+=distance){
-			setSquareHeight(i, i+distance, distance);
-			setSquareHeight(i+distance, i, distance);
+		for (int i = 0; i+distance<this.size; i++){
+			int first = 0;
+			if (i%2==0)
+				first = 1;
+			
+			for(int j = first; j+distance<this.size; j+=2){
+				setSquareHeight(i, j+distance, distance);
+				setSquareHeight(i+distance,j, distance);
+			}
 		}
-	}
-//	private void squareStep(int iComputedDiamondPoint,int jComputedDiamondPoint, int distance){
-//	
-//		setSquareHeight(iComputedDiamondPoint-distance, jComputedDiamondPoint, distance);
-//		setSquareHeight(iComputedDiamondPoint, jComputedDiamondPoint-distance, distance);
-//		setSquareHeight(iComputedDiamondPoint+distance, jComputedDiamondPoint, distance);
-//		setSquareHeight(iComputedDiamondPoint, jComputedDiamondPoint+distance, distance);
-//		
-//		diamondStep(iComputedDiamondPoint, jComputedDiamondPoint-distance, iComputedDiamondPoint+distance, jComputedDiamondPoint);
-//		diamondStep(iComputedDiamondPoint, jComputedDiamondPoint, iComputedDiamondPoint+distance, jComputedDiamondPoint+distance);
-//		diamondStep(iComputedDiamondPoint-distance, jComputedDiamondPoint, iComputedDiamondPoint, jComputedDiamondPoint+distance);
-//		diamondStep(iComputedDiamondPoint-distance, jComputedDiamondPoint-distance, iComputedDiamondPoint, jComputedDiamondPoint);	
-//	}
-	
-//	private void diamondStep(int iTopLeftOfSquare, int jTopLeftOfSquare, int iBottomRightOfSquare, int jBottomRightOfSquare){
-//		
-//		// finde Mittelpunkt
-//		int iMiddle = (iTopLeftOfSquare+iBottomRightOfSquare)/2;
-//		int jMiddle = (jTopLeftOfSquare+jBottomRightOfSquare)/2;
-//		
-//		int distance = Math.abs(iMiddle - iTopLeftOfSquare);
-//		
-//		if(distance < 1){
-//			return;
+		
+//		for (int i = 0; i<=cycles;i++){
+//			setSquareHeight(i, i+distance, distance);
+//			setSquareHeight(i+distance, i, distance);
 //		}
-//		
-//		setDiamondHeight(iMiddle, jMiddle, distance);
-//		squareStep(iMiddle, jMiddle, distance);
-//	}
+		
+//		for (int i = distance; i <: cycles; i++){
+//			setSquareHeight(i, i-distance, distance);
+//			setSquareHeight(i+distance, )
+//		}
+	}
 	
 	private void setDiamondHeight(int iDiamond, int jDiamond, int distance) {
 		
@@ -115,30 +103,29 @@ public class FractalLandscape extends AbstractSimpleShape{
 		int dividers = 0;
 		float sum = 0;
 		
-		// finde Nachbar(en)
-				
-		if (iSquare>0){
+		// finde Nachbar(en)		
+		if (iSquare-distance >= 0){
 			// finde linken Nachbar
 			float heightLinkerNachbar = heights[iSquare-distance][jSquare];
 			dividers++;
 			sum += heightLinkerNachbar;
 		}
 		
-		if (iSquare < this.size-1){
+		if (iSquare+distance < this.size){
 			// finde rechten Nachbar
 			float heightRechterNachbar = heights[iSquare+distance][jSquare];
 			dividers++;
 			sum += heightRechterNachbar;
 		}
 		
-		if (jSquare > 0){
+		if (jSquare-distance >= 0){
 			// finde oberen Nachba
 			float heightObererNachbar = heights[iSquare][jSquare-distance];
 			dividers ++;
 			sum += heightObererNachbar;
 		}
 		
-		if (jSquare < this.size-1){
+		if (jSquare+distance < this.size){
 			// finde unteren Nachbar
 			float heightUntererNachbar = heights[iSquare][jSquare+distance];
 			dividers++;
