@@ -42,7 +42,9 @@ public class FractalLandscape extends AbstractSimpleShape{
 		heights[this.size-1][this.size-1] = new Selectable();
 		heights[this.size-1][this.size-1].setVal(cornerHeight);
 
-		squareStep(0,0,this.size-1, this.size-1, this.size-1);
+//		squareStep(0,0,this.size-1, this.size-1, this.size-1);
+//		diamondStep(0,0,this.size-1,this.size-1);
+		
 		diamondStep(0,0,this.size-1,this.size-1);
 		
 		addVerticesAndTriangles();
@@ -50,96 +52,151 @@ public class FractalLandscape extends AbstractSimpleShape{
 		
 	}
 
-	private void squareStep(int iTopLeft, int jTopLeft, int iBottomRight, int jBottomRight, int länge){
+//	private void squareStep(int iTopLeft, int jTopLeft, int iBottomRight, int jBottomRight, int länge){
+//	private void squareStep(int i1, int j1, int i2, int j2){ // {i1,j1} und {i2,j2} sind zwei sich gegenüberliegende Ecken eines Diamonds
+	private void squareStep(int iComputedDiamondPoint,int jComputedDiamondPoint, int distance){
+		
+//		int iSquare = (i2+i1)/2;
+//		int jSquare = (j1+j2)/2;
+		
+		setSquareHeight(iComputedDiamondPoint-distance, jComputedDiamondPoint, distance);
+		setSquareHeight(iComputedDiamondPoint, jComputedDiamondPoint-distance, distance);
+		setSquareHeight(iComputedDiamondPoint+distance, jComputedDiamondPoint, distance);
+		setSquareHeight(iComputedDiamondPoint, jComputedDiamondPoint+distance, distance);
+		
+		
+		diamondStep(iComputedDiamondPoint, jComputedDiamondPoint-distance, iComputedDiamondPoint+distance, jComputedDiamondPoint);
+		diamondStep(iComputedDiamondPoint, jComputedDiamondPoint, iComputedDiamondPoint+distance, jComputedDiamondPoint+distance);
+		diamondStep(iComputedDiamondPoint-distance, jComputedDiamondPoint, iComputedDiamondPoint, jComputedDiamondPoint+distance);
+		diamondStep(iComputedDiamondPoint-distance, jComputedDiamondPoint-distance, iComputedDiamondPoint, jComputedDiamondPoint);
+		
+//		setSquareHeight()
+//		setSquareHeight(iTopOfDiamond,jTopOfDiamond+länge,iBottomOfDiamond+länge,jBottomOfDiamond);
+//		setSquareHeight(iTopOfDiamond-länge,jTopOfDiamond+länge,iBottomOfDiamond, jBottomOfDiamond);
+//		setSquareHeight(iTopOfDiamond-länge,jTopOfDiamond,iTopOfDiamond,jTopOfDiamond+länge);
+		
+//		diamondStep(iTopLeft, jTopLeft, iBottomRight, jBottomRight);
 		
 		// Abbruch-Bedingung:
 //		if(länge<=1){
 //			return;
 //		}
 		
-		int iBottomLeft = iTopLeft;
-		int jBottomLeft = jTopLeft+länge;
+//		int iBottomLeft = iTopLeft;
+//		int jBottomLeft = jTopLeft+länge;
 		
 //		int iBottomRight = iTopLeft+länge;
 //		int jBottomRight = jTopLeft+länge;
 		
-		int iTopRight = iTopLeft+länge;
-		int jTopRight = jTopLeft;
+//		int iTopRight = iTopLeft+länge;
+//		int jTopRight = jTopLeft;
 		
-		float heightMiddle = (heights[iBottomLeft][jBottomLeft].val()+
-								heights[iBottomRight][jBottomRight].val()+
-								heights[iTopRight][jTopRight].val()+
-								heights[iTopLeft][jTopLeft].val())/4;
+//		float heightMiddle = (heights[iBottomLeft][jBottomLeft].val()+
+//								heights[iBottomRight][jBottomRight].val()+
+//								heights[iTopRight][jTopRight].val()+
+//								heights[iTopLeft][jTopLeft].val())/4;
 		
-		int halbeLänge = länge/2;
+//		int halbeLänge = länge/2;
+//		
+//		int iMiddle = iTopLeft + halbeLänge;
+//		int jMiddle = iTopLeft + halbeLänge;
 		
-		int iMiddle = iTopLeft + halbeLänge;
-		int jMiddle = iTopLeft + halbeLänge;
-		
-		heights[iMiddle][jMiddle] = new Selectable();
-		heights[iMiddle][jMiddle].setVal(heightMiddle);
-		
-//		diamondStep(iTopLeft, jTopLeft, iBottomRight, jBottomRight);		
+//		heights[iMiddle][jMiddle] = new Selectable();
+//		heights[iMiddle][jMiddle].setVal(heightMiddle);		
 	}
 	
-	private void diamondStep(int i1, int j1, int i2, int j2){
+	private void diamondStep(int iTopLeftOfSquare, int jTopLeftOfSquare, int iBottomRightOfSquare, int jBottomRightOfSquare){
+		
+		// finde restliche Punkte des gegebenen Quadrats
+		int iBottomLeftOfSquare = iTopLeftOfSquare;
+		int jBottomLeftOfSquare = jBottomRightOfSquare;
+		
+		int  iTopRightOfSquare = iBottomRightOfSquare;
+		int jTopRightOfSquare = jTopLeftOfSquare;
+		
+		
 		
 		// finde Mittelpunkt
-		int iMiddle = (i1+i2)/2;
-		int jMiddle = (j1+j2)/2;
+		int iMiddle = (iTopLeftOfSquare+iBottomRightOfSquare)/2;
+		int jMiddle = (jTopLeftOfSquare+jBottomRightOfSquare)/2;
 		
-		int distance = Math.abs(iMiddle - i1);
+		int distance = Math.abs(iMiddle - iTopLeftOfSquare);
 		
 		if(distance < 1){
 			return;
 		}
 		
-		setDiamondHeight(iMiddle, jMiddle-distance, distance);
-		setDiamondHeight(iMiddle, jMiddle+distance, distance);
-		setDiamondHeight(iMiddle-distance, jMiddle, distance);
-		setDiamondHeight(iMiddle+distance, jMiddle, distance);
-		 
-		squareStep(i1, j1, iMiddle, jMiddle, distance);
-		squareStep(iMiddle, jMiddle-distance,iMiddle+distance, jMiddle, distance );
-		squareStep(iMiddle, jMiddle, i2, j2, distance);
-		squareStep(iMiddle-distance, jMiddle, iMiddle, jMiddle+distance, distance);
+		setDiamondHeight(iMiddle, jMiddle, distance);
 		
-		diamondStep(i1,j1,iMiddle,jMiddle);
-		diamondStep(iMiddle,jMiddle-distance,iMiddle+distance,jMiddle);
-		diamondStep(iMiddle,jMiddle,i2,j2);
-		diamondStep(iMiddle-distance,jMiddle,iMiddle,jMiddle+distance);
+		squareStep(iMiddle, jMiddle, distance);
+		
+//		squareStep(iTopLeftOfSquare, jTopLeftOfSquare, iBottomLeftOfSquare, jBottomLeftOfSquare);
+//		squareStep(iTopLeftOfSquare, jTopLeftOfSquare, iTopRightOfSquare, jTopRightOfSquare);
+//		squareStep(iTopRightOfSquare, jTopRightOfSquare, iBottomRightOfSquare, jBottomRightOfSquare);
+//		squareStep(iBottomLeftOfSquare, jBottomLeftOfSquare, iBottomRightOfSquare, jBottomRightOfSquare);
+		
+		
+//		setDiamondHeight(iMiddle, jMiddle-distance, distance);
+//		setDiamondHeight(iMiddle, jMiddle+distance, distance);
+//		setDiamondHeight(iMiddle-distance, jMiddle, distance);
+//		setDiamondHeight(iMiddle+distance, jMiddle, distance);
+		
+		 
+//		squareStep(iTopLeftOfSquare, jTopLeftOfSquare, iMiddle, jMiddle, distance);
+//		squareStep(iMiddle, jMiddle-distance,iMiddle+distance, jMiddle, distance );
+//		squareStep(iMiddle, jMiddle, iBottomRightOfSquare, jBottomRightOfSquare, distance);
+//		squareStep(iMiddle-distance, jMiddle, iMiddle, jMiddle+distance, distance);
+		
+//		diamondStep(i1,j1,iMiddle,jMiddle);
+//		diamondStep(iMiddle,jMiddle-distance,iMiddle+distance,jMiddle);
+//		diamondStep(iMiddle,jMiddle,i2,j2);
+//		diamondStep(iMiddle-distance,jMiddle,iMiddle,jMiddle+distance);
 	}
 	
 	private void setDiamondHeight(int iDiamond, int jDiamond, int distance) {
+		
+		float heightDiamond = (heights[iDiamond-distance][jDiamond-distance].val()+
+				heights[iDiamond-distance][jDiamond+distance].val()+
+				heights[iDiamond+distance][jDiamond-distance].val()+
+				heights[iDiamond+distance][jDiamond+distance].val())/4;
+		
+		heights[iDiamond][jDiamond] = new Selectable();
+		heights[iDiamond][jDiamond].setVal(heightDiamond);
+		
+	
+	}
+	
+	private void setSquareHeight(int iSquare, int jSquare, int distance){
+		
 		int dividers = 0;
 		float sum = 0;
 		
 		// finde Nachbar(en)
 				
-		if (iDiamond>0){
+		if (iSquare>0){
 			// finde linken Nachbar
-			float heightLinkerNachbar = heights[iDiamond-distance][jDiamond].val();
+			float heightLinkerNachbar = heights[iSquare-distance][jSquare].val();
 			dividers++;
 			sum += heightLinkerNachbar;
 		}
 		
-		if (iDiamond < this.size-1){
+		if (iSquare < this.size-1){
 			// finde rechten Nachbar
-			float heightRechterNachbar = heights[iDiamond+distance][jDiamond].val();
+			float heightRechterNachbar = heights[iSquare+distance][jSquare].val();
 			dividers++;
 			sum += heightRechterNachbar;
 		}
 		
-		if (jDiamond > 0){
+		if (jSquare > 0){
 			// finde oberen Nachba
-			float heightObererNachbar = heights[iDiamond][jDiamond-distance].val();
+			float heightObererNachbar = heights[iSquare][jSquare-distance].val();
 			dividers ++;
 			sum += heightObererNachbar;
 		}
 		
-		if (jDiamond < this.size-1){
+		if (jSquare < this.size-1){
 			// finde unteren Nachbar
-			float heightUntererNachbar = heights[iDiamond][jDiamond+distance].val();
+			float heightUntererNachbar = heights[iSquare][jSquare+distance].val();
 			dividers++;
 			sum+=  heightUntererNachbar;
 		}
@@ -148,10 +205,8 @@ public class FractalLandscape extends AbstractSimpleShape{
 		float avg = sum/dividers;
 		
 		//...und setze Höhenwert
-		heights[iDiamond][jDiamond] = new Selectable();
-		heights[iDiamond][jDiamond].setVal(avg);
-
-		
+		heights[iSquare][jSquare] = new Selectable();
+		heights[iSquare][jSquare].setVal(avg);
 	}
 
 	private void addVerticesAndTriangles(){
