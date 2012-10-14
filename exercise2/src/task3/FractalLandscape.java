@@ -12,7 +12,7 @@ import jrtr.VertexData;
 import ex1.AbstractSimpleShape;
 
 public class FractalLandscape extends AbstractSimpleShape{
-	private int size;
+	private int size, cycles;
 	private float heights[][];
 //	private float granularity;
 	
@@ -23,7 +23,7 @@ public class FractalLandscape extends AbstractSimpleShape{
 	 */
 	public FractalLandscape(int size, float cornerHeight, float granularity){
 		
-//		this.cycles = size;
+		this.cycles = size;
 		this.size = (int)Math.pow(2, size)+1;
 		this.heights = new float[this.size][this.size];
 //		this.granularity = granularity;
@@ -33,39 +33,72 @@ public class FractalLandscape extends AbstractSimpleShape{
 		heights[0][this.size-1]=0;
 		heights[this.size-1][this.size-1]=cornerHeight;
 
-		diamondStep(0,0,this.size-1,this.size-1);
+		for (int c=0; c<=cycles; c++){
+			diamondStep((int)(this.size/(Math.pow(2, c))));
+			squareStep((int)(this.size/(Math.pow(2, c))));
+		}
+		
+//		diamondStep(0,0,this.size-1,this.size-1);
 		
 		addVerticesAndTrianglesandColors();
 	}
 
-	private void squareStep(int iComputedDiamondPoint,int jComputedDiamondPoint, int distance){
-	
-		setSquareHeight(iComputedDiamondPoint-distance, jComputedDiamondPoint, distance);
-		setSquareHeight(iComputedDiamondPoint, jComputedDiamondPoint-distance, distance);
-		setSquareHeight(iComputedDiamondPoint+distance, jComputedDiamondPoint, distance);
-		setSquareHeight(iComputedDiamondPoint, jComputedDiamondPoint+distance, distance);
-		
-		diamondStep(iComputedDiamondPoint, jComputedDiamondPoint-distance, iComputedDiamondPoint+distance, jComputedDiamondPoint);
-		diamondStep(iComputedDiamondPoint, jComputedDiamondPoint, iComputedDiamondPoint+distance, jComputedDiamondPoint+distance);
-		diamondStep(iComputedDiamondPoint-distance, jComputedDiamondPoint, iComputedDiamondPoint, jComputedDiamondPoint+distance);
-		diamondStep(iComputedDiamondPoint-distance, jComputedDiamondPoint-distance, iComputedDiamondPoint, jComputedDiamondPoint);	
-	}
-	
-	private void diamondStep(int iTopLeftOfSquare, int jTopLeftOfSquare, int iBottomRightOfSquare, int jBottomRightOfSquare){
-		
-		// finde Mittelpunkt
-		int iMiddle = (iTopLeftOfSquare+iBottomRightOfSquare)/2;
-		int jMiddle = (jTopLeftOfSquare+jBottomRightOfSquare)/2;
-		
-		int distance = Math.abs(iMiddle - iTopLeftOfSquare);
-		
-		if(distance < 1){
-			return;
+	private void diamondStep(int width){
+		int distance = width/2;
+		for (int i=0; i<this.size-1; i+=width){
+			for (int j=0; j<this.size-1; j+= width){
+								
+				int iMiddle = i + distance;
+				int jMiddle = j+distance;
+				
+				setDiamondHeight(iMiddle, jMiddle, distance);
+			}
 		}
-		
-		setDiamondHeight(iMiddle, jMiddle, distance);
-		squareStep(iMiddle, jMiddle, distance);
 	}
+	
+	private void squareStep(int width){
+		int distance = width/2;
+		
+//		for (int i = 0; i<this.size; i+= width-1){
+//			for (int j = 0; j<this.size; j+= width-1){
+//				setSquareHeight(i, j+distance, distance);
+//				setSquareHeight(i+distance, j, distance);
+//			}
+//		}
+		
+		for (int i = 0; i<=this.size-2; i+=distance){
+			setSquareHeight(i, i+distance, distance);
+			setSquareHeight(i+distance, i, distance);
+		}
+	}
+//	private void squareStep(int iComputedDiamondPoint,int jComputedDiamondPoint, int distance){
+//	
+//		setSquareHeight(iComputedDiamondPoint-distance, jComputedDiamondPoint, distance);
+//		setSquareHeight(iComputedDiamondPoint, jComputedDiamondPoint-distance, distance);
+//		setSquareHeight(iComputedDiamondPoint+distance, jComputedDiamondPoint, distance);
+//		setSquareHeight(iComputedDiamondPoint, jComputedDiamondPoint+distance, distance);
+//		
+//		diamondStep(iComputedDiamondPoint, jComputedDiamondPoint-distance, iComputedDiamondPoint+distance, jComputedDiamondPoint);
+//		diamondStep(iComputedDiamondPoint, jComputedDiamondPoint, iComputedDiamondPoint+distance, jComputedDiamondPoint+distance);
+//		diamondStep(iComputedDiamondPoint-distance, jComputedDiamondPoint, iComputedDiamondPoint, jComputedDiamondPoint+distance);
+//		diamondStep(iComputedDiamondPoint-distance, jComputedDiamondPoint-distance, iComputedDiamondPoint, jComputedDiamondPoint);	
+//	}
+	
+//	private void diamondStep(int iTopLeftOfSquare, int jTopLeftOfSquare, int iBottomRightOfSquare, int jBottomRightOfSquare){
+//		
+//		// finde Mittelpunkt
+//		int iMiddle = (iTopLeftOfSquare+iBottomRightOfSquare)/2;
+//		int jMiddle = (jTopLeftOfSquare+jBottomRightOfSquare)/2;
+//		
+//		int distance = Math.abs(iMiddle - iTopLeftOfSquare);
+//		
+//		if(distance < 1){
+//			return;
+//		}
+//		
+//		setDiamondHeight(iMiddle, jMiddle, distance);
+//		squareStep(iMiddle, jMiddle, distance);
+//	}
 	
 	private void setDiamondHeight(int iDiamond, int jDiamond, int distance) {
 		
@@ -75,7 +108,6 @@ public class FractalLandscape extends AbstractSimpleShape{
 			heights[iDiamond+distance][jDiamond+distance])/4;
 		
 			heights[iDiamond][jDiamond]=heightDiamond + (float)Math.random();
-//			float random = (float)Math.random();
 	}
 	
 	private void setSquareHeight(int iSquare, int jSquare, int distance){
@@ -152,12 +184,6 @@ public class FractalLandscape extends AbstractSimpleShape{
 		this.indices = ind;
 		this.colors = c;
 		this.normals = n;
-		
-//		float[] normals = new float[n.size()];
-//		for (int i=0; i<n.size(); i++){
-//			normals[i] = n.get(i);
-//		}
-//		this.vertexData.addElement(normals, VertexData.Semantic.NORMAL, 3);
 	}
 	
 	private void addNormal(ArrayList<Float> n, Vector3f normal) {
