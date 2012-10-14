@@ -6,6 +6,10 @@ import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
 import ex1.AbstractSimpleShape;
 
+// TODO: 
+//	add more (and reasonable) colors
+//	change interval of random value for each step
+
 public class FractalLandscape extends AbstractSimpleShape{
 	private int size, cycles;
 	private float heights[][];
@@ -161,7 +165,13 @@ public class FractalLandscape extends AbstractSimpleShape{
 			col = new Color3f(1,1,1);
 		if(f>1)
 			col = new Color3f(1,0,0);
+		
+		if(f>1.5)
+			col = new Color3f(1,1,0);
+		
 		return col;
+		
+		
 	}
 	
 	private Vector3f computeNormal(int i, int j) {
