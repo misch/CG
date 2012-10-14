@@ -74,7 +74,6 @@ public class FractalLandscape extends AbstractSimpleShape{
 		}
 		
 		setDiamondHeight(iMiddle, jMiddle, distance);
-		
 		squareStep(iMiddle, jMiddle, distance);
 	}
 	
@@ -136,12 +135,12 @@ public class FractalLandscape extends AbstractSimpleShape{
 		for(int i = 0; i<this.size-1; i++){
 			for(int j = 0; j<this.size-1;j++){
 				int indTopLeft = addVertex(v, new Point3f(i,heights[i][j],j));
-				int indBottomLeft = addVertex(v, new Point3f(i,heights[i][j+1], j+1));
+				int indBottomLeft = addVertex(v, new Point3f(i,heights[i][j+1],j+1));
 				int indBottomRight = addVertex(v, new Point3f(i+1,heights[i+1][j+1], j+1));
 				int indTopRight = addVertex(v, new Point3f(i+1, heights[i+1][j],j));
 				
-				addTriangle(ind, indTopLeft, indBottomLeft, indBottomRight);
-				addTriangle(ind, indBottomLeft, indBottomRight, indTopRight);
+				addTriangle(ind, indTopLeft, indBottomLeft, indTopRight);
+				addTriangle(ind, indTopRight, indBottomRight, indBottomLeft);
 			}
 		}
 		this.vertices = v;
