@@ -149,13 +149,16 @@ public class ShowLandScape {
 	*/
 	public static void main(String[] args){	
 
-		int size = 2;
+		int size = 4;
 		float cornerHeight = 1;
 		float granularity = 1;
 
 		shape = new Shape(new FractalLandscape(size, cornerHeight, granularity).getVertexData());
 
-		sceneManager = new SimpleSceneManager(new Camera(),new Frustum());
+		Camera camera = new Camera(new Vector3f(0,0,40), new Vector3f(0,0,0), new Vector3f(0,1,0));
+		Frustum frustum = new Frustum(1,100,1,(float)(Math.PI/3));
+		
+		sceneManager = new SimpleSceneManager(camera,frustum);
 		sceneManager.addShape(shape);
 
 		// Make a render panel. The init function of the renderPanel

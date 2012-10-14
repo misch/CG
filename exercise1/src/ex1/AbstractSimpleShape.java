@@ -12,8 +12,9 @@ import jrtr.VertexData;
 public abstract class AbstractSimpleShape implements IForm {
 	protected ArrayList<Float> vertices, colors;
 	protected ArrayList<Integer> indices;
+	
 	protected float u,v;
-	private VertexData vertexData;
+	protected VertexData vertexData;
 	protected Shape shape;
 		
 	public Shape getShape(){
@@ -25,7 +26,7 @@ public abstract class AbstractSimpleShape implements IForm {
 	public VertexData getVertexData(){
 		vertexData = new VertexData(getVertices().length/3);
 		vertexData.addElement(getColors(),VertexData.Semantic.COLOR, 3);
-		vertexData.addElement(getVertices(), VertexData.Semantic.POSITION, 3);		
+		vertexData.addElement(getVertices(), VertexData.Semantic.POSITION, 3);
 		vertexData.addIndices(getIndices());
 		return vertexData;
 	}

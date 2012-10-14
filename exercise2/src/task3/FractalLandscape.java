@@ -1,23 +1,20 @@
 package task3;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
 
-import jrtr.Shape;
+import jrtr.VertexData;
 
 import ex1.AbstractSimpleShape;
 
 public class FractalLandscape extends AbstractSimpleShape{
 	private int size;
-//	private Selectable heights[][];
 	private float heights[][];
-	private float granularity;
-//	private int iTopLeft, iTopRight, iBottomLeft, iBottomRight;
+//	private float granularity;
 	
 	/** The constructor has only one parameter "cornorHeight": all
 	 * four corner will have the same height for now.
@@ -26,9 +23,10 @@ public class FractalLandscape extends AbstractSimpleShape{
 	 */
 	public FractalLandscape(int size, float cornerHeight, float granularity){
 		
+		this.cycles = size;
 		this.size = (int)Math.pow(2, size)+1;
 		this.heights = new float[this.size][this.size];
-		this.granularity = granularity;
+//		this.granularity = granularity;
 			
 		heights[0][0] = 0;
 		heights[this.size-1][0]=0;
@@ -55,13 +53,6 @@ public class FractalLandscape extends AbstractSimpleShape{
 	
 	private void diamondStep(int iTopLeftOfSquare, int jTopLeftOfSquare, int iBottomRightOfSquare, int jBottomRightOfSquare){
 		
-		// finde restliche Punkte des gegebenen Quadrats
-		int iBottomLeftOfSquare = iTopLeftOfSquare;
-		int jBottomLeftOfSquare = jBottomRightOfSquare;
-		
-		int  iTopRightOfSquare = iBottomRightOfSquare;
-		int jTopRightOfSquare = jTopLeftOfSquare;
-		
 		// finde Mittelpunkt
 		int iMiddle = (iTopLeftOfSquare+iBottomRightOfSquare)/2;
 		int jMiddle = (jTopLeftOfSquare+jBottomRightOfSquare)/2;
@@ -82,7 +73,9 @@ public class FractalLandscape extends AbstractSimpleShape{
 			heights[iDiamond-distance][jDiamond+distance]+
 			heights[iDiamond+distance][jDiamond-distance]+
 			heights[iDiamond+distance][jDiamond+distance])/4;
-			heights[iDiamond][jDiamond]=heightDiamond;
+		
+			heights[iDiamond][jDiamond]=heightDiamond + (float)Math.random();
+//			float random = (float)Math.random();
 	}
 	
 	private void setSquareHeight(int iSquare, int jSquare, int distance){
@@ -124,27 +117,32 @@ public class FractalLandscape extends AbstractSimpleShape{
 		float avg = sum/dividers;
 		
 		//...und setze Höhenwert
-		heights[iSquare][jSquare]=avg;
+		heights[iSquare][jSquare]=avg + (float)Math.random();
 	}
 
 	private void addVerticesAndTrianglesandColors(){
 		ArrayList<Float> v = new ArrayList<Float>();
 		ArrayList<Integer> ind = new ArrayList<Integer>();
 		ArrayList<Float> c = new ArrayList<Float>();
+		ArrayList<Float> n = new ArrayList<Float>();
 		
 		for(int i = 0; i<this.size-1; i++){
 			for(int j = 0; j<this.size-1;j++){
 				int indTopLeft = addVertex(v, new Point3f(i,heights[i][j],j));
 				addColor(c,getCol(heights[i][j]));
+				addNormal(n, computeNormal(i,j));
 				
 				int indBottomLeft = addVertex(v, new Point3f(i,heights[i][j+1],j+1));
 				addColor(c,getCol(heights[i][j+1]));
+				addNormal(n, computeNormal(i,j+1));
 				
 				int indBottomRight = addVertex(v, new Point3f(i+1,heights[i+1][j+1], j+1));
 				addColor(c,getCol(heights[i+1][j+1]));
+				addNormal(n, computeNormal(i+1,j+1));
 				
 				int indTopRight = addVertex(v, new Point3f(i+1, heights[i+1][j],j));
 				addColor(c,getCol(heights[i+1][j]));
+				addNormal(n, computeNormal(i+1,j));
 				
 				addTriangle(ind, indTopLeft, indBottomLeft, indTopRight);
 				addTriangle(ind, indTopRight, indBottomRight, indBottomLeft);
@@ -153,57 +151,54 @@ public class FractalLandscape extends AbstractSimpleShape{
 		this.vertices = v;
 		this.indices = ind;
 		this.colors = c;
+		
+		float[] normals = new float[n.size()];
+		for (int i=0; i<n.size(); i++){
+			normals[i] = n.get(i);
+		}
+		this.vertexData.addElement(normals, VertexData.Semantic.NORMAL, 3);
 	}
 	
+	private void addNormal(ArrayList<Float> n, Vector3f normal) {
+		n.add(normal.x);
+		n.add(normal.y);
+		n.add(normal.z);
+	}
+
 	private Color3f getCol(float f) {
 		Color3f col;
 		
-		col = new Color3f(1,0,1);
+		col = new Color3f(1,1,1);
 		
 		if(f <= 0.1)
 			col = new Color3f(0,1,0);
 		
 		if (f>= 0.1)
-			col = new Color3f(0,0,1);
+			col = new Color3f(0,1,.5f);
 		
 		if( f>=0.5)
-			col = new Color3f(1,0,1);
+			col = new Color3f(0,1,1);
+		
+		if(f>=0.8)
+			col = new Color3f(1,1,1);
 
 		return col;
 	}
-
-	private class Selectable{
-		private boolean selected = false;
-		private float val;
-		
-		public boolean getSelected(){
-			return selected;
-		}
-		
-		public float val(){
-			return val;
-		}
-		
-		public void setVal(float val){
-			this.val = val;
-			this.selected = true;
+	
+	private Vector3f computeNormal(int i, int j) {
+		try {
+			Vector3f v = new Vector3f(i, heights[i][j], j);
+			Vector3f down = new Vector3f(i + 1, heights[i][j + 1], j + 1);
+			Vector3f right = new Vector3f(i + 1, heights[i + 1][j],j);
+			down.sub(v);
+			right.sub(v);
+			Vector3f cross = new Vector3f();
+			cross.cross(down, right);
+			return cross;
+		} catch (ArrayIndexOutOfBoundsException e) {
+			return new Vector3f(0,1,0);
 		}
 	}
-	
-//	protected void setColors(){
-//		
-//		ArrayList<Float> c = new ArrayList<Float>();
-//		
-//		for(int i=0;i<vertices.size()/3;i++){
-//			Color3f col = new Color3f(0,1,0);
-//			addColor(c,col);
-//		}
-//		this.colors = c;
-//	}
-	
-//	private float getHeight(int i, int j){
-//		return heights[i][j];
-//	}
 
 	@Override
 	protected float x(float u, float v) {return 0;}
