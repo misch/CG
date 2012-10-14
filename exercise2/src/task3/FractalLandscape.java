@@ -42,8 +42,6 @@ public class FractalLandscape extends AbstractSimpleShape{
 	 * @param cornerHeight
 	 */
 	public FractalLandscape(int size, float cornerHeight, float granularity){
-//		ArrayList<Float> v = new ArrayList<Float>();
-//		ArrayList<Integer> indices = new ArrayList<Integer>();
 		
 		this.size = (int)Math.pow(2, size)+1;
 		this.heights = new Selectable[this.size][this.size];
@@ -51,26 +49,18 @@ public class FractalLandscape extends AbstractSimpleShape{
 			
 		heights[0][0] = new Selectable();
 		heights[0][0].setVal(0);
-//		iTopLeft = addVertex(v, new Point3f(0,heights[0][0].val(),0)); // TODO: a global "addVertices"-Method which might accept some param to scale the distance between two points
 		
 		heights[this.size-1][0] = new Selectable();
 		heights[this.size-1][0].setVal(0);
-//		iTopRight = addVertex(v,new Point3f(this.size-1,heights[this.size-1][0].val(),0));
 		
 		heights[0][this.size-1] = new Selectable();
 		heights[0][this.size-1].setVal(0);
-//		iBottomLeft = addVertex(v,new Point3f(0,heights[0][this.size-1].val(),this.size-1));
 		
 		heights[this.size-1][this.size-1] = new Selectable();
 		heights[this.size-1][this.size-1].setVal(cornerHeight);
-//		iBottomRight = addVertex(v,new Point3f(this.size-1,heights[this.size-1][this.size-1].val(),this.size-1));
+
+		squareStep(0,0,this.size-1, this.size-1, this.size);
 		
-//		addTriangle(indices, iTopLeft,iBottomLeft,iTopRight);
-//		addTriangle(indices, iBottomLeft,iTopRight,iBottomRight);
-		squareStep(this.size);
-		
-//		this.vertices = v;
-//		this.indices = ind;
 		addVerticesAndTriangles();
 		setColors();
 		
@@ -87,7 +77,7 @@ public class FractalLandscape extends AbstractSimpleShape{
 //	}
 	
 //	private void squareStep(int width){
-	private void squareStep(int iTopLeft, int jTopRight, länge){
+	private void squareStep(int iTopLeft, int jTopLeft, int iBottomRight, int jBottomRight, int länge){
 		
 		// gehe [länge] nach unten, um den punkt unten links zu finden
 		// gehe [länge] nach rechts, um den punkt oben rechts zu finden
@@ -97,97 +87,101 @@ public class FractalLandscape extends AbstractSimpleShape{
 		// berechne den Durchschnitt der Höhenwerte
 		// finde den mittelpunkt
 		
-		int iBottomLeft = i;
-		int jBottomLeft = j+länge;
+		int iBottomLeft = iTopLeft;
+		int jBottomLeft = jTopLeft+länge;
 		
-		int iBottomRight = i+länge;
-		int jBottomRight = j+länge;
+//		int iBottomRight = iTopLeft+länge;
+//		int jBottomRight = jTopLeft+länge;
 		
-		int iTopRight = i+länge;
-		int jTopRight = j;
+		int iTopRight = iTopLeft+länge;
+		int jTopRight = jTopLeft;
 		
-		float heightMiddle = (heights[ibottomLeft][jBottomLeft].val()+
+		float heightMiddle = (heights[iBottomLeft][jBottomLeft].val()+
 								heights[iBottomRight][jBottomRight].val()+
 								heights[iTopRight][jTopRight].val()+
 								heights[iTopLeft][jTopLeft].val())/4;
 		
+		int halbeLänge = länge/2;
 		
-//		for (int i = 0; i < this.size; i+=width)
-//			for (int j = 0; j < this.size; j+=width){
-//				
-//				float height1 = heights[i][j].val();
-//				float height2 = heights[i+width-1][j].val();
-//				float height3 = heights[i][j+width-1].val();
-//				float height4 = heights[i+width-1][j+width-1].val();
-//				
-//				float avg = (height1+height2+height3+height4)/4;
-//				int halfWidth = width/2;
-//				
-//				heights[i+halfWidth][j+halfWidth] = new Selectable();
-//				heights[i+halfWidth][j+halfWidth].setVal(avg);
-//				
-//				diamondStep();
-//				diamondStep();
-//			}
+		int iMiddle = iTopLeft + halbeLänge;
+		int jMiddle = iTopLeft + halbeLänge;
+		
+		heights[iMiddle][jMiddle] = new Selectable();
+		heights[iMiddle][jMiddle].setVal(heightMiddle);
+		
+		diamondStep(iTopLeft, jTopLeft, iBottomRight, jBottomRight);
+//		diamondStep(iTopLeft,jTopLeft,iBottomLeft,jBottomLeft);
+//		diamondStep(iTopLeft, jTopLeft, iTopRight, jTopRight);
+//		diamondStep(iTopRight, jTopRight, iBottomRight, jBottomRight);
+//		diamondStep(iBottomLeft, jBottomLeft, iBottomRight, jBottomRight);
+		
 	}
 	
-//	private void diamondStep(int[] left, int[] right){
 	private void diamondStep(int i1, int j1, int i2, int j2){
 		
 		// finde Mittelpunkt
-		int iMiddle = (Math.max(i1, i2)+Math.min(i1, i2))/2;
-		int jMiddle = (Math.max(j1,j2)+Math.min(j1, j2))/2;
+//		int iMiddle = (Math.max(i1, i2)+Math.min(i1, i2))/2;
+//		int jMiddle = (Math.max(j1,j2)+Math.min(j1, j2))/2;
+		int iMiddle = (i1+i2)/2;
+		int jMiddle = (j1+j2)/2;
 		
+		int distance = Math.abs(iMiddle - i1);
+		
+		setDiamondHeight(iMiddle, jMiddle-distance, distance);
+		setDiamondHeight(iMiddle, jMiddle+distance, distance);
+		setDiamondHeight(iMiddle-distance, jMiddle, distance);
+		setDiamondHeight(iMiddle+distance, jMiddle, distance);
+		 
+		squareStep(i1, j1, iMiddle, jMiddle, distance);
+		squareStep(iMiddle, jMiddle-distance,iMiddle+distance, jMiddle, distance );
+		squareStep(iMiddle, jMiddle, i2, j2, distance);
+		squareStep(iMiddle-distance, jMiddle, iMiddle, jMiddle+distance, distance);
+	}
+	
+	private void setDiamondHeight(int iDiamond, int jDiamond, int distance) {
 		int dividers = 0;
 		float sum = 0;
+		
 		// finde Nachbar(en)
-		int distance = Math.abs(iMiddle - i1);
-		if (iMiddle>0){
-			float heightLinkerNachbar = heights[iMiddle-distance][jMiddle].val();
+				
+		if (iDiamond>0){
+			// finde linken Nachbar
+			float heightLinkerNachbar = heights[iDiamond-distance][jDiamond].val();
 			dividers++;
 			sum += heightLinkerNachbar;
 		}
 		
-		if (iMiddle < this.size-1){
+		if (iDiamond < this.size-1){
 			// finde rechten Nachbar
-			float heightRechterNachbar = heights[iMiddle+distance][jMiddle].val();
+			float heightRechterNachbar = heights[iDiamond+distance][jDiamond].val();
 			dividers++;
 			sum += heightRechterNachbar;
 		}
 		
-		if (jMiddle > 0){
+		if (jDiamond > 0){
 			// finde oberen Nachba
-			float heightObererNachbar = heights[iMiddle][jMiddle-distance];
+			float heightObererNachbar = heights[iDiamond][jDiamond-distance].val();
 			dividers ++;
 			sum += heightObererNachbar;
 		}
 		
-		if (jMiddle < this.size-1){
+		if (jDiamond < this.size-1){
 			// finde unteren Nachbar
-			float heightUntererNachbar = heights[iMiddle][jMiddle+distance];
+			float heightUntererNachbar = heights[iDiamond][jDiamond+distance].val();
 			dividers++;
-			sum+=  heightObererNachbar;
+			sum+=  heightUntererNachbar;
 		}
 		
 		// berechne Durchschnitt...
 		float avg = sum/dividers;
 		
 		//...und setze Höhenwert
-		heights[iMiddle][jMiddle] = new Selectable();
-		heights[iMiddle][jMiddle].setVal(avg);
+		heights[iDiamond][jDiamond] = new Selectable();
+		heights[iDiamond][jDiamond].setVal(avg);
+
 		
-//		int halfWidth = width/2;	
-//		for (int i = halfWidth ;i<this.size; i+=width){
-//			for(int j = (i+halfWidth)%width; j < this.size; j+=width){
-//				float height1 = (heights[i-1][j] == null) ? null : heights[i-1][j].val();
-//				float height2 = (heights[i+1][j] == null) ? null : heights[i+1][j].val();
-//				float height3 = (heights[i][j-1] == null) ? null : heights[i][j-1].val();
-//				float height4 = (heights[i][j+1] == null) ? null : heights[i][j+1].val();
-//			}
-//		}
-	
 	}
-	
+
 	private void addVerticesAndTriangles(){
 		ArrayList<Float> v = new ArrayList<Float>();
 		ArrayList<Integer> ind = new ArrayList<Integer>();
