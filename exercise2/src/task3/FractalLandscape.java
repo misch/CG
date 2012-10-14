@@ -37,8 +37,7 @@ public class FractalLandscape extends AbstractSimpleShape{
 
 		diamondStep(0,0,this.size-1,this.size-1);
 		
-		addVerticesAndTriangles();
-		setColors();
+		addVerticesAndTrianglesandColors();
 	}
 
 	private void squareStep(int iComputedDiamondPoint,int jComputedDiamondPoint, int distance){
@@ -128,16 +127,24 @@ public class FractalLandscape extends AbstractSimpleShape{
 		heights[iSquare][jSquare]=avg;
 	}
 
-	private void addVerticesAndTriangles(){
+	private void addVerticesAndTrianglesandColors(){
 		ArrayList<Float> v = new ArrayList<Float>();
 		ArrayList<Integer> ind = new ArrayList<Integer>();
+		ArrayList<Float> c = new ArrayList<Float>();
 		
 		for(int i = 0; i<this.size-1; i++){
 			for(int j = 0; j<this.size-1;j++){
 				int indTopLeft = addVertex(v, new Point3f(i,heights[i][j],j));
+				addColor(c,getCol(heights[i][j]));
+				
 				int indBottomLeft = addVertex(v, new Point3f(i,heights[i][j+1],j+1));
+				addColor(c,getCol(heights[i][j+1]));
+				
 				int indBottomRight = addVertex(v, new Point3f(i+1,heights[i+1][j+1], j+1));
+				addColor(c,getCol(heights[i+1][j+1]));
+				
 				int indTopRight = addVertex(v, new Point3f(i+1, heights[i+1][j],j));
+				addColor(c,getCol(heights[i+1][j]));
 				
 				addTriangle(ind, indTopLeft, indBottomLeft, indTopRight);
 				addTriangle(ind, indTopRight, indBottomRight, indBottomLeft);
@@ -145,8 +152,26 @@ public class FractalLandscape extends AbstractSimpleShape{
 		}
 		this.vertices = v;
 		this.indices = ind;
+		this.colors = c;
 	}
 	
+	private Color3f getCol(float f) {
+		Color3f col;
+		
+		col = new Color3f(1,0,1);
+		
+		if(f <= 0.1)
+			col = new Color3f(0,1,0);
+		
+		if (f>= 0.1)
+			col = new Color3f(0,0,1);
+		
+		if( f>=0.5)
+			col = new Color3f(1,0,1);
+
+		return col;
+	}
+
 	private class Selectable{
 		private boolean selected = false;
 		private float val;
@@ -165,36 +190,23 @@ public class FractalLandscape extends AbstractSimpleShape{
 		}
 	}
 	
-	protected void setColors(){
-		
-		ArrayList<Float> c = new ArrayList<Float>();
-		
-		for(int i=0;i<vertices.size()/3;i++){
-			Color3f col = new Color3f(0,1,0);
-			addColor(c,col);
-		}
-		this.colors = c;
-	}
+//	protected void setColors(){
+//		
+//		ArrayList<Float> c = new ArrayList<Float>();
+//		
+//		for(int i=0;i<vertices.size()/3;i++){
+//			Color3f col = new Color3f(0,1,0);
+//			addColor(c,col);
+//		}
+//		this.colors = c;
+//	}
 	
-	private float getHeight(int i, int j){
-		return heights[i][j];
-	}
+//	private float getHeight(int i, int j){
+//		return heights[i][j];
+//	}
 
 	@Override
-	protected float x(float u, float v) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	protected float y(float u, float v) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	protected float z(float u, float v) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	protected float x(float u, float v) {return 0;}
+	protected float y(float u, float v) {return 0;}
+	protected float z(float u, float v) {return 0;}
 }
