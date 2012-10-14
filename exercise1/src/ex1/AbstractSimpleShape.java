@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3f;
+import javax.vecmath.Vector3f;
 
 import jrtr.Shape;
 import jrtr.VertexData;
@@ -92,6 +93,12 @@ public abstract class AbstractSimpleShape implements IForm {
 		indices.add(lowerPoint);
 		indices.add(nextUpperPoint);
 	}
+	
+	protected void addNormal(ArrayList<Float> n, Vector3f normal) {
+	n.add(normal.x);
+	n.add(normal.y);
+	n.add(normal.z);
+}
 	
 	
 	protected abstract float x(float u, float v);

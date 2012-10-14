@@ -1,46 +1,35 @@
 package task3;
 
 import java.util.ArrayList;
-import java.util.Random;
-
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
-
-import jrtr.VertexData;
-
 import ex1.AbstractSimpleShape;
 
 public class FractalLandscape extends AbstractSimpleShape{
 	private int size, cycles;
 	private float heights[][];
-//	private float granularity;
 	
-	/** The constructor has only one parameter "cornorHeight": all
-	 * four corner will have the same height for now.
-	 * @param size
-	 * @param cornerHeight
-	 */
 	public FractalLandscape(int size, float cornerHeight, float granularity){
 		
 		this.cycles = size;
 		this.size = (int)Math.pow(2, size)+1;
 		this.heights = new float[this.size][this.size];
-//		this.granularity = granularity;
 			
-		heights[0][0] = 0;
-		heights[this.size-1][0]=0;
+		heights[0][0] = -5;
+		heights[this.size-1][0]=6;
 		heights[0][this.size-1]=0;
-		heights[this.size-1][this.size-1]=cornerHeight;
+		heights[this.size-1][this.size-1]=0;
 
-		for (int c=0; c<=cycles; c++){
-			diamondStep((int)(this.size/(Math.pow(2, c))));
-			squareStep((int)(this.size/(Math.pow(2, c))));
+		int width = this.size-1;
+
+		for (int c=0; c<=cycles-1; c++){
+			diamondStep(width);
+			squareStep(width);
+			width /=2;
 		}
 		
-//		diamondStep(0,0,this.size-1,this.size-1);
-		
-		addVerticesAndTrianglesandColors();
+		composeVertexData();
 	}
 
 	private void diamondStep(int width){
@@ -59,33 +48,14 @@ public class FractalLandscape extends AbstractSimpleShape{
 	private void squareStep(int width){
 		int distance = width/2;
 		
-//		for (int i = 0; i<this.size; i+= width-1){
-//			for (int j = 0; j<this.size; j+= width-1){
-//				setSquareHeight(i, j+distance, distance);
-//				setSquareHeight(i+distance, j, distance);
-//			}
-//		}
-		
-		for (int i = 0; i+distance<this.size; i++){
-			int first = 0;
-			if (i%2==0)
-				first = 1;
-			
-			for(int j = first; j+distance<this.size; j+=2){
-				setSquareHeight(i, j+distance, distance);
-				setSquareHeight(i+distance,j, distance);
+		for (int i = distance; i+distance < this.size; i+=width){
+			for (int j = distance; j+distance<this.size; j+=width){
+				setSquareHeight(i,j-distance,distance);
+				setSquareHeight(i,j+distance,distance);
+				setSquareHeight(i-distance,j,distance);
+				setSquareHeight(i+distance,j,distance);
 			}
 		}
-		
-//		for (int i = 0; i<=cycles;i++){
-//			setSquareHeight(i, i+distance, distance);
-//			setSquareHeight(i+distance, i, distance);
-//		}
-		
-//		for (int i = distance; i <: cycles; i++){
-//			setSquareHeight(i, i-distance, distance);
-//			setSquareHeight(i+distance, )
-//		}
 	}
 	
 	private void setDiamondHeight(int iDiamond, int jDiamond, int distance) {
@@ -95,7 +65,7 @@ public class FractalLandscape extends AbstractSimpleShape{
 			heights[iDiamond+distance][jDiamond-distance]+
 			heights[iDiamond+distance][jDiamond+distance])/4;
 		
-			heights[iDiamond][jDiamond]=heightDiamond + (float)Math.random();
+			heights[iDiamond][jDiamond]=heightDiamond + (float) Math.random();
 	}
 	
 	private void setSquareHeight(int iSquare, int jSquare, int distance){
@@ -139,7 +109,7 @@ public class FractalLandscape extends AbstractSimpleShape{
 		heights[iSquare][jSquare]=avg + (float)Math.random();
 	}
 
-	private void addVerticesAndTrianglesandColors(){
+	private void composeVertexData(){
 		ArrayList<Float> v = new ArrayList<Float>();
 		ArrayList<Integer> ind = new ArrayList<Integer>();
 		ArrayList<Float> c = new ArrayList<Float>();
@@ -172,12 +142,6 @@ public class FractalLandscape extends AbstractSimpleShape{
 		this.colors = c;
 		this.normals = n;
 	}
-	
-	private void addNormal(ArrayList<Float> n, Vector3f normal) {
-		n.add(normal.x);
-		n.add(normal.y);
-		n.add(normal.z);
-	}
 
 	private Color3f getCol(float f) {
 		Color3f col;
@@ -195,7 +159,8 @@ public class FractalLandscape extends AbstractSimpleShape{
 		
 		if(f>=0.8)
 			col = new Color3f(1,1,1);
-
+		if(f>1)
+			col = new Color3f(1,0,0);
 		return col;
 	}
 	

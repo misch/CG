@@ -152,6 +152,7 @@ public class ShowLandScape {
 		Frustum frustum = new Frustum(1,100,1,(float)(Math.PI/3));
 		
 		sceneManager = new SimpleSceneManager(camera,frustum);
+//		sceneManager = new SimpleSceneManager(new Camera(), new Frustum());
 		sceneManager.addShape(shape);
 
 		// Make a render panel. The init function of the renderPanel
