@@ -15,6 +15,7 @@ public class Camera {
 	private Vector3f centerOfProjection = new Vector3f();;
 	private Vector3f lookAtPoint = new Vector3f();
 	private Vector3f upVector = new Vector3f();
+	private Vector3f xAxis,yAxis,zAxis;
 
 	/**
 	 * Construct a camera with a default camera matrix. The camera
@@ -56,6 +57,10 @@ public class Camera {
 		
 		Vector4f translationVector = new Vector4f(centerOfProjection);
 		translationVector.setW(1);
+		
+		this.setxAxis(xAxis);
+		this.setyAxis(yAxis);
+		this.setzAxis(zAxis);
 		
 		Matrix4f newCameraMatrix = new Matrix4f();
 		newCameraMatrix.setColumn(0, new Vector4f(xAxis));
@@ -104,6 +109,30 @@ public class Camera {
 	public void setUpVector(Vector3f upVector) {
 		this.upVector = upVector;
 		computeCameraMatrix();
+	}
+
+	public Vector3f getzAxis() {
+		return zAxis;
+	}
+
+	public void setzAxis(Vector3f zAxis) {
+		this.zAxis = zAxis;
+	}
+
+	public Vector3f getxAxis() {
+		return xAxis;
+	}
+
+	public void setxAxis(Vector3f xAxis) {
+		this.xAxis = xAxis;
+	}
+
+	public Vector3f getyAxis() {
+		return yAxis;
+	}
+
+	public void setyAxis(Vector3f yAxis) {
+		this.yAxis = yAxis;
 	}
 	
 }

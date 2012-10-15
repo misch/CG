@@ -74,16 +74,14 @@ public class ShowLandScape {
 		@Override
 		public void keyPressed(KeyEvent e) {
 			switch(e.getKeyChar()) {
-			case 'w':
-				goTowards = new Vector3f(cam.getLookAtPoint());
-				goFrom = new Vector3f(cam.getCenterOfProjection());
-				
-				goTowards.sub(goFrom);
-				goTowards.normalize();
-				
-				Vector3f zoomIn = cam.getCenterOfProjection();
-				zoomIn.add(goTowards);
-				cam.setCenterOfProjection(zoomIn);
+			case 'w':				
+				Vector3f zoomIn = cam.getzAxis();
+				zoomIn.scale(-1);
+				zoomIn.normalize();
+
+				Vector3f goFrom = new Vector3f(cam.getCenterOfProjection());
+				goFrom.add(zoomIn);
+				cam.setCenterOfProjection(goFrom);
 				
 				renderPanel.getCanvas().repaint();
 				break;
@@ -100,7 +98,13 @@ public class ShowLandScape {
 				
 				renderPanel.getCanvas().repaint();
 				break;
-				}
+			case 'd':
+				goTowards = new Vector3f(cam.getCenterOfProjection());
+				goFrom = new Vector3f(cam.getUpVector());
+				
+				goTowards.cross(goTowards, goFrom);
+			}
+				
 		}
 
 		@Override
