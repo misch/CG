@@ -1,5 +1,7 @@
 package task3;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -60,6 +62,59 @@ public class ShowLandScape {
 	* A timer task that generates an animation. This task triggers
 	* the redrawing of the 3D scene every time it is executed.
 	*/
+	
+	public static class MyKeyListener implements KeyListener {
+		
+		Camera cam;
+		Vector3f goTowards, goFrom;
+		public MyKeyListener(Camera cam){
+			this.cam = cam;
+		}
+		
+		@Override
+		public void keyPressed(KeyEvent e) {
+			switch(e.getKeyChar()) {
+			case 'w':
+				goTowards = new Vector3f(cam.getLookAtPoint());
+				goFrom = new Vector3f(cam.getCenterOfProjection());
+				
+				goTowards.sub(goFrom);
+				goTowards.normalize();
+				
+				Vector3f zoomIn = cam.getCenterOfProjection();
+				zoomIn.add(goTowards);
+				cam.setCenterOfProjection(zoomIn);
+				
+				renderPanel.getCanvas().repaint();
+				break;
+			case 's':
+				goTowards = new Vector3f(cam.getCenterOfProjection());
+				goFrom = new Vector3f(cam.getLookAtPoint());
+				
+				goTowards.sub(goFrom);
+				goTowards.normalize();
+				
+				Vector3f zoomOut = cam.getCenterOfProjection();
+				zoomOut.add(goTowards);
+				cam.setCenterOfProjection(zoomOut);
+				
+				renderPanel.getCanvas().repaint();
+				break;
+				}
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void keyTyped(KeyEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+	}
 	
 	/**
 	* A mouse listener for the main window of this application. This can be
@@ -148,7 +203,7 @@ public class ShowLandScape {
 
 		shape = new Shape(new FractalLandscape(size, cornerHeight, granularity).getVertexData());
 
-		Camera camera = new Camera(new Vector3f(0,100,200), new Vector3f(((2^size)+1)/2,0,((2^size)+1)/2), new Vector3f(0,1,0));
+		Camera camera = new Camera(new Vector3f(100,100,200), new Vector3f(((2^size)+1)/2,0,((2^size)+1)/2), new Vector3f(0,1,0));
 		Frustum frustum = new Frustum(1,1000,1,(float)(Math.PI/3));
 		
 		sceneManager = new SimpleSceneManager(camera,frustum);
@@ -169,6 +224,8 @@ public class ShowLandScape {
 		SimpleMouseListener ml = new SimpleMouseListener();
 		renderPanel.getCanvas().addMouseListener(ml);
 		renderPanel.getCanvas().addMouseMotionListener(ml);
+		renderPanel.getCanvas().addKeyListener(new MyKeyListener(camera));
+		
 		renderPanel.getCanvas().repaint();
 		jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		jframe.setVisible(true); // show window

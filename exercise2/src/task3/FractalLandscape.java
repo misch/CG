@@ -160,8 +160,7 @@ public class FractalLandscape extends AbstractSimpleShape{
 		if (f> 70)
 			col = new Color3f(1,1,1);
 		
-//		if( f>100)
-//			col = new Color3f(1,1,1);
+//		if( fyl = new Color3f(1,1,1);
 		
 //		if(f>=0.8)
 //			col = new Color3f(1,1,1);
