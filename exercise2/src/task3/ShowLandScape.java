@@ -142,14 +142,14 @@ public class ShowLandScape {
 	*/
 	public static void main(String[] args){	
 
-		int size = 4;
+		int size = 7;
 		float cornerHeight = 1;
 		float granularity = 1;
 
 		shape = new Shape(new FractalLandscape(size, cornerHeight, granularity).getVertexData());
 
-		Camera camera = new Camera(new Vector3f(0,0,40), new Vector3f(0,0,0), new Vector3f(0,1,0));
-		Frustum frustum = new Frustum(1,100,1,(float)(Math.PI/3));
+		Camera camera = new Camera(new Vector3f(0,100,200), new Vector3f(((2^size)+1)/2,0,((2^size)+1)/2), new Vector3f(0,1,0));
+		Frustum frustum = new Frustum(1,1000,1,(float)(Math.PI/3));
 		
 		sceneManager = new SimpleSceneManager(camera,frustum);
 //		sceneManager = new SimpleSceneManager(new Camera(), new Frustum());
