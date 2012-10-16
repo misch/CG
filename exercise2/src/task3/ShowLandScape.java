@@ -67,6 +67,7 @@ public class ShowLandScape {
 		
 		Camera cam;
 		Vector3f goTowards, goFrom;
+		Vector3f camSittingAt, camLookingAt;
 		public MyKeyListener(Camera cam){
 			this.cam = cam;
 		}
@@ -82,8 +83,6 @@ public class ShowLandScape {
 				goFrom = new Vector3f(cam.getCenterOfProjection());
 				goFrom.add(dirZoomIn);
 				cam.setCenterOfProjection(goFrom);
-				
-				renderPanel.getCanvas().repaint();
 				break;
 				
 			case 's':
@@ -91,25 +90,37 @@ public class ShowLandScape {
 				dirZoomOut.normalize();
 				
 				goFrom = new Vector3f(cam.getCenterOfProjection());
-				
-//				goFrom = new Vector3f(cam.getLookAtPoint());
-				
-//				goTowards.sub(goFrom);
-//				goTowards.normalize();
-				
-//				Vector3f zoomOut = cam.getCenterOfProjection();
-//				zoomOut.add(goTowards);
 				goFrom.add(dirZoomOut);
 				cam.setCenterOfProjection(goFrom);
-				
-				renderPanel.getCanvas().repaint();
 				break;
 			case 'd':
-				goTowards = new Vector3f(cam.getCenterOfProjection());
-				goFrom = new Vector3f(cam.getUpVector());
+				Vector3f dirGoRight = cam.getxAxis();
+				dirGoRight.normalize();
 				
-				goTowards.cross(goTowards, goFrom);
+				camSittingAt = new Vector3f(cam.getCenterOfProjection());
+				camLookingAt = new Vector3f(cam.getLookAtPoint());
+				camSittingAt.add(dirGoRight);
+				camLookingAt.add(dirGoRight);
+				
+				cam.setCenterOfProjection(camSittingAt);
+				cam.setLookAtPoint(camLookingAt);
+				break;
+			case 'a':
+				Vector3f dirGoLeft = cam.getxAxis();
+				dirGoLeft.scale(-1);
+				dirGoLeft.normalize();
+				
+				camSittingAt = new Vector3f(cam.getCenterOfProjection());
+				camLookingAt = new Vector3f(cam.getLookAtPoint());
+				
+				camSittingAt.add(dirGoLeft);
+				camLookingAt.add(dirGoLeft);
+				
+				cam.setCenterOfProjection(camSittingAt);
+				cam.setLookAtPoint(camLookingAt);
+				break;	
 			}
+			renderPanel.getCanvas().repaint();
 				
 		}
 
