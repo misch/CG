@@ -75,26 +75,32 @@ public class ShowLandScape {
 		public void keyPressed(KeyEvent e) {
 			switch(e.getKeyChar()) {
 			case 'w':				
-				Vector3f zoomIn = cam.getzAxis();
-				zoomIn.scale(-1);
-				zoomIn.normalize();
+				Vector3f dirZoomIn = cam.getzAxis();
+				dirZoomIn.scale(-1);
+				dirZoomIn.normalize();
 
-				Vector3f goFrom = new Vector3f(cam.getCenterOfProjection());
-				goFrom.add(zoomIn);
+				goFrom = new Vector3f(cam.getCenterOfProjection());
+				goFrom.add(dirZoomIn);
 				cam.setCenterOfProjection(goFrom);
 				
 				renderPanel.getCanvas().repaint();
 				break;
+				
 			case 's':
-				goTowards = new Vector3f(cam.getCenterOfProjection());
-				goFrom = new Vector3f(cam.getLookAtPoint());
+				Vector3f dirZoomOut = cam.getzAxis();
+				dirZoomOut.normalize();
 				
-				goTowards.sub(goFrom);
-				goTowards.normalize();
+				goFrom = new Vector3f(cam.getCenterOfProjection());
 				
-				Vector3f zoomOut = cam.getCenterOfProjection();
-				zoomOut.add(goTowards);
-				cam.setCenterOfProjection(zoomOut);
+//				goFrom = new Vector3f(cam.getLookAtPoint());
+				
+//				goTowards.sub(goFrom);
+//				goTowards.normalize();
+				
+//				Vector3f zoomOut = cam.getCenterOfProjection();
+//				zoomOut.add(goTowards);
+				goFrom.add(dirZoomOut);
+				cam.setCenterOfProjection(goFrom);
 				
 				renderPanel.getCanvas().repaint();
 				break;
@@ -201,7 +207,7 @@ public class ShowLandScape {
 	*/
 	public static void main(String[] args){	
 
-		int size = 7;
+		int size = 8;
 		float cornerHeight = 1;
 		float granularity = 1;
 

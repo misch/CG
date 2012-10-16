@@ -20,17 +20,19 @@ public class FractalLandscape extends AbstractSimpleShape{
 		this.size = (int)Math.pow(2, size)+1;
 		this.heights = new float[this.size][this.size];
 			
-		heights[0][0] = 30;
-		heights[this.size-1][0]=50;
-		heights[0][this.size-1]=11;
-		heights[this.size-1][this.size-1]=0;
+		heights[0][0] = -20;
+		heights[this.size-1][0]=-20;
+		heights[0][this.size-1]=-20;
+		heights[this.size-1][this.size-1]=100;
 
 		int width = this.size-1;
 		float randomScale = this.size;
-		for (int c=0; c<=cycles-1; c++){
+//		float randomScale = 0;
+		for (int c=0; c<=cycles; c++){
 //			randomScale = 3/(c+1);
 			randomScale /=2;
 			diamondStep(width, randomScale);
+//			randomScale/=2;
 			squareStep(width, randomScale);
 			width /=2;
 		}
@@ -71,7 +73,7 @@ public class FractalLandscape extends AbstractSimpleShape{
 			heights[iDiamond+distance][jDiamond-distance]+
 			heights[iDiamond+distance][jDiamond+distance])/4;
 		
-			heights[iDiamond][jDiamond]=heightDiamond + (float) Math.random()*randomScale;
+			heights[iDiamond][jDiamond]=heightDiamond + (((float) Math.random()-0.5f)*randomScale);
 	}
 	
 	private void setSquareHeight(int iSquare, int jSquare, int distance, float randomScale){
@@ -112,7 +114,7 @@ public class FractalLandscape extends AbstractSimpleShape{
 		float avg = sum/dividers;
 		
 		//...und setze Höhenwert
-		heights[iSquare][jSquare]=avg + (float)Math.random() * randomScale;
+		heights[iSquare][jSquare]=avg + (((float)Math.random()-0.5f) * randomScale);
 	}
 
 	private void composeVertexData(){
@@ -159,20 +161,8 @@ public class FractalLandscape extends AbstractSimpleShape{
 		
 		if (f> 70)
 			col = new Color3f(1,1,1);
-		
-//		if( fyl = new Color3f(1,1,1);
-		
-//		if(f>=0.8)
-//			col = new Color3f(1,1,1);
-//		if(f>1)
-//			col = new Color3f(1,0,0);
-//		
-//		if(f>1.5)
-//			col = new Color3f(1,1,0);
-		
-		return col;
-		
-		
+				
+		return col;	
 	}
 	
 	private Vector3f computeNormal(int i, int j) {
@@ -185,7 +175,8 @@ public class FractalLandscape extends AbstractSimpleShape{
 			Vector3f cross = new Vector3f();
 			cross.cross(down, right);
 			return cross;
-		} catch (ArrayIndexOutOfBoundsException e) {
+		}
+		catch (ArrayIndexOutOfBoundsException e) {
 			return new Vector3f(0,1,0);
 		}
 	}
