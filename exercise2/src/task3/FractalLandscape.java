@@ -6,10 +6,6 @@ import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
 import ex1.AbstractSimpleShape;
 
-// TODO: 
-//	add more (and reasonable) colors
-//	change interval of random value for each step
-
 public class FractalLandscape extends AbstractSimpleShape{
 	private int size, cycles;
 	private float heights[][];
@@ -27,7 +23,6 @@ public class FractalLandscape extends AbstractSimpleShape{
 
 		int width = this.size-1;
 		float randomScale = this.size;
-//		float randomScale = 0;
 		for (int c=0; c<=cycles; c++){
 			randomScale /=2;
 			diamondStep(width, randomScale);
