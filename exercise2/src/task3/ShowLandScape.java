@@ -50,11 +50,6 @@ public class ShowLandScape {
 		{
 			renderContext = r;
 			renderContext.setSceneManager(sceneManager);
-
-			// Register a timer task
-//			Timer timer = new Timer();
-//			angle = 0.01f;
-//			timer.scheduleAtFixedRate(new AnimationTask(), 0, 10);
 		}		
 	}
 	
@@ -83,6 +78,10 @@ public class ShowLandScape {
 				goFrom = new Vector3f(cam.getCenterOfProjection());
 				goFrom.add(dirZoomIn);
 				cam.setCenterOfProjection(goFrom);
+				
+				camLookingAt = new Vector3f(cam.getLookAtPoint());
+				camLookingAt.add(dirZoomIn);
+				cam.setLookAtPoint(camLookingAt);
 				break;
 				
 			case 's':
@@ -92,6 +91,9 @@ public class ShowLandScape {
 				goFrom = new Vector3f(cam.getCenterOfProjection());
 				goFrom.add(dirZoomOut);
 				cam.setCenterOfProjection(goFrom);
+				camLookingAt = new Vector3f(cam.getLookAtPoint());
+				camLookingAt.add(dirZoomOut);
+				cam.setLookAtPoint(camLookingAt);
 				break;
 			case 'd':
 				Vector3f dirGoRight = cam.getxAxis();
