@@ -121,7 +121,6 @@ public class ShowLandScape {
 				break;	
 			}
 			renderPanel.getCanvas().repaint();
-				
 		}
 
 		@Override
@@ -143,7 +142,13 @@ public class ShowLandScape {
 	*/
 	public static class SimpleMouseListener implements MouseListener, MouseMotionListener
 	{
-	    private Vector3f initialVec; 	
+	   private Camera cam = new Camera();
+	   
+	   public SimpleMouseListener(Camera cam){
+		   this.cam = cam;
+	   }
+		
+		private Vector3f initialVec; 	
 		public void mousePressed(MouseEvent e) {
 			initialVec = projectMousePositionToSphere(e.getX(), e.getY());
 		}
@@ -156,15 +161,41 @@ public class ShowLandScape {
 		
 
 		public void mouseDragged(MouseEvent e) {
-	    	Vector3f newVec = projectMousePositionToSphere(e.getX(),e.getY());
+//	    	Vector3f newVec = projectMousePositionToSphere(e.getX(),e.getY());
+			Vector3f newVecUpDown = projectMousePositionToTranslation(initialVec.x, e.getY());
 			
-	    	executeRotation(newVec);
+	    	Vector3f camLookingAt = new Vector3f(cam.getLookAtPoint());
+	    	
+//	    	Vector3f newVecUpDown = projectMousePositionToSphere(initialVec.x, e.getY());
+//	    	Vector3f newVecUpDown = projectMousePositionToSphere(0,0);
+//	    	Vector3f newVecUpDown = new Vector3f(0,e.getY(),0);
+	    	newVecUpDown.normalize();
+	    	Vector3f newVecAroundWorld = projectMousePositionToSphere(e.getX(), initialVec.y);
+	    	
+	    	camLookingAt.add(newVecUpDown);
+	    	
+	    	cam.setLookAtPoint(camLookingAt);
+	    	renderPanel.getCanvas().repaint();
+//	    	executeRotation(newVecUpDown);
+//	    	executeRotation(newVecAroundWorld);
 			
+		}
+		private Vector3f projectMousePositionToTranslation(float posX, float posY) {
+			float transX = posX - initialVec.x;
+			System.out.println("initial y: " + initialVec.y);
+			System.out.println("posY: " + posY);
+			float transY = posY - initialVec.y;
+			System.out.println("transY: " + transY);
+			
+			
+			Vector3f translationVector = new Vector3f(0, transY, 0);
+			System.out.println(translationVector.x + ";" + translationVector.y +";" + translationVector.z);
+			return translationVector;
 		}
 		@Override
 		public void mouseMoved(MouseEvent arg0) {}
 		
-		private Vector3f projectMousePositionToSphere(float posX, float posY){ // should be something with the mouse :-)
+		private Vector3f projectMousePositionToSphere(float posX, float posY){
 			float width = renderPanel.getCanvas().getWidth();
 			float height = renderPanel.getCanvas().getHeight();
 			
@@ -190,20 +221,21 @@ public class ShowLandScape {
 		}
 		
 		private void executeRotation(Vector3f newVec){
-			Vector3f rotAxis = new Vector3f();
-			initialVec.normalize();
-			newVec.normalize();
+			Vector3f rotAxis = new Vector3f(0,1,0);
+//			initialVec.normalize();
+//			newVec.normalize();
 			
-			rotAxis.cross(initialVec, newVec);
-			rotAxis.normalize();
-			float angle = (float)(Math.acos(initialVec.dot(newVec)));
+//			rotAxis.cross(initialVec, newVec);
+//			rotAxis.normalize();
+//			float angle = (float)(Math.acos(initialVec.dot(newVec)));
 			
-			Matrix4f initMatrix = shape.getTransformation();
-			Matrix4f rotMatrix = new Matrix4f();
-			rotMatrix.setIdentity();
-			rotMatrix.setRotation(new AxisAngle4f(rotAxis,angle));
-			
-			initMatrix.mul(rotMatrix,initMatrix);
+//			Matrix4f initMatrix = cam.getCameraMatrix();
+//			Matrix4f initMatrix = shape.getTransformation(); 
+//			Matrix4f rotMatrix = new Matrix4f();
+//			rotMatrix.setIdentity();
+//			rotMatrix.setRotation(new AxisAngle4f(rotAxis,angle));
+//			
+//			initMatrix.mul(rotMatrix,initMatrix);
 			renderPanel.getCanvas().repaint();
 
 			initialVec = newVec;
@@ -218,7 +250,7 @@ public class ShowLandScape {
 	*/
 	public static void main(String[] args){	
 
-		int size = 8;
+		int size = 7;
 		float cornerHeight = 1;
 		float granularity = 1;
 
@@ -242,7 +274,7 @@ public class ShowLandScape {
 		jframe.getContentPane().add(renderPanel.getCanvas());// put the canvas into a JFrame window
 
 		// Add a mouse listener
-		SimpleMouseListener ml = new SimpleMouseListener();
+		SimpleMouseListener ml = new SimpleMouseListener(camera);
 		renderPanel.getCanvas().addMouseListener(ml);
 		renderPanel.getCanvas().addMouseMotionListener(ml);
 		renderPanel.getCanvas().addKeyListener(new MyKeyListener(camera));

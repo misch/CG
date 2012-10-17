@@ -20,19 +20,17 @@ public class FractalLandscape extends AbstractSimpleShape{
 		this.size = (int)Math.pow(2, size)+1;
 		this.heights = new float[this.size][this.size];
 			
-		heights[0][0] = -20;
-		heights[this.size-1][0]=-20;
-		heights[0][this.size-1]=-20;
-		heights[this.size-1][this.size-1]=100;
+		heights[0][0] = 150;
+		heights[this.size-1][0]=100;
+		heights[0][this.size-1]=20;
+		heights[this.size-1][this.size-1]=60;
 
 		int width = this.size-1;
 		float randomScale = this.size;
 //		float randomScale = 0;
 		for (int c=0; c<=cycles; c++){
-//			randomScale = 3/(c+1);
 			randomScale /=2;
 			diamondStep(width, randomScale);
-//			randomScale/=2;
 			squareStep(width, randomScale);
 			width /=2;
 		}
