@@ -143,14 +143,17 @@ public class ShowLandScape {
 	public static class SimpleMouseListener implements MouseListener, MouseMotionListener
 	{
 	   private Camera cam = new Camera();
+	   private Vector3f initialVec; 
+	   private int initPosX, initPosY;
 	   
 	   public SimpleMouseListener(Camera cam){
 		   this.cam = cam;
 	   }
 		
-		private Vector3f initialVec; 	
 		public void mousePressed(MouseEvent e) {
 			initialVec = projectMousePositionToSphere(e.getX(), e.getY());
+			initPosX = e.getX();
+			initPosY = e.getY();
 		}
 	    public void mouseReleased(MouseEvent e) {
 	    	initialVec = null;
@@ -161,35 +164,38 @@ public class ShowLandScape {
 		
 
 		public void mouseDragged(MouseEvent e) {
-//	    	Vector3f newVec = projectMousePositionToSphere(e.getX(),e.getY());
-			Vector3f newVecUpDown = projectMousePositionToTranslation(initialVec.x, e.getY());
 			
+			
+			Vector3f newVecUpDown = new Vector3f(0,initPosY- e.getY(), 0);
+			Vector3f newVecLeftRight = new Vector3f(e.getX()-initPosX, 0,0);
+			
+//			Vector3f newVecUpDown = new Vector3f(0,0,0);
+//			newVecUpDown.add(new Vector3f(0,initPosY-e.getY(),0));
+			if (newVecUpDown.length() > 0){
+				newVecUpDown.normalize();
+				newVecUpDown.scale(2);
+			}
+			
+			if (newVecLeftRight.length() > 0){
+				newVecLeftRight.normalize();
+				newVecLeftRight.scale(2);
+			}
+
 	    	Vector3f camLookingAt = new Vector3f(cam.getLookAtPoint());
-	    	
-//	    	Vector3f newVecUpDown = projectMousePositionToSphere(initialVec.x, e.getY());
-//	    	Vector3f newVecUpDown = projectMousePositionToSphere(0,0);
-//	    	Vector3f newVecUpDown = new Vector3f(0,e.getY(),0);
-	    	newVecUpDown.normalize();
-	    	Vector3f newVecAroundWorld = projectMousePositionToSphere(e.getX(), initialVec.y);
-	    	
 	    	camLookingAt.add(newVecUpDown);
+    	
 	    	
 	    	cam.setLookAtPoint(camLookingAt);
-	    	renderPanel.getCanvas().repaint();
-//	    	executeRotation(newVecUpDown);
-//	    	executeRotation(newVecAroundWorld);
-			
+	    	this.initPosX = e.getX();
+	    	this.initPosY = e.getY();
+	    	renderPanel.getCanvas().repaint();			
 		}
 		private Vector3f projectMousePositionToTranslation(float posX, float posY) {
-			float transX = posX - initialVec.x;
-			System.out.println("initial y: " + initialVec.y);
-			System.out.println("posY: " + posY);
-			float transY = posY - initialVec.y;
-			System.out.println("transY: " + transY);
+			float transX = posX - initPosX;
+			float transY = posY - initPosY;
 			
 			
-			Vector3f translationVector = new Vector3f(0, transY, 0);
-			System.out.println(translationVector.x + ";" + translationVector.y +";" + translationVector.z);
+			Vector3f translationVector = new Vector3f(transX, transY, 0);
 			return translationVector;
 		}
 		@Override
