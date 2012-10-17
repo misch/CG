@@ -183,6 +183,7 @@ public class ShowLandScape {
 
 	    	Vector3f camLookingAt = new Vector3f(cam.getLookAtPoint());
 	    	camLookingAt.add(newVecUpDown);
+	    	camLookingAt.add(newVecLeftRight);
     	
 	    	
 	    	cam.setLookAtPoint(camLookingAt);
