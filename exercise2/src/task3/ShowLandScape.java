@@ -124,10 +124,7 @@ public class ShowLandScape {
 		}
 
 		@Override
-		public void keyReleased(KeyEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
+		public void keyReleased(KeyEvent e) {}
 
 		@Override
 		public void keyTyped(KeyEvent e) {}
@@ -140,7 +137,6 @@ public class ShowLandScape {
 	public static class SimpleMouseListener implements MouseListener, MouseMotionListener
 	{
 	   private Camera cam = new Camera();
-//	   private Vector3f initialVec; 
 	   private int initPosX, initPosY;
 	   
 	   public SimpleMouseListener(Camera cam){
@@ -148,70 +144,42 @@ public class ShowLandScape {
 	   }
 		
 		public void mousePressed(MouseEvent e) {
-//			initialVec = projectMousePositionToSphere(e.getX(), e.getY());
 			initPosX = e.getX();
 			initPosY = e.getY();
 		}
-	    public void mouseReleased(MouseEvent e) {
-//	    	initialVec = null;
-	    }
+	    public void mouseReleased(MouseEvent e) {}
 	    public void mouseEntered(MouseEvent e) {}
 	    public void mouseExited(MouseEvent e) {}
 	    public void mouseClicked(MouseEvent e) {}
+		public void mouseMoved(MouseEvent arg0) {}
 		
-
 		public void mouseDragged(MouseEvent e) {
 						
-//			Vector3f newVecUpDown = new Vector3f(0,e.getY()-initPosY, 0);
-//			Vector3f newVecLeftRight = new Vector3f(initPosX-e.getX(), 0,0);
-			
 			Vector3f camLookingAt = new Vector3f(cam.getLookAtPoint());
+			
 			Vector3f pivotTranslation = new Vector3f(cam.getCenterOfProjection());
 			camLookingAt.sub(pivotTranslation);
 			
-			// Rotation //
-			AxisAngle4f axisAngle = new AxisAngle4f(cam.getyAxis(), (e.getX()-initPosX)*0.005f);
+			AxisAngle4f axisAngleLeftRight = new AxisAngle4f(cam.getyAxis(), (e.getX()-initPosX)*0.005f);
+			AxisAngle4f axisAngleUpDown = new AxisAngle4f(cam.getxAxis(), (e.getY()-initPosY)*0.005f);
 			
 			Matrix4f rotMatrix = new Matrix4f();
 			rotMatrix.setIdentity();
-			rotMatrix.setRotation(axisAngle);
 			
+			rotMatrix.setRotation(axisAngleLeftRight);			
+			rotMatrix.transform(camLookingAt);
+			
+			rotMatrix.setRotation(axisAngleUpDown);
 			rotMatrix.transform(camLookingAt);
 			
 			camLookingAt.add(pivotTranslation);
 			
 			cam.setLookAtPoint(camLookingAt);
 			
-			
-//			if (newVecUpDown.length() > 0){
-//				newVecUpDown.normalize();
-//				newVecUpDown.scale(2);
-//			}
-//			
-//			if (newVecLeftRight.length() > 0){
-//				newVecLeftRight.normalize();
-//				newVecLeftRight.scale(2);
-//			}
-
-//	    	Vector3f camLookingAt = new Vector3f(cam.getLookAtPoint());
-//	    	camLookingAt.add(newVecUpDown);
-//	    	camLookingAt.add(newVecLeftRight);
-    	
-//	    	cam.setLookAtPoint(camLookingAt);
 	    	this.initPosX = e.getX();
 	    	this.initPosY = e.getY();
 	    	renderPanel.getCanvas().repaint();			
 		}
-//		private Vector3f projectMousePositionToTranslation(float posX, float posY) {
-//			float transX = posX - initPosX;
-//			float transY = posY - initPosY;
-//			
-//			
-//			Vector3f translationVector = new Vector3f(transX, transY, 0);
-//			return translationVector;
-//		}
-		@Override
-		public void mouseMoved(MouseEvent arg0) {}
 		
 //		private Vector3f projectMousePositionToSphere(float posX, float posY){
 //			float width = renderPanel.getCanvas().getWidth();
