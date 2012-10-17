@@ -130,10 +130,7 @@ public class ShowLandScape {
 		}
 
 		@Override
-		public void keyTyped(KeyEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
+		public void keyTyped(KeyEvent e) {}
 	}
 	
 	/**
@@ -143,7 +140,7 @@ public class ShowLandScape {
 	public static class SimpleMouseListener implements MouseListener, MouseMotionListener
 	{
 	   private Camera cam = new Camera();
-	   private Vector3f initialVec; 
+//	   private Vector3f initialVec; 
 	   private int initPosX, initPosY;
 	   
 	   public SimpleMouseListener(Camera cam){
@@ -151,12 +148,12 @@ public class ShowLandScape {
 	   }
 		
 		public void mousePressed(MouseEvent e) {
-			initialVec = projectMousePositionToSphere(e.getX(), e.getY());
+//			initialVec = projectMousePositionToSphere(e.getX(), e.getY());
 			initPosX = e.getX();
 			initPosY = e.getY();
 		}
 	    public void mouseReleased(MouseEvent e) {
-	    	initialVec = null;
+//	    	initialVec = null;
 	    }
 	    public void mouseEntered(MouseEvent e) {}
 	    public void mouseExited(MouseEvent e) {}
@@ -164,71 +161,85 @@ public class ShowLandScape {
 		
 
 		public void mouseDragged(MouseEvent e) {
+						
+//			Vector3f newVecUpDown = new Vector3f(0,e.getY()-initPosY, 0);
+//			Vector3f newVecLeftRight = new Vector3f(initPosX-e.getX(), 0,0);
+			
+			Vector3f camLookingAt = new Vector3f(cam.getLookAtPoint());
+			Vector3f pivotTranslation = new Vector3f(cam.getCenterOfProjection());
+			camLookingAt.sub(pivotTranslation);
+			
+			// Rotation //
+			AxisAngle4f axisAngle = new AxisAngle4f(cam.getyAxis(), (e.getX()-initPosX)*0.005f);
+			
+			Matrix4f rotMatrix = new Matrix4f();
+			rotMatrix.setIdentity();
+			rotMatrix.setRotation(axisAngle);
+			
+			rotMatrix.transform(camLookingAt);
+			
+			camLookingAt.add(pivotTranslation);
+			
+			cam.setLookAtPoint(camLookingAt);
 			
 			
-			Vector3f newVecUpDown = new Vector3f(0,initPosY- e.getY(), 0);
-			Vector3f newVecLeftRight = new Vector3f(e.getX()-initPosX, 0,0);
-			
-//			Vector3f newVecUpDown = new Vector3f(0,0,0);
-//			newVecUpDown.add(new Vector3f(0,initPosY-e.getY(),0));
-			if (newVecUpDown.length() > 0){
-				newVecUpDown.normalize();
-				newVecUpDown.scale(2);
-			}
-			
-			if (newVecLeftRight.length() > 0){
-				newVecLeftRight.normalize();
-				newVecLeftRight.scale(2);
-			}
+//			if (newVecUpDown.length() > 0){
+//				newVecUpDown.normalize();
+//				newVecUpDown.scale(2);
+//			}
+//			
+//			if (newVecLeftRight.length() > 0){
+//				newVecLeftRight.normalize();
+//				newVecLeftRight.scale(2);
+//			}
 
-	    	Vector3f camLookingAt = new Vector3f(cam.getLookAtPoint());
-	    	camLookingAt.add(newVecUpDown);
-	    	camLookingAt.add(newVecLeftRight);
+//	    	Vector3f camLookingAt = new Vector3f(cam.getLookAtPoint());
+//	    	camLookingAt.add(newVecUpDown);
+//	    	camLookingAt.add(newVecLeftRight);
     	
-	    	
-	    	cam.setLookAtPoint(camLookingAt);
+//	    	cam.setLookAtPoint(camLookingAt);
 	    	this.initPosX = e.getX();
 	    	this.initPosY = e.getY();
 	    	renderPanel.getCanvas().repaint();			
 		}
-		private Vector3f projectMousePositionToTranslation(float posX, float posY) {
-			float transX = posX - initPosX;
-			float transY = posY - initPosY;
-			
-			
-			Vector3f translationVector = new Vector3f(transX, transY, 0);
-			return translationVector;
-		}
+//		private Vector3f projectMousePositionToTranslation(float posX, float posY) {
+//			float transX = posX - initPosX;
+//			float transY = posY - initPosY;
+//			
+//			
+//			Vector3f translationVector = new Vector3f(transX, transY, 0);
+//			return translationVector;
+//		}
 		@Override
 		public void mouseMoved(MouseEvent arg0) {}
 		
-		private Vector3f projectMousePositionToSphere(float posX, float posY){
-			float width = renderPanel.getCanvas().getWidth();
-			float height = renderPanel.getCanvas().getHeight();
-			
-			float uniformScale = Math.min(width,height);
-			float uniformWidth = width/uniformScale;
-			float uniformHeight = height/uniformScale;
-			
-			float sphereX = (2*posX/uniformScale)- uniformWidth;
-			float sphereY = uniformHeight- 2*posY/uniformScale;
-			float sphereZ = 1-sphereX*sphereX-sphereY*sphereY;
-			
-			if (sphereZ > 0){
-				sphereZ = MathFloat.sqrt(sphereZ);
-			}
-			else{
-				sphereZ = 0;
-			}
-			
-			Vector3f sphereVector = new Vector3f(sphereX,sphereY,sphereZ);
-			sphereVector.normalize();
-			
-			return sphereVector;
-		}
+//		private Vector3f projectMousePositionToSphere(float posX, float posY){
+//			float width = renderPanel.getCanvas().getWidth();
+//			float height = renderPanel.getCanvas().getHeight();
+//			
+//			float uniformScale = Math.min(width,height);
+//			float uniformWidth = width/uniformScale;
+//			float uniformHeight = height/uniformScale;
+//			
+//			float sphereX = (2*posX/uniformScale)- uniformWidth;
+//			float sphereY = uniformHeight- 2*posY/uniformScale;
+//			float sphereZ = 1-sphereX*sphereX-sphereY*sphereY;
+//			
+//			if (sphereZ > 0){
+//				sphereZ = MathFloat.sqrt(sphereZ);
+//			}
+//			else{
+//				sphereZ = 0;
+//			}
+//			
+//			Vector3f sphereVector = new Vector3f(sphereX,sphereY,sphereZ);
+//			sphereVector.normalize();
+//			
+//			return sphereVector;
+//		}
 		
-		private void executeRotation(Vector3f newVec){
-			Vector3f rotAxis = new Vector3f(0,1,0);
+//		private void executeRotation(Vector3f newVec){
+//			Vector3f rotAxis = new Vector3f(0,1,0);
 //			initialVec.normalize();
 //			newVec.normalize();
 			
@@ -243,10 +254,10 @@ public class ShowLandScape {
 //			rotMatrix.setRotation(new AxisAngle4f(rotAxis,angle));
 //			
 //			initMatrix.mul(rotMatrix,initMatrix);
-			renderPanel.getCanvas().repaint();
-
-			initialVec = newVec;
-		}
+//			renderPanel.getCanvas().repaint();
+//
+//			initialVec = newVec;
+//		}
 		
 	}
 	
