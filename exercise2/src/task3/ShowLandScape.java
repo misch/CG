@@ -184,10 +184,21 @@ public class ShowLandScape {
 	public static void main(String[] args){	
 
 		int size = 7;
-		float cornerHeight = 1;
-		float granularity = 1;
 
-		shape = new Shape(new FractalLandscape(size, cornerHeight, granularity).getVertexData());
+		float heightTopLeft = 0;
+		float heightBottomLeft = 0;
+		float heightTopRight = 0;
+		float heightBottomRight = 0;
+
+		float[] cornerHeights = new float[4];
+		cornerHeights[0] = heightTopLeft;
+		cornerHeights[1] = heightBottomLeft;
+		cornerHeights[2] = heightTopRight;
+		cornerHeights[3] = heightBottomRight;
+		
+		float roughness= 1;
+
+		shape = new Shape(new FractalLandscape(size, cornerHeights,roughness).getVertexData());
 
 		Camera camera = new Camera(new Vector3f(100,100,200), new Vector3f(((2^size)+1)/2,0,((2^size)+1)/2), new Vector3f(0,1,0));
 		Frustum frustum = new Frustum(1,1000,1,(float)(Math.PI/3));

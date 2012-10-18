@@ -10,24 +10,31 @@ public class FractalLandscape extends AbstractSimpleShape{
 	private int size, cycles;
 	private float heights[][];
 	
-	public FractalLandscape(int size, float cornerHeight, float granularity){
+	public FractalLandscape(int size, float[] cornerHeights, float roughness){
 		
 		this.cycles = size;
 		this.size = (int)Math.pow(2, size)+1;
 		this.heights = new float[this.size][this.size];
 			
-		heights[0][0] = 150;
-		heights[this.size-1][0]=100;
-		heights[0][this.size-1]=20;
-		heights[this.size-1][this.size-1]=60;
+		heights[0][0] = cornerHeights[0];
+		heights[this.size-1][0]=cornerHeights[2];
+		heights[0][this.size-1]=cornerHeights[1];
+		heights[this.size-1][this.size-1]=cornerHeights[3];
 
 		int width = this.size-1;
-		float randomScale = this.size;
+		float randomScale = this.size*roughness;
 		for (int c=0; c<=cycles; c++){
 			randomScale /=2;
 			diamondStep(width, randomScale);
 			squareStep(width, randomScale);
 			width /=2;
+		}
+		
+		for (int i = 0; i<this.size; i++){
+			for (int j = 0; j<this.size; j++){
+				if (heights[i][j] <= 0)
+					heights[i][j] = 0;
+			}
 		}
 		
 		composeVertexData();
@@ -146,14 +153,22 @@ public class FractalLandscape extends AbstractSimpleShape{
 
 	private Color3f getCol(float f) {
 		Color3f col;
-		
 		col = new Color3f(1,1,1);
 		
-		if(f <= 70)
-			col = new Color3f(0,1,0);
+		if (f<=0){
+			float blueVar = (float)(Math.random()*0.2);
+			return col = new Color3f(0,0,1-blueVar);
+		}
 		
-		if (f> 70)
-			col = new Color3f(1,1,1);
+		if(f <= 50 + Math.random()*20)
+			return col = new Color3f(0,0.8f-(float)Math.random()*0.3f,0);
+		
+		if (f> 50 - Math.random()*20){
+			float greyVar = (float)(Math.random()*0.5);
+			return col = new Color3f(1-greyVar,1-greyVar,1-greyVar);
+		}
+		
+		
 				
 		return col;	
 	}
