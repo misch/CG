@@ -36,6 +36,21 @@ public class ShowLandScape {
 		}		
 	}
 	
+	public final static class MyRenderPanel extends SWRenderPanel
+	{
+		/**
+		 * Initialization call-back. We initialize our renderer here.
+		 * @param r the render context that is associated with this render panel
+		 */
+		public void init(RenderContext r)
+		{
+			renderContext = r;
+			renderContext.setSceneManager(sceneManager);
+		}		
+	}
+	
+	
+	
 	/**
 	* The main function opens a 3D rendering window, constructs a simple 3D
 	* scene, and starts a timer task to generate an animation.
@@ -43,8 +58,8 @@ public class ShowLandScape {
 	*/
 	public static void main(String[] args){	
 
-		int size = 7;
-		int roughness = 5;
+		int size = 6;
+		int roughness = 2;
 		shape = setUpLandscape(size, roughness);
 
 		Camera camera = new Camera(new Vector3f(100,100,200), new Vector3f(((2^size)+1)/2,30,((2^size)+1)/2), new Vector3f(0,1,0));
@@ -55,7 +70,9 @@ public class ShowLandScape {
 
 		// Make a render panel. The init function of the renderPanel
 		// (see above) will be called back for initialization.
-		renderPanel = new SimpleRenderPanel();
+//		renderPanel = new SimpleRenderPanel();
+		
+		renderPanel = new MyRenderPanel();
 
 		// Make the main window of this application and add the renderer to it
 		JFrame jframe = new JFrame("simple");
