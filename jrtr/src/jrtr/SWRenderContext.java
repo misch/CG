@@ -5,9 +5,9 @@ import jrtr.RenderContext;
 import java.awt.Color;
 import java.awt.image.*;
 
-import javax.media.opengl.GL3;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Tuple4f;
+import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
 
@@ -24,7 +24,6 @@ public class SWRenderContext implements RenderContext {
 	private SceneManagerInterface sceneManager;
 	private BufferedImage colorBuffer;
 	private Matrix4f viewPortMatrix;
-//	private BufferedImage clearBuffer;
 	private Raster clear;
 		
 	public void setSceneManager(SceneManagerInterface sceneManager)
@@ -105,17 +104,61 @@ public class SWRenderContext implements RenderContext {
 		t.mul(sceneManager.getFrustum().getProjectionMatrix(),t);
 		t.mul(viewPortMatrix, t);
 		
-		float[] vertices = renderItem.getShape().getVertexData().getElements().getLast().getData();
+//		drawDots(renderItem.getShape(), t);
+		drawTriangles(renderItem.getShape(), t);
+		
+	}
+	private void drawTriangles(Shape shape, Matrix4f t) {		
+		float[] vertices = shape.getVertexData().getElements().getLast().getData();
 		
 		for (int i = 0; i<vertices.length; i+=3){
 			Tuple4f vec = new Vector4f(vertices[i], vertices[i+1], vertices[i+2], 1);
 			t.transform(vec);
+			
+			// Homogeneous 2D coordinates
+			Vector3f homog2DCoord = homog2DCoord(vec);
+			
+			// Homogeneous division
 			vec.scale(1/vec.w);
+			
 			if (vec.x > 0 && vec.x < colorBuffer.getWidth() && vec.y > 0 && vec.y < colorBuffer.getHeight()){
 			colorBuffer.setRGB((int)(vec.x), colorBuffer.getHeight() - (int)(vec.y)-1, new Color(255,255,255).getRGB());
 			}
 		}
+		
 	}
+	
+	private void drawDots(Shape shape, Matrix4f t) {
+		float[] vertices = shape.getVertexData().getElements().getLast().getData();
+		
+		for (int i = 0; i<vertices.length; i+=3){
+			Tuple4f vec = new Vector4f(vertices[i], vertices[i+1], vertices[i+2], 1);
+			t.transform(vec);
+			
+			// Homogeneous division
+			vec.scale(1/vec.w);
+			
+			if (vec.x > 0 && vec.x < colorBuffer.getWidth() && vec.y > 0 && vec.y < colorBuffer.getHeight()){
+			colorBuffer.setRGB((int)(vec.x), colorBuffer.getHeight() - (int)(vec.y)-1, new Color(255,255,255).getRGB());
+			}
+		}
+		
+	}
+
+	private Vector3f homog2DCoord(Tuple4f vec) {
+		Vector3f homogeneous = new Vector3f(vec.x, vec.y, vec.w);
+		return homogeneous;
+	}
+
+	// Edge functions
+	// Parameter:
+	//	int x, y (pixel coordiantes),
+	//	float w (z-buffer)
+	private int alpha(int x, int y, float w){
+		return 0;
+	}
+	
+	
 	
 	/**
 	 * Does nothing. We will not implement shaders for the software renderer.

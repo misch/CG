@@ -11,7 +11,8 @@ import jrtr.VertexData;
 
 
 public abstract class AbstractSimpleShape implements IForm {
-	protected ArrayList<Float> vertices, colors, normals;
+	protected ArrayList<Float> vertices, colors; 
+	protected ArrayList<Float> normals = new ArrayList<Float>(); 
 	protected ArrayList<Integer> indices;
 	
 	protected float u,v;

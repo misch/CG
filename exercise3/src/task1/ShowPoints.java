@@ -1,12 +1,18 @@
 package task1;
 
 import jrtr.*;
+
 import javax.swing.*;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 import javax.vecmath.*;
+
+import ex1.Cube;
+import ex1.Cylinder;
+import ex1.Torus;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -101,48 +107,20 @@ public class ShowPoints {
 	 */
 	public static void main(String[] args) throws IOException
 	{		
-		// Make a simple geometric object: a cube
 		
-		// The vertex positions of the cube
-		float v[] = {-1,-1,1, 1,-1,1, 1,1,1, -1,1,1,		// front face
-			         -1,-1,-1, -1,-1,1, -1,1,1, -1,1,-1,	// left face
-				  	 1,-1,-1,-1,-1,-1, -1,1,-1, 1,1,-1,		// back face
-					 1,-1,1, 1,-1,-1, 1,1,-1, 1,1,1,		// right face
-					 1,1,1, 1,1,-1, -1,1,-1, -1,1,1,		// top face
-					-1,-1,1, -1,-1,-1, 1,-1,-1, 1,-1,1};	// bottom face
+//		shape = new Cylinder(50,2,1).getShape();
+		shape = new Torus(50,2).getShape();
+//		shape = new Cube().getShape();
 
-		// The vertex colors
-		float c[] = {1,0,0, 1,0,0, 1,0,0, 1,0,0,
-				     0,1,0, 0,1,0, 0,1,0, 0,1,0,
-					 1,0,0, 1,0,0, 1,0,0, 1,0,0,
-					 0,1,0, 0,1,0, 0,1,0, 0,1,0,
-					 0,0,1, 0,0,1, 0,0,1, 0,0,1,
-					 0,0,1, 0,0,1, 0,0,1, 0,0,1};
-
-		// Construct a data structure that stores the vertices, their
-		// attributes, and the triangle mesh connectivity
-		VertexData vertexData = new VertexData(24);
-		vertexData.addElement(c, VertexData.Semantic.COLOR, 3);
-		vertexData.addElement(v, VertexData.Semantic.POSITION, 3);
-		
-		// The triangles (three vertex indices for each triangle)
-		int indices[] = {0,2,3, 0,1,2,			// front face
-						 4,6,7, 4,5,6,			// left face
-						 8,10,11, 8,9,10,		// back face
-						 12,14,15, 12,13,14,	// right face
-						 16,18,19, 16,17,18,	// top face
-						 20,22,23, 20,21,22};	// bottom face
-
-		vertexData.addIndices(indices);
-				
 		// Make a scene manager and add the object
 		sceneManager = new SimpleSceneManager();
-		shape = new Shape(vertexData);
+
 //		shape = new Shape(ObjReader.read("teapot.obj", 1));
 		sceneManager.addShape(shape);
 
 		// Make a render panel. The init function of the renderPanel
 		// (see above) will be called back for initialization.
+
 //		renderPanel = new SimpleRenderPanel();
 		renderPanel = new MyRenderPanel();
 		
