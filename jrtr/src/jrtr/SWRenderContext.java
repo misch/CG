@@ -99,11 +99,15 @@ public class SWRenderContext implements RenderContext {
 		t.mul(viewPortMatrix, t);
 		
 		float[] vertices = renderItem.getShape().getVertexData().getElements().getLast().getData();
+		
 		for (int i = 0; i<vertices.length; i+=3){
 			Tuple4f vec = new Vector4f(vertices[i], vertices[i+1], vertices[i+2], 1);
 			t.transform(vec);
-			float w = vec.getW();
-			colorBuffer.setRGB((int)(vec.x/w), (int)(vec.y/w), new Color(255,255,255).getRGB());
+//			float w = vec.getW();
+			vec.scale(1/vec.w);
+			if (vec.x > 0 && vec.x < colorBuffer.getWidth() && vec.y > 0 && vec.y < colorBuffer.getHeight()){
+			colorBuffer.setRGB((int)(vec.x), (int)(vec.y), new Color(255,255,255).getRGB());
+			}
 		}
 	}
 	
