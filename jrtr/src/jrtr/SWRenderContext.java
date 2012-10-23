@@ -5,6 +5,7 @@ import jrtr.RenderContext;
 import java.awt.Color;
 import java.awt.image.*;
 
+import javax.vecmath.Matrix3f;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Tuple4f;
 import javax.vecmath.Vector3f;
@@ -110,24 +111,50 @@ public class SWRenderContext implements RenderContext {
 	}
 	private void drawTriangles(Shape shape, Matrix4f t) {		
 		float[] vertices = shape.getVertexData().getElements().getLast().getData();
+		int[] indices = shape.getVertexData().getIndices();
 		
-		for (int i = 0; i<vertices.length; i+=3){
-			Tuple4f vec = new Vector4f(vertices[i], vertices[i+1], vertices[i+2], 1);
-			t.transform(vec);
+//		for (int i = 0; i<vertices.length; i+=3){
+		for (int i = 0; i<indices.length, i+=9){
+//			Tuple4f vec = new Vector4f(vertices[i], vertices[i+1], vertices[i+2], 1);
+			Tuple4f vert1 = new Vector4f(indices[i], indices[i+1], indices[i+2], 1);
+			Tuple4f vert2 = new Vector4f(indices[i+3], indices[i+4], indices[i+5], 1);
+			Tuple4f vert3 = new Vector4f(indices[i+6], indices[i+7], indices[i+8], 1);
+			
+//			t.transform(vec);
+			t.transform(vert1);
+			t.transform(vert2);
+			t.transform(vert3);
 			
 			// Homogeneous 2D coordinates
-			Vector3f homog2DCoord = homog2DCoord(vec);
+			Vector3f homogeneousVert1 = homog2DCoord(vert1);
+			Vector3f homogeneousVert2 = homog2DCoord(vert2);
+			Vector3f homogeneousVert3 = homog2DCoord(vert3);
+			
+			Matrix3f edgeFuncCoeff = computeEdgeFuncCoeff(homogeneousVert1, homogeneousVert2, homogeneousVert3);
 			
 			// Homogeneous division
-			vec.scale(1/vec.w);
+//			vec.scale(1/vec.w);
 			
-			if (vec.x > 0 && vec.x < colorBuffer.getWidth() && vec.y > 0 && vec.y < colorBuffer.getHeight()){
-			colorBuffer.setRGB((int)(vec.x), colorBuffer.getHeight() - (int)(vec.y)-1, new Color(255,255,255).getRGB());
-			}
+//			if (vec.x > 0 && vec.x < colorBuffer.getWidth() && vec.y > 0 && vec.y < colorBuffer.getHeight()){
+//			colorBuffer.setRGB((int)(vec.x), colorBuffer.getHeight() - (int)(vec.y)-1, new Color(255,255,255).getRGB());
+//			}
 		}
 		
 	}
 	
+	private Matrix3f computeEdgeFuncCoeff(Vector3f homogeneousVert1,
+			Vector3f homogeneousVert2, Vector3f homogeneousVert3) {
+		Matrix3f edgeFuncCoeff = new Matrix3f();
+		
+		edgeFuncCoeff.setRow(0, homogeneousVert1);
+		edgeFuncCoeff.setRow(1, homogeneousVert2);
+		edgeFuncCoeff.setRow(2, homogeneousVert3);
+		
+		edgeFuncCoeff.invert();
+		return edgeFuncCoeff;
+		
+	}
+
 	private void drawDots(Shape shape, Matrix4f t) {
 		float[] vertices = shape.getVertexData().getElements().getLast().getData();
 		
