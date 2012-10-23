@@ -1,3 +1,5 @@
+package task1;
+
 import jrtr.*;
 import javax.swing.*;
 import java.awt.event.MouseListener;
@@ -8,12 +10,7 @@ import javax.vecmath.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
-/**
- * Implements a simple application that opens a 3D rendering window and 
- * shows a rotating cube.
- */
-public class simple
-{	
+public class ShowPoints {	
 	static RenderPanel renderPanel;
 	static RenderContext renderContext;
 	static SimpleSceneManager sceneManager;
@@ -43,7 +40,24 @@ public class simple
 		}
 	}
 
-
+	public final static class MyRenderPanel extends SWRenderPanel
+	{
+		/**
+		 * Initialization call-back. We initialize our renderer here.
+		 * 
+		 * @param r	the render context that is associated with this render panel
+		 */
+		public void init(RenderContext r)
+		{
+			renderContext = r;
+			renderContext.setSceneManager(sceneManager);
+	
+			// Register a timer task
+		    Timer timer = new Timer();
+		    angle = 0.01f;
+		    timer.scheduleAtFixedRate(new AnimationTask(), 0, 10);
+		}
+	}
 	/**
 	 * A timer task that generates an animation. This task triggers
 	 * the redrawing of the 3D scene every time it is executed.
@@ -124,12 +138,13 @@ public class simple
 		// Make a scene manager and add the object
 		sceneManager = new SimpleSceneManager();
 		shape = new Shape(vertexData);
-
+//		shape = new Shape(ObjReader.read("teapot.obj", 1));
 		sceneManager.addShape(shape);
 
 		// Make a render panel. The init function of the renderPanel
 		// (see above) will be called back for initialization.
-		renderPanel = new SimpleRenderPanel();
+//		renderPanel = new SimpleRenderPanel();
+		renderPanel = new MyRenderPanel();
 		
 		// Make the main window of this application and add the renderer to it
 		JFrame jframe = new JFrame("simple");

@@ -58,8 +58,8 @@ public class ShowLandScape {
 	*/
 	public static void main(String[] args){	
 
-		int size = 6;
-		int roughness = 2;
+		int size = 7;
+		int roughness = 3;
 		shape = setUpLandscape(size, roughness);
 
 		Camera camera = new Camera(new Vector3f(100,100,200), new Vector3f(((2^size)+1)/2,30,((2^size)+1)/2), new Vector3f(0,1,0));

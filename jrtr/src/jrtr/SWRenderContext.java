@@ -5,6 +5,7 @@ import jrtr.RenderContext;
 import java.awt.Color;
 import java.awt.image.*;
 
+import javax.media.opengl.GL3;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Tuple4f;
 import javax.vecmath.Vector4f;
@@ -23,6 +24,8 @@ public class SWRenderContext implements RenderContext {
 	private SceneManagerInterface sceneManager;
 	private BufferedImage colorBuffer;
 	private Matrix4f viewPortMatrix;
+//	private BufferedImage clearBuffer;
+	private Raster clear;
 		
 	public void setSceneManager(SceneManagerInterface sceneManager)
 	{
@@ -64,7 +67,7 @@ public class SWRenderContext implements RenderContext {
 	public void setViewportSize(int width, int height)
 	{
 		viewPortMatrix = new Matrix4f();
-//		viewPortMatrix.setZero();
+		viewPortMatrix.setZero();
 		viewPortMatrix.setM00(width/2f);
 		viewPortMatrix.setM11(height/2f);
 		viewPortMatrix.setM22(1/2f);
@@ -72,8 +75,11 @@ public class SWRenderContext implements RenderContext {
 		viewPortMatrix.setM03(width/2f);
 		viewPortMatrix.setM13(height/2f);
 		viewPortMatrix.setM23(1/2f);
+
 		
 		colorBuffer = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
+		BufferedImage clearBuffer = new BufferedImage(width,height, BufferedImage.TYPE_3BYTE_BGR);
+		this.clear = clearBuffer.getRaster();
 	}
 		
 	/**
@@ -81,6 +87,7 @@ public class SWRenderContext implements RenderContext {
 	 */
 	private void beginFrame()
 	{
+		colorBuffer.setData(clear);
 	}
 	
 	private void endFrame()
@@ -103,10 +110,9 @@ public class SWRenderContext implements RenderContext {
 		for (int i = 0; i<vertices.length; i+=3){
 			Tuple4f vec = new Vector4f(vertices[i], vertices[i+1], vertices[i+2], 1);
 			t.transform(vec);
-//			float w = vec.getW();
 			vec.scale(1/vec.w);
 			if (vec.x > 0 && vec.x < colorBuffer.getWidth() && vec.y > 0 && vec.y < colorBuffer.getHeight()){
-			colorBuffer.setRGB((int)(vec.x), (int)(vec.y), new Color(255,255,255).getRGB());
+			colorBuffer.setRGB((int)(vec.x), colorBuffer.getHeight() - (int)(vec.y)-1, new Color(255,255,255).getRGB());
 			}
 		}
 	}
