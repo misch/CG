@@ -110,17 +110,13 @@ public class SWRenderContext implements RenderContext {
 		
 	}
 	private void drawTriangles(Shape shape, Matrix4f t) {		
-		float[] vertices = shape.getVertexData().getElements().getLast().getData();
 		int[] indices = shape.getVertexData().getIndices();
 		
-//		for (int i = 0; i<vertices.length; i+=3){
-		for (int i = 0; i<indices.length, i+=9){
-//			Tuple4f vec = new Vector4f(vertices[i], vertices[i+1], vertices[i+2], 1);
+		for (int i = 0; i<indices.length; i+=9){
 			Tuple4f vert1 = new Vector4f(indices[i], indices[i+1], indices[i+2], 1);
 			Tuple4f vert2 = new Vector4f(indices[i+3], indices[i+4], indices[i+5], 1);
 			Tuple4f vert3 = new Vector4f(indices[i+6], indices[i+7], indices[i+8], 1);
 			
-//			t.transform(vec);
 			t.transform(vert1);
 			t.transform(vert2);
 			t.transform(vert3);
@@ -132,6 +128,7 @@ public class SWRenderContext implements RenderContext {
 			
 			Matrix3f edgeFuncCoeff = computeEdgeFuncCoeff(homogeneousVert1, homogeneousVert2, homogeneousVert3);
 			
+			
 			// Homogeneous division
 //			vec.scale(1/vec.w);
 			
@@ -140,6 +137,22 @@ public class SWRenderContext implements RenderContext {
 //			}
 		}
 		
+	}
+	
+	private boolean isInTriangle(Matrix3f edgeFuncCoeff, Vector3f vec){
+		boolean isInTriangle = true;
+		float x = vec.x;
+		float y = vec.y;
+		float w = vec.z;
+		
+		for (int i = 0; i<3; i++){
+			Vector3f edgeCoeff = new Vector3f();
+			edgeFuncCoeff.getColumn(i, edgeCoeff);
+			
+			float sum = edgeCoeff.x*(x/w)+edgeCoeff.y*(y/w)+edgeCoeff.z;
+			isInTriangle = (sum>0);
+		}
+		return isInTriangle;
 	}
 	
 	private Matrix3f computeEdgeFuncCoeff(Vector3f homogeneousVert1,
@@ -152,7 +165,6 @@ public class SWRenderContext implements RenderContext {
 		
 		edgeFuncCoeff.invert();
 		return edgeFuncCoeff;
-		
 	}
 
 	private void drawDots(Shape shape, Matrix4f t) {
