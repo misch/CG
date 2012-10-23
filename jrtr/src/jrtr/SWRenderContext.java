@@ -1,9 +1,11 @@
 package jrtr;
 
 import jrtr.RenderContext;
+import jrtr.VertexData.VertexElement;
 
 import java.awt.Color;
 import java.awt.image.*;
+import java.util.LinkedList;
 
 import javax.vecmath.Matrix3f;
 import javax.vecmath.Matrix4f;
@@ -110,32 +112,74 @@ public class SWRenderContext implements RenderContext {
 		
 	}
 	private void drawTriangles(Shape shape, Matrix4f t) {		
-		int[] indices = shape.getVertexData().getIndices();
+		VertexData vertexData = shape.getVertexData();
+//		LinkedList<VertexData.VertexElement>;
+		int indices[] = vertexData.getIndices();
+		float[][] colors;
 		
-		for (int i = 0; i<indices.length; i+=9){
-			Tuple4f vert1 = new Vector4f(indices[i], indices[i+1], indices[i+2], 1);
-			Tuple4f vert2 = new Vector4f(indices[i+3], indices[i+4], indices[i+5], 1);
-			Tuple4f vert3 = new Vector4f(indices[i+6], indices[i+7], indices[i+8], 1);
+		// Skeleton code to assemble triangle data
+		int k = 0; // index of triangle vertex, k is 0,1, or 2
+		
+		
+		// Loop over all vertex indices
+		for(int j=0; j<indices.length; j++)
+		{
+			// Loop over all attributes of current vertex
+			for(VertexElement vertexElement: vertexData.getElements()){
+				if(vertexElement.getSemantic() == VertexData.Semantic.POSITION){
+					Vector4f p = new Vector4f(vertexElement.getData()[j*3], vertexElement.getData()[j*3+1], vertexElement.getData()[j*3+2],1);
+					t.transform(p);		
+					float[][] positions = new float[3][4];
+					positions[k][0] = p.x;
+					positions[k][1] = p.y;
+					positions[k][2] = p.z;
+					positions[k][3] = p.w;
+					k++;
+				}
+				else if (vertexElement.getSemantic() == VertexData.Semantic.COLOR){
+					// TODO
+				}
+				else if (vertexElement.getSemantic() == VertexData.Semantic.NORMAL){
+					//TODO
+				}
 			
-			t.transform(vert1);
-			t.transform(vert2);
-			t.transform(vert3);
-			
-			// Homogeneous 2D coordinates
-			Vector3f homogeneousVert1 = homog2DCoord(vert1);
-			Vector3f homogeneousVert2 = homog2DCoord(vert2);
-			Vector3f homogeneousVert3 = homog2DCoord(vert3);
-			
-			Matrix3f edgeFuncCoeff = computeEdgeFuncCoeff(homogeneousVert1, homogeneousVert2, homogeneousVert3);
-			
-			
-			// Homogeneous division
-//			vec.scale(1/vec.w);
-			
-//			if (vec.x > 0 && vec.x < colorBuffer.getWidth() && vec.y > 0 && vec.y < colorBuffer.getHeight()){
-//			colorBuffer.setRGB((int)(vec.x), colorBuffer.getHeight() - (int)(vec.y)-1, new Color(255,255,255).getRGB());
-//			}
+				// Draw triangle as soon as we collected the data for 3 vertices
+				if(k == 3)
+				{
+					// Draw the triangle with the collected three vertex positions, etc.
+					// rasterizeTriangle(positions, colors, normals, ...);
+					k = 0;
+				}
+			}
 		}
+				
+			
+//		//		int[] indices = shape.getVertexData().getIndices();
+//		
+//		for (int i = 0; i<indices.length; i+=9){
+//			Tuple4f vert1 = new Vector4f(indices[i], indices[i+1], indices[i+2], 1);
+//			Tuple4f vert2 = new Vector4f(indices[i+3], indices[i+4], indices[i+5], 1);
+//			Tuple4f vert3 = new Vector4f(indices[i+6], indices[i+7], indices[i+8], 1);
+//			
+//			t.transform(vert1);
+//			t.transform(vert2);
+//			t.transform(vert3);
+//			
+//			// Homogeneous 2D coordinates
+//			Vector3f homogeneousVert1 = homog2DCoord(vert1);
+//			Vector3f homogeneousVert2 = homog2DCoord(vert2);
+//			Vector3f homogeneousVert3 = homog2DCoord(vert3);
+//			
+//			Matrix3f edgeFuncCoeff = computeEdgeFuncCoeff(homogeneousVert1, homogeneousVert2, homogeneousVert3);
+//			
+//			
+//			// Homogeneous division
+////			vec.scale(1/vec.w);
+//			
+////			if (vec.x > 0 && vec.x < colorBuffer.getWidth() && vec.y > 0 && vec.y < colorBuffer.getHeight()){
+////			colorBuffer.setRGB((int)(vec.x), colorBuffer.getHeight() - (int)(vec.y)-1, new Color(255,255,255).getRGB());
+////			}
+//		}
 		
 	}
 	
