@@ -139,13 +139,13 @@ public class SWRenderContext implements RenderContext {
 					k++;
 				}
 				else if (vertexElement.getSemantic() == VertexData.Semantic.COLOR){
-					Color3f col = new Color3f(vertexElement.getData()[j*3],vertexElement.getData()[j*3+1],vertexElement.getData()[j*3+2]);
-					colors[k] = col;
+//					Color3f col = new Color3f(vertexElement.getData()[j*3],vertexElement.getData()[j*3+1],vertexElement.getData()[j*3+2]);
+//					colors[k] = col;
 //					k++;
 				}
 				else if (vertexElement.getSemantic() == VertexData.Semantic.NORMAL){
-					Vector4f n = getPoint(vertexElement,indices[j]);
-					normals[k] = n;
+//					Vector4f n = getPoint(vertexElement,indices[j]);
+//					normals[k] = n;
 //					k++;
 				}
 //				k++;
@@ -159,17 +159,21 @@ public class SWRenderContext implements RenderContext {
 					Matrix3f edgeFuncCoeff = computeEdgeFuncCoeff(homogeneousVert1, homogeneousVert2, homogeneousVert3);
 
 					// Compute the bounding box:
-					int[] pixelCoord1 = homogeneousDivision(homogeneousVert1);
-					int[] pixelCoord2 = homogeneousDivision(homogeneousVert2);
-					int[] pixelCoord3 = homogeneousDivision(homogeneousVert3);
+//					int[] pixelCoord1 = homogeneousDivision(homogeneousVert1);
+//					int[] pixelCoord2 = homogeneousDivision(homogeneousVert2);
+//					int[] pixelCoord3 = homogeneousDivision(homogeneousVert3);
+					Point pixelCoord1 = homogeneousDivision(homogeneousVert1);
+					Point pixelCoord2 = homogeneousDivision(homogeneousVert2);
+					Point pixelCoord3 = homogeneousDivision(homogeneousVert3);
 					
-//					Point2f[] boundingBox = getBoundingBox(pixelCoord1, pixelCoord2, pixelCoord3);
-					Point[] boundingBox = {new Point(0,0), new Point(width,height)}; // upperLeft and lowerRight point 
+					Point[] boundingBox = getBoundingBox(pixelCoord1, pixelCoord2, pixelCoord3);
+//					Point[] boundingBox = {new Point(255,255), new Point(300,300)}; // upperLeft and lowerRight point 
 					
 					for (int i = boundingBox[0].x; i < boundingBox[1].x;i++){
 						for (int n = boundingBox[0].y; n < boundingBox[1].y; n++){
 							Vector3f vec = new Vector3f(i,n,1);
-							if (isInTriangle(edgeFuncCoeff, vec)){
+//							if (isInTriangle(edgeFuncCoeff, vec)){
+							if (isInTriangle(edgeFuncCoeff, i,n)){
 								colorBuffer.setRGB(i, colorBuffer.getHeight()-n-1, new Color(255,255,255).getRGB());
 							}
 							
@@ -223,17 +227,31 @@ public class SWRenderContext implements RenderContext {
 		
 	}
 	
-	private Point2f[] getBoundingBox(int[] pixelCoord1, int[] pixelCoord2,
-			int[] pixelCoord3) {
-		// TODO Auto-generated method stub
-		return null;
+//	private Point2f[] getBoundingBox(int[] pixelCoord1, int[] pixelCoord2,
+//			int[] pixelCoord3) {
+	private Point[] getBoundingBox(Point pixelCoord1, Point pixelCoord2,
+			Point pixelCoord3) {
+		int minX = Math.min(Math.min(pixelCoord1.x, pixelCoord2.x), pixelCoord3.x);
+		int minY = Math.min(Math.min(pixelCoord1.y, pixelCoord2.y), pixelCoord3.y);
+		
+		int maxX = Math.max(Math.max(pixelCoord1.x, pixelCoord2.x), pixelCoord3.x);
+		int maxY = Math.max(Math.max(pixelCoord1.y, pixelCoord2.y), pixelCoord3.y);
+		
+		Point upperLeft = new Point(minX,minY);
+		Point lowerRight = new Point(maxX, maxY);
+		
+		Point[] boundingBox = {upperLeft, lowerRight};
+		return boundingBox;
 	}
 
-	private int[] homogeneousDivision(Vector3f homogeneousVec) {
+//	private int[] homogeneousDivision(Vector3f homogeneousVec) {
+	private Point homogeneousDivision(Vector3f homogeneousVec) {
 		int x = (int)(homogeneousVec.x/homogeneousVec.z); // the z-value is the w-value of the 4-dimensional vector before using homog2DCoord
 		int y = (int)(homogeneousVec.y/homogeneousVec.z);
 		
-		int[] pixelCoord = {x,y};
+//		int[] pixelCoord = {x,y};
+		Point pixelCoord = new Point(x,y);
+		
 		return pixelCoord;
 	}
 
@@ -242,17 +260,19 @@ public class SWRenderContext implements RenderContext {
 		return vec;
 	}
 
-	private boolean isInTriangle(Matrix3f edgeFuncCoeff, Vector3f vec){
-		boolean isInTriangle = true;
-		float x = vec.x;
-		float y = vec.y;
-		float w = vec.z;
+//	private boolean isInTriangle(Matrix3f edgeFuncCoeff, Vector3f vec){
+	private boolean isInTriangle(Matrix3f edgeFuncCoeff, int x, int y){
+		boolean isInTriangle = false;
+//		float x = vec.x;
+//		float y = vec.y;
+//		float w = vec.z;
 		
 		for (int i = 0; i<3; i++){
 			Vector3f edgeCoeff = new Vector3f();
 			edgeFuncCoeff.getColumn(i, edgeCoeff);
 			
-			float sum = edgeCoeff.x*(x/w)+edgeCoeff.y*(y/w)+edgeCoeff.z;
+//			float sum = edgeCoeff.x*(x/w)+edgeCoeff.y*(y/w)+edgeCoeff.z;
+			float sum = edgeCoeff.x*x+edgeCoeff.y*y+edgeCoeff.z;
 			isInTriangle = (sum>0);
 		}
 		return isInTriangle;
