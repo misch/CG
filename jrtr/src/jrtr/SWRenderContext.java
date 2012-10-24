@@ -32,6 +32,7 @@ public class SWRenderContext implements RenderContext {
 	private Matrix4f viewPortMatrix;
 	private Raster clear;
 //	private int width,height;
+	private float[][] zBuffer;
 		
 	public void setSceneManager(SceneManagerInterface sceneManager)
 	{
@@ -74,6 +75,7 @@ public class SWRenderContext implements RenderContext {
 	{
 //		this.width = width;
 //		this.height = height;
+		this.zBuffer = new float[width][height];
 		viewPortMatrix = new Matrix4f();
 		viewPortMatrix.setZero();
 		viewPortMatrix.setM00(width/2f);
@@ -140,14 +142,12 @@ public class SWRenderContext implements RenderContext {
 				else if (vertexElement.getSemantic() == VertexData.Semantic.COLOR){
 					Color col = new Color(vertexElement.getData()[indices[j]*3],vertexElement.getData()[indices[j]*3+1],vertexElement.getData()[indices[j]*3+2]);
 					colors[k] = col;
-//					k++;
 				}
-				else if (vertexElement.getSemantic() == VertexData.Semantic.NORMAL){
+//				else if (vertexElement.getSemantic() == VertexData.Semantic.NORMAL){
 //					Vector4f n = getPoint(vertexElement,indices[j]);
 //					normals[k] = n;
-//					k++;
-				}
-//				k++;
+//				}
+				
 				// Draw triangle as soon as we collected the data for 3 vertices
 				if(k == 3)
 				{
@@ -156,7 +156,16 @@ public class SWRenderContext implements RenderContext {
 					Vector3f homogeneousVert3 = homog2DCoord(positions[2]);
 					
 					Matrix3f edgeFuncCoeff = computeEdgeFuncCoeff(homogeneousVert1, homogeneousVert2, homogeneousVert3);
-
+					
+					float w1 = homogeneousVert1.z;
+					float w2 = homogeneousVert2.z;
+					float w3 = homogeneousVert3.z;
+					
+					setPixel(homogeneousVert1, colors[0]);
+					setPixel(homogeneousVert2, colors[1]);
+					setPixel(homogeneousVert3, colors[2]);
+					
+					
 					
 					
 					// Compute the bounding box:
@@ -168,9 +177,17 @@ public class SWRenderContext implements RenderContext {
 					
 					for (int x = boundingBox[0].x; x <= boundingBox[1].x;x++){
 						for (int y = boundingBox[0].y; y <= boundingBox[1].y; y++){
+							float zBuff = 0;
+							zBuff += (1/w3)*alpha(edgeFuncCoeff,x,y);
+							zBuff += (1/w2)*beta(edgeFuncCoeff,x,y);
+							zBuff += (1/w1)*gamma(edgeFuncCoeff,x,x);
+							
+							if (zBuff > zBuffer[x][y]){
+								zBuffer[x][y] = zBuff;
+							
 							if (isInTriangle(edgeFuncCoeff, x,y) && pixelIsInWindow(x,y,colorBuffer)){
 								colorBuffer.setRGB(x, colorBuffer.getHeight()-y-1,colors[0].getRGB());
-							}
+							}}
 						}
 					}
 					k = 0;
@@ -178,7 +195,19 @@ public class SWRenderContext implements RenderContext {
 			}
 		}
 	}
-	
+
+	private void setPixel(Vector3f homogCoord, Color color) {
+		Point pixelCoord = homogeneousDivision(homogCoord);
+		zBuffer[pixelCoord.x][pixelCoord.y] = 1/homogCoord.z;
+	}
+
+//	private float zBuffer(Vector3f homogeneousVert1, Vector3f homogeneousVert2,
+//			Vector3f homogeneousVert3, int x, int y) {
+//	
+//		float w = homogeneousVert1.z + homogeneousVert2.z + homogeneousVert3.z;
+//		return 0;
+//	}
+
 	private Point[] getBoundingBox(Point pixelCoord1, Point pixelCoord2,
 			Point pixelCoord3) {
 		int minX = Math.min(Math.min(pixelCoord1.x, pixelCoord2.x), pixelCoord3.x);
@@ -218,6 +247,27 @@ public class SWRenderContext implements RenderContext {
 				return false;
 		}
 		return true;
+	}
+	
+	private float alpha(Matrix3f edgeFuncCoeff, int x, int y){
+		Vector3f alphaCoeff = new Vector3f();
+		edgeFuncCoeff.getColumn(0, alphaCoeff);		
+		float dotProd = alphaCoeff.dot(new Vector3f(x,y,1));
+		return dotProd;
+	}
+	
+	private float beta(Matrix3f edgeFuncCoeff, int x, int y){
+		Vector3f betaCoeff = new Vector3f();
+		edgeFuncCoeff.getColumn(1, betaCoeff);		
+		float dotProd = betaCoeff.dot(new Vector3f(x,y,1));
+		return dotProd;
+	}
+	
+	private float gamma(Matrix3f edgeFuncCoeff, int x, int y){
+		Vector3f gammaCoeff = new Vector3f();
+		edgeFuncCoeff.getColumn(2, gammaCoeff);		
+		float dotProd = gammaCoeff.dot(new Vector3f(x,y,1));
+		return dotProd;
 	}
 	
 	private Matrix3f computeEdgeFuncCoeff(Vector3f homogeneousVert1,
