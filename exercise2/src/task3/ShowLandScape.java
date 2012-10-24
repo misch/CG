@@ -85,7 +85,8 @@ public class ShowLandScape {
 		
 		renderPanel.getCanvas().addMouseListener(listener);
 		renderPanel.getCanvas().addMouseMotionListener(listener);
-		renderPanel.getCanvas().addKeyListener(listener);
+//		renderPanel.getCanvas().addKeyListener(listener);
+		jframe.addKeyListener(listener);
 		
 		renderPanel.getCanvas().repaint();
 		jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

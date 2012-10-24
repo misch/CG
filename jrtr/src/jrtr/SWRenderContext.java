@@ -31,7 +31,7 @@ public class SWRenderContext implements RenderContext {
 	private BufferedImage colorBuffer;
 	private Matrix4f viewPortMatrix;
 	private Raster clear;
-	private int width,height;
+//	private int width,height;
 		
 	public void setSceneManager(SceneManagerInterface sceneManager)
 	{
@@ -72,8 +72,8 @@ public class SWRenderContext implements RenderContext {
 	 */
 	public void setViewportSize(int width, int height)
 	{
-		this.width = width;
-		this.height = height;
+//		this.width = width;
+//		this.height = height;
 		viewPortMatrix = new Matrix4f();
 		viewPortMatrix.setZero();
 		viewPortMatrix.setM00(width/2f);
@@ -123,9 +123,8 @@ public class SWRenderContext implements RenderContext {
 		Color3f colors[] = new Color3f[3];
 		Vector4f positions[] = new Vector4f[3];
 		Vector4f normals[] = new Vector4f[3];
-		// Skeleton code to assemble triangle data
-		int k = 0; // index of triangle vertex, k is 0,1, or 2
 		
+		int k = 0; // index of triangle vertex, k is 0,1, or 2
 		
 		// Loop over all vertex indices
 		for(int j=0; j<indices.length; j++)
@@ -157,78 +156,29 @@ public class SWRenderContext implements RenderContext {
 					Vector3f homogeneousVert3 = homog2DCoord(positions[2]);
 					
 					Matrix3f edgeFuncCoeff = computeEdgeFuncCoeff(homogeneousVert1, homogeneousVert2, homogeneousVert3);
+//					Matrix3f edgeFuncCoeff = computeEdgeFuncCoeff(positions);
 
 					// Compute the bounding box:
-//					int[] pixelCoord1 = homogeneousDivision(homogeneousVert1);
-//					int[] pixelCoord2 = homogeneousDivision(homogeneousVert2);
-//					int[] pixelCoord3 = homogeneousDivision(homogeneousVert3);
 					Point pixelCoord1 = homogeneousDivision(homogeneousVert1);
 					Point pixelCoord2 = homogeneousDivision(homogeneousVert2);
 					Point pixelCoord3 = homogeneousDivision(homogeneousVert3);
 					
-					Point[] boundingBox = getBoundingBox(pixelCoord1, pixelCoord2, pixelCoord3);
-//					Point[] boundingBox = {new Point(255,255), new Point(300,300)}; // upperLeft and lowerRight point 
+					Point[] boundingBox = getBoundingBox(pixelCoord1, pixelCoord2, pixelCoord3); 
 					
-					for (int i = boundingBox[0].x; i < boundingBox[1].x;i++){
-						for (int n = boundingBox[0].y; n < boundingBox[1].y; n++){
-							Vector3f vec = new Vector3f(i,n,1);
-//							if (isInTriangle(edgeFuncCoeff, vec)){
-							if (isInTriangle(edgeFuncCoeff, i,n)){
-								colorBuffer.setRGB(i, colorBuffer.getHeight()-n-1, new Color(255,255,255).getRGB());
+					for (int x = boundingBox[0].x; x <= boundingBox[1].x;x++){
+						for (int y = boundingBox[0].y; y <= boundingBox[1].y; y++){
+							if (isInTriangle(edgeFuncCoeff, x,y) && pixelIsInWindow(x,y,colorBuffer)){
+								colorBuffer.setRGB(x, colorBuffer.getHeight()-y-1, new Color(255,255,255).getRGB());
 							}
 							
 						}
 					}
-//					Examples of using the homogeneousDivision-Method.
-//					Will be needed for computing bounding box
-//					int[] pixelCoord1 = homogeneousDivision(homogeneousVert1);
-//					int[] pixelCoord2 = homogeneousDivision(homogeneousVert2);
-//					int[] pixelCoord3 = homogeneousDivision(homogeneousVert3);
-					
-//					int[] boundingBox = new int[4];
-//					int minX = Math.min(Math.min((int)homogeneousVert1.x, (int)homogeneousVert2.x), (int)homogeneousVert3.x);
-//					int maxX = Math.max(Math.max((int)homogeneousVert1.x, (int)homogeneousVert2.x), (int)homogeneousVert3.x);
-//					int minY = Math.min(Math.min((int)homogeneousVert1.y, (int)homogeneousVert2.x), (int)homogeneousVert3.x);
-					
-					// Draw the triangle with the collected three vertex positions, etc.
-					// rasterizeTriangle(positions, colors, normals, ...);
 					k = 0;
 				}
 			}
 		}
-				
-			
-//		//		int[] indices = shape.getVertexData().getIndices();
-//		
-//		for (int i = 0; i<indices.length; i+=9){
-//			Tuple4f vert1 = new Vector4f(indices[i], indices[i+1], indices[i+2], 1);
-//			Tuple4f vert2 = new Vector4f(indices[i+3], indices[i+4], indices[i+5], 1);
-//			Tuple4f vert3 = new Vector4f(indices[i+6], indices[i+7], indices[i+8], 1);
-//			
-//			t.transform(vert1);
-//			t.transform(vert2);
-//			t.transform(vert3);
-//			
-//			// Homogeneous 2D coordinates
-//			Vector3f homogeneousVert1 = homog2DCoord(vert1);
-//			Vector3f homogeneousVert2 = homog2DCoord(vert2);
-//			Vector3f homogeneousVert3 = homog2DCoord(vert3);
-//			
-//			Matrix3f edgeFuncCoeff = computeEdgeFuncCoeff(homogeneousVert1, homogeneousVert2, homogeneousVert3);
-//			
-//			
-//			// Homogeneous division
-////			vec.scale(1/vec.w);
-//			
-////			if (vec.x > 0 && vec.x < colorBuffer.getWidth() && vec.y > 0 && vec.y < colorBuffer.getHeight()){
-////			colorBuffer.setRGB((int)(vec.x), colorBuffer.getHeight() - (int)(vec.y)-1, new Color(255,255,255).getRGB());
-////			}
-//		}
-		
 	}
 	
-//	private Point2f[] getBoundingBox(int[] pixelCoord1, int[] pixelCoord2,
-//			int[] pixelCoord3) {
 	private Point[] getBoundingBox(Point pixelCoord1, Point pixelCoord2,
 			Point pixelCoord3) {
 		int minX = Math.min(Math.min(pixelCoord1.x, pixelCoord2.x), pixelCoord3.x);
@@ -244,12 +194,10 @@ public class SWRenderContext implements RenderContext {
 		return boundingBox;
 	}
 
-//	private int[] homogeneousDivision(Vector3f homogeneousVec) {
 	private Point homogeneousDivision(Vector3f homogeneousVec) {
 		int x = (int)(homogeneousVec.x/homogeneousVec.z); // the z-value is the w-value of the 4-dimensional vector before using homog2DCoord
 		int y = (int)(homogeneousVec.y/homogeneousVec.z);
 		
-//		int[] pixelCoord = {x,y};
 		Point pixelCoord = new Point(x,y);
 		
 		return pixelCoord;
@@ -260,22 +208,16 @@ public class SWRenderContext implements RenderContext {
 		return vec;
 	}
 
-//	private boolean isInTriangle(Matrix3f edgeFuncCoeff, Vector3f vec){
 	private boolean isInTriangle(Matrix3f edgeFuncCoeff, int x, int y){
-		boolean isInTriangle = false;
-//		float x = vec.x;
-//		float y = vec.y;
-//		float w = vec.z;
-		
 		for (int i = 0; i<3; i++){
 			Vector3f edgeCoeff = new Vector3f();
 			edgeFuncCoeff.getColumn(i, edgeCoeff);
 			
-//			float sum = edgeCoeff.x*(x/w)+edgeCoeff.y*(y/w)+edgeCoeff.z;
-			float sum = edgeCoeff.x*x+edgeCoeff.y*y+edgeCoeff.z;
-			isInTriangle = (sum>0);
+			float dotProd = edgeCoeff.dot(new Vector3f(x,y,1));
+			if (dotProd < 0)
+				return false;
 		}
-		return isInTriangle;
+		return true;
 	}
 	
 	private Matrix3f computeEdgeFuncCoeff(Vector3f homogeneousVert1,
@@ -300,28 +242,23 @@ public class SWRenderContext implements RenderContext {
 			// Homogeneous division
 			vec.scale(1/vec.w);
 			
-			if (vec.x > 0 && vec.x < colorBuffer.getWidth() && vec.y > 0 && vec.y < colorBuffer.getHeight()){
+//			if (vec.x > 0 && vec.x < colorBuffer.getWidth() && vec.y > 0 && vec.y < colorBuffer.getHeight()){
+			if (pixelIsInWindow(vec.x, vec.y, colorBuffer)){
 			colorBuffer.setRGB((int)(vec.x), colorBuffer.getHeight() - (int)(vec.y)-1, new Color(255,255,255).getRGB());
 			}
 		}
-		
 	}
-
+	
+	private boolean pixelIsInWindow(float x, float y, BufferedImage cb){
+		boolean inWindow = (x > 0 && x < cb.getWidth() && y > 0 && y < cb.getHeight());
+		return inWindow;
+	}
+	
 	private Vector3f homog2DCoord(Tuple4f vec) {
 		Vector3f homogeneous = new Vector3f(vec.x, vec.y, vec.w);
 		return homogeneous;
 	}
 
-	// Edge functions
-	// Parameter:
-	//	int x, y (pixel coordiantes),
-	//	float w (z-buffer)
-	private int alpha(int x, int y, float w){
-		return 0;
-	}
-	
-	
-	
 	/**
 	 * Does nothing. We will not implement shaders for the software renderer.
 	 */
