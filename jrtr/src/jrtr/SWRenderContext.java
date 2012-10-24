@@ -4,12 +4,14 @@ import jrtr.RenderContext;
 import jrtr.VertexData.VertexElement;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.image.*;
 import java.util.LinkedList;
 
 import javax.vecmath.Color3f;
 import javax.vecmath.Matrix3f;
 import javax.vecmath.Matrix4f;
+import javax.vecmath.Point2f;
 import javax.vecmath.Tuple4f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
@@ -29,6 +31,7 @@ public class SWRenderContext implements RenderContext {
 	private BufferedImage colorBuffer;
 	private Matrix4f viewPortMatrix;
 	private Raster clear;
+	private int width,height;
 		
 	public void setSceneManager(SceneManagerInterface sceneManager)
 	{
@@ -69,6 +72,8 @@ public class SWRenderContext implements RenderContext {
 	 */
 	public void setViewportSize(int width, int height)
 	{
+		this.width = width;
+		this.height = height;
 		viewPortMatrix = new Matrix4f();
 		viewPortMatrix.setZero();
 		viewPortMatrix.setM00(width/2f);
@@ -114,7 +119,6 @@ public class SWRenderContext implements RenderContext {
 	}
 	private void drawTriangles(Shape shape, Matrix4f t) {		
 		VertexData vertexData = shape.getVertexData();
-//		LinkedList<VertexData.VertexElement>;
 		int indices[] = vertexData.getIndices();
 		Color3f colors[] = new Color3f[3];
 		Vector4f positions[] = new Vector4f[3];
@@ -129,8 +133,7 @@ public class SWRenderContext implements RenderContext {
 			// Loop over all attributes of current vertex
 			for(VertexElement vertexElement: vertexData.getElements()){
 				if(vertexElement.getSemantic() == VertexData.Semantic.POSITION){
-//					Vector4f p = new Vector4f(vertexElement.getData()[j*3], vertexElement.getData()[j*3+1], vertexElement.getData()[j*3+2],1);
-					Vector4f p = getPoint(vertexElement, j);
+					Vector4f p = getPoint(vertexElement, indices[j]);
 					t.transform(p);		
 					positions[k] = p;
 					k++;
@@ -138,13 +141,14 @@ public class SWRenderContext implements RenderContext {
 				else if (vertexElement.getSemantic() == VertexData.Semantic.COLOR){
 					Color3f col = new Color3f(vertexElement.getData()[j*3],vertexElement.getData()[j*3+1],vertexElement.getData()[j*3+2]);
 					colors[k] = col;
+//					k++;
 				}
 				else if (vertexElement.getSemantic() == VertexData.Semantic.NORMAL){
-					Vector4f n = getPoint(vertexElement,j);
-					normals[k] = getPoint(vertexElement, j);
-					k++;
+					Vector4f n = getPoint(vertexElement,indices[j]);
+					normals[k] = n;
+//					k++;
 				}
-			
+//				k++;
 				// Draw triangle as soon as we collected the data for 3 vertices
 				if(k == 3)
 				{
@@ -153,12 +157,25 @@ public class SWRenderContext implements RenderContext {
 					Vector3f homogeneousVert3 = homog2DCoord(positions[2]);
 					
 					Matrix3f edgeFuncCoeff = computeEdgeFuncCoeff(homogeneousVert1, homogeneousVert2, homogeneousVert3);
+
+					// Compute the bounding box:
+					int[] pixelCoord1 = homogeneousDivision(homogeneousVert1);
+					int[] pixelCoord2 = homogeneousDivision(homogeneousVert2);
+					int[] pixelCoord3 = homogeneousDivision(homogeneousVert3);
 					
+//					Point2f[] boundingBox = getBoundingBox(pixelCoord1, pixelCoord2, pixelCoord3);
+					Point[] boundingBox = {new Point(0,0), new Point(width,height)}; 
 					
-					int[] boundingBox = new int[4];
-					int minX = Math.min(Math.min((int)homogeneousVert1.x, (int)homogeneousVert2.x), (int)homogeneousVert3.x);
-					int maxX = Math.max(Math.max((int)homogeneousVert1.x, (int)homogeneousVert2.x), (int)homogeneousVert3.x);
-					int minY = Math.min(Math.min((int)homogeneousVert1.y, (int)homogeneousVert2.x), (int)homogeneousVert3.x);
+//					Examples of using the homogeneousDivision-Method.
+//					Will be needed for computing bounding box
+//					int[] pixelCoord1 = homogeneousDivision(homogeneousVert1);
+//					int[] pixelCoord2 = homogeneousDivision(homogeneousVert2);
+//					int[] pixelCoord3 = homogeneousDivision(homogeneousVert3);
+					
+//					int[] boundingBox = new int[4];
+//					int minX = Math.min(Math.min((int)homogeneousVert1.x, (int)homogeneousVert2.x), (int)homogeneousVert3.x);
+//					int maxX = Math.max(Math.max((int)homogeneousVert1.x, (int)homogeneousVert2.x), (int)homogeneousVert3.x);
+//					int minY = Math.min(Math.min((int)homogeneousVert1.y, (int)homogeneousVert2.x), (int)homogeneousVert3.x);
 					
 					// Draw the triangle with the collected three vertex positions, etc.
 					// rasterizeTriangle(positions, colors, normals, ...);
@@ -197,6 +214,20 @@ public class SWRenderContext implements RenderContext {
 		
 	}
 	
+	private Point2f[] getBoundingBox(int[] pixelCoord1, int[] pixelCoord2,
+			int[] pixelCoord3) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private int[] homogeneousDivision(Vector3f homogeneousVec) {
+		int x = (int)(homogeneousVec.x/homogeneousVec.z); // the z-value is the w-value of the 4-dimensional vector before using homog2DCoord
+		int y = (int)(homogeneousVec.y/homogeneousVec.z);
+		
+		int[] pixelCoord = {x,y};
+		return pixelCoord;
+	}
+
 	private Vector4f getPoint(VertexElement vertexElement, int j) {
 		Vector4f vec = new Vector4f(vertexElement.getData()[j*3], vertexElement.getData()[j*3+1], vertexElement.getData()[j*3+2],1);
 		return vec;
