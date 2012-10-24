@@ -120,7 +120,7 @@ public class SWRenderContext implements RenderContext {
 	private void drawTriangles(Shape shape, Matrix4f t) {		
 		VertexData vertexData = shape.getVertexData();
 		int indices[] = vertexData.getIndices();
-		Color3f colors[] = new Color3f[3];
+		Color colors[] = new Color[3];
 		Vector4f positions[] = new Vector4f[3];
 		Vector4f normals[] = new Vector4f[3];
 		
@@ -138,8 +138,8 @@ public class SWRenderContext implements RenderContext {
 					k++;
 				}
 				else if (vertexElement.getSemantic() == VertexData.Semantic.COLOR){
-//					Color3f col = new Color3f(vertexElement.getData()[j*3],vertexElement.getData()[j*3+1],vertexElement.getData()[j*3+2]);
-//					colors[k] = col;
+					Color col = new Color(vertexElement.getData()[indices[j]*3],vertexElement.getData()[indices[j]*3+1],vertexElement.getData()[indices[j]*3+2]);
+					colors[k] = col;
 //					k++;
 				}
 				else if (vertexElement.getSemantic() == VertexData.Semantic.NORMAL){
@@ -156,8 +156,9 @@ public class SWRenderContext implements RenderContext {
 					Vector3f homogeneousVert3 = homog2DCoord(positions[2]);
 					
 					Matrix3f edgeFuncCoeff = computeEdgeFuncCoeff(homogeneousVert1, homogeneousVert2, homogeneousVert3);
-//					Matrix3f edgeFuncCoeff = computeEdgeFuncCoeff(positions);
 
+					
+					
 					// Compute the bounding box:
 					Point pixelCoord1 = homogeneousDivision(homogeneousVert1);
 					Point pixelCoord2 = homogeneousDivision(homogeneousVert2);
@@ -168,9 +169,8 @@ public class SWRenderContext implements RenderContext {
 					for (int x = boundingBox[0].x; x <= boundingBox[1].x;x++){
 						for (int y = boundingBox[0].y; y <= boundingBox[1].y; y++){
 							if (isInTriangle(edgeFuncCoeff, x,y) && pixelIsInWindow(x,y,colorBuffer)){
-								colorBuffer.setRGB(x, colorBuffer.getHeight()-y-1, new Color(255,255,255).getRGB());
+								colorBuffer.setRGB(x, colorBuffer.getHeight()-y-1,colors[0].getRGB());
 							}
-							
 						}
 					}
 					k = 0;
@@ -242,7 +242,6 @@ public class SWRenderContext implements RenderContext {
 			// Homogeneous division
 			vec.scale(1/vec.w);
 			
-//			if (vec.x > 0 && vec.x < colorBuffer.getWidth() && vec.y > 0 && vec.y < colorBuffer.getHeight()){
 			if (pixelIsInWindow(vec.x, vec.y, colorBuffer)){
 			colorBuffer.setRGB((int)(vec.x), colorBuffer.getHeight() - (int)(vec.y)-1, new Color(255,255,255).getRGB());
 			}

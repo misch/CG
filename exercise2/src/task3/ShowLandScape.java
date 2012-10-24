@@ -58,7 +58,7 @@ public class ShowLandScape {
 	*/
 	public static void main(String[] args){	
 
-		int size = 7;
+		int size = 4;
 		int roughness = 3;
 		shape = setUpLandscape(size, roughness);
 
@@ -86,7 +86,7 @@ public class ShowLandScape {
 		renderPanel.getCanvas().addMouseListener(listener);
 		renderPanel.getCanvas().addMouseMotionListener(listener);
 //		renderPanel.getCanvas().addKeyListener(listener);
-		jframe.addKeyListener(listener);
+				jframe.addKeyListener(listener);
 		
 		renderPanel.getCanvas().repaint();
 		jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
