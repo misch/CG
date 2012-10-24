@@ -164,8 +164,17 @@ public class SWRenderContext implements RenderContext {
 					int[] pixelCoord3 = homogeneousDivision(homogeneousVert3);
 					
 //					Point2f[] boundingBox = getBoundingBox(pixelCoord1, pixelCoord2, pixelCoord3);
-					Point[] boundingBox = {new Point(0,0), new Point(width,height)}; 
+					Point[] boundingBox = {new Point(0,0), new Point(width,height)}; // upperLeft and lowerRight point 
 					
+					for (int i = boundingBox[0].x; i < boundingBox[1].x;i++){
+						for (int n = boundingBox[0].y; n < boundingBox[1].y; n++){
+							Vector3f vec = new Vector3f(i,n,1);
+							if (isInTriangle(edgeFuncCoeff, vec)){
+								colorBuffer.setRGB(i, colorBuffer.getHeight()-n-1, new Color(255,255,255).getRGB());
+							}
+							
+						}
+					}
 //					Examples of using the homogeneousDivision-Method.
 //					Will be needed for computing bounding box
 //					int[] pixelCoord1 = homogeneousDivision(homogeneousVert1);
