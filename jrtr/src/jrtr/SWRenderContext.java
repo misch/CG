@@ -146,7 +146,8 @@ public class SWRenderContext implements RenderContext {
 					
 					Point[] boundingBox = computeBoundingBox(pos);
 					Vector3f wReciprocalValues = new Vector3f(1/pos[0].w, 1/pos[1].w, 1/pos[2].w);
-										
+
+					// TODO: extract method to interpolate colors
 					Vector3f[] interpolatedColors = interpolateColors(edgeFuncCoeff, colors);
 					Vector3f interpolatedOneOverW = computeOneOverW(edgeFuncCoeff, colors);
 					
