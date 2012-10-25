@@ -156,19 +156,18 @@ public class SWRenderContext implements RenderContext {
 						for (int y = boundingBox[0].y; y <= boundingBox[1].y; y++){		
 							Vector3f edgeValues = edgeValues(x,y,edgeFuncCoeff);
 							
-							float redUOverW = red.dot(new Vector3f(x,y,1)); 
-							float blueUOverW = blue.dot(new Vector3f(x,y,1));
-							float greenUOverW = green.dot(new Vector3f(x,y,1));
-							float allOneOverW = oneOverW.dot(new Vector3f(x,y,1));
-							
-							int redVal = (int)(redUOverW/allOneOverW);
-							int blueVal = (int)(blueUOverW/allOneOverW);
-							int greenVal = (int)(greenUOverW/allOneOverW);
-							
-//							System.out.println("red: " + redVal + "\n" + "blue: " + blueVal + "\n" + "green: "+greenVal+"\n");
-							
+												
 							if (edgeValues != null){
-								Color c = new Color(redVal,blueVal,greenVal);
+								float redUOverW = red.dot(new Vector3f(x,y,1)); 
+								float blueUOverW = blue.dot(new Vector3f(x,y,1));
+								float greenUOverW = green.dot(new Vector3f(x,y,1));
+								float allOneOverW = oneOverW.dot(new Vector3f(x,y,1));
+								
+								int redVal = (int)(redUOverW/allOneOverW);
+								int blueVal = (int)(blueUOverW/allOneOverW);
+								int greenVal = (int)(greenUOverW/allOneOverW);
+								
+								Color c = new Color(redVal,greenVal,blueVal);
 								float zBuff = edgeValues.dot(wReciprocalValues)/(edgeValues.x + edgeValues.y + edgeValues.z);
 								if (zBuffer[x][y] < zBuff){
 									zBuffer[x][y] = zBuff;

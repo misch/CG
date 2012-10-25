@@ -46,7 +46,7 @@ public class Cube extends AbstractSimpleShape{
 	
 	protected void setColors(){
 		// The vertex colors
-		float[] colors = {1,0,0, 1,0,0, 1,0,0, 1,0,0,
+		float[] colors = {1,0,1, 1,0,1, 1,0,0, 1,0,0,
 				     0,1,0, 0,1,0, 0,1,0, 0,1,0,
 					 1,0,0, 1,0,0, 1,0,0, 1,0,0,
 					 0,1,0, 0,1,0, 0,1,0, 0,1,0,
