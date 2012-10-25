@@ -73,8 +73,6 @@ public class SWRenderContext implements RenderContext {
 	 */
 	public void setViewportSize(int width, int height)
 	{
-//		this.width = width;
-//		this.height = height;
 		this.zBuffer = new float[width][height];
 		viewPortMatrix = new Matrix4f();
 		viewPortMatrix.setZero();
@@ -98,6 +96,7 @@ public class SWRenderContext implements RenderContext {
 	private void beginFrame()
 	{
 		colorBuffer.setData(clear);
+		zBuffer = new float[colorBuffer.getWidth()][colorBuffer.getHeight()];
 	}
 	
 	private void endFrame()
@@ -143,10 +142,10 @@ public class SWRenderContext implements RenderContext {
 					Color col = new Color(vertexElement.getData()[indices[j]*3],vertexElement.getData()[indices[j]*3+1],vertexElement.getData()[indices[j]*3+2]);
 					colors[k] = col;
 				}
-//				else if (vertexElement.getSemantic() == VertexData.Semantic.NORMAL){
-//					Vector4f n = getPoint(vertexElement,indices[j]);
-//					normals[k] = n;
-//				}
+				else if (vertexElement.getSemantic() == VertexData.Semantic.NORMAL){
+					Vector4f n = getPoint(vertexElement,indices[j]);
+					normals[k] = n;
+				}
 				
 				// Draw triangle as soon as we collected the data for 3 vertices
 				if(k == 3)
@@ -171,11 +170,10 @@ public class SWRenderContext implements RenderContext {
 							Vector3f edgeValues = edgeValues(x,y,edgeFuncCoeff);
 							
 							if (isInTriangle(edgeFuncCoeff, x,y) && pixelIsInWindow(x,y,colorBuffer)){
-//								float zBuff = edgeValues.dot(wValues);
-								float zBuff = edgeValues.dot(new Vector3f(1/w1, 1/w2, 1/w3));
+								float zBuff = edgeValues.dot(new Vector3f(1/w1, 1/w2, 1/w3))/(edgeValues.x + edgeValues.y + edgeValues.z);
 								if (zBuffer[x][y] < zBuff){
-									colorBuffer.setRGB(x, colorBuffer.getHeight()-y-1,colors[0].getRGB());
 									zBuffer[x][y] = zBuff;
+									colorBuffer.setRGB(x, colorBuffer.getHeight()-y-1,colors[0].getRGB());
 								}
 							}
 						}
@@ -191,7 +189,7 @@ public class SWRenderContext implements RenderContext {
 		Vector3f edgeCoeff = new Vector3f();
 		for (int i = 0; i<3; i++){
 			edgeFuncCoeff.getColumn(i, edgeCoeff);
-			
+
 			float dotProd = edgeCoeff.dot(new Vector3f(x,y,1));
 			edgeValues[i] = dotProd;
 		}
@@ -244,16 +242,9 @@ public class SWRenderContext implements RenderContext {
 		return true;
 	}
 	
-//	private Matrix3f computeEdgeFuncCoeff(Vector3f homogeneousVert1,
-//			Vector3f homogeneousVert2, Vector3f homogeneousVert3) {
 	private Matrix3f computeEdgeFuncCoeff(Vector4f[] pos) {
 		Matrix3f coeff = new Matrix3f();
 
-		
-//		edgeFuncCoeff.setRow(0, homogeneousVert1);
-//		edgeFuncCoeff.setRow(1, homogeneousVert2);
-//		edgeFuncCoeff.setRow(2, homogeneousVert3);
-		
 		for (int i = 0; i<3;i++){
 			coeff.setRow(i, new Vector3f(pos[i].x, pos[i].y, pos[i].w));
 		}	
@@ -282,10 +273,10 @@ public class SWRenderContext implements RenderContext {
 		return inWindow;
 	}
 	
-	private Vector3f homog2DCoord(Tuple4f vec) {
-		Vector3f homogeneous = new Vector3f(vec.x, vec.y, vec.w);
-		return homogeneous;
-	}
+//	private Vector3f homog2DCoord(Tuple4f vec) {
+//		Vector3f homogeneous = new Vector3f(vec.x, vec.y, vec.w);
+//		return homogeneous;
+//	}
 
 	/**
 	 * Does nothing. We will not implement shaders for the software renderer.
