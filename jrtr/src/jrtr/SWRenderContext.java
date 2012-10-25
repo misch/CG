@@ -150,44 +150,34 @@ public class SWRenderContext implements RenderContext {
 				
 				// Draw triangle as soon as we collected the data for 3 vertices
 				if(k == 3)
-				{
-					Vector3f homogeneousVert1 = homog2DCoord(positions[0]);
-					Vector3f homogeneousVert2 = homog2DCoord(positions[1]);
-					Vector3f homogeneousVert3 = homog2DCoord(positions[2]);
+				{	
+					Matrix3f edgeFuncCoeff = computeEdgeFuncCoeff(positions);
 					
-					Matrix3f edgeFuncCoeff = computeEdgeFuncCoeff(homogeneousVert1, homogeneousVert2, homogeneousVert3);
-					
-					float w1 = homogeneousVert1.z;
-					float w2 = homogeneousVert2.z;
-					float w3 = homogeneousVert3.z;
-					
-					setPixel(homogeneousVert1, colors[0]);
-					setPixel(homogeneousVert2, colors[1]);
-					setPixel(homogeneousVert3, colors[2]);
-					
-					
-					
-					
+					float w1 = positions[0].w;
+					float w2 = positions[1].w;
+					float w3 = positions[2].w;
+			
 					// Compute the bounding box:
-					Point pixelCoord1 = homogeneousDivision(homogeneousVert1);
-					Point pixelCoord2 = homogeneousDivision(homogeneousVert2);
-					Point pixelCoord3 = homogeneousDivision(homogeneousVert3);
+					Point pixelCoord1 = new Point((int)(positions[0].x/w1), (int)(positions[0].y/w1));
+					Point pixelCoord2= new Point((int)(positions[1].x/w2), (int)(positions[1].y/w2));
+					Point pixelCoord3 = new Point((int)(positions[2].x/w3), (int)(positions[2].y/w3));
 					
 					Point[] boundingBox = getBoundingBox(pixelCoord1, pixelCoord2, pixelCoord3); 
 					
+					
 					for (int x = boundingBox[0].x; x <= boundingBox[1].x;x++){
-						for (int y = boundingBox[0].y; y <= boundingBox[1].y; y++){
-							float zBuff = 0;
-							zBuff += (1/w3)*alpha(edgeFuncCoeff,x,y);
-							zBuff += (1/w2)*beta(edgeFuncCoeff,x,y);
-							zBuff += (1/w1)*gamma(edgeFuncCoeff,x,x);
+						for (int y = boundingBox[0].y; y <= boundingBox[1].y; y++){		
 							
-							if (zBuff > zBuffer[x][y]){
-								zBuffer[x][y] = zBuff;
+							Vector3f edgeValues = edgeValues(x,y,edgeFuncCoeff);
 							
 							if (isInTriangle(edgeFuncCoeff, x,y) && pixelIsInWindow(x,y,colorBuffer)){
-								colorBuffer.setRGB(x, colorBuffer.getHeight()-y-1,colors[0].getRGB());
-							}}
+//								float zBuff = edgeValues.dot(wValues);
+								float zBuff = edgeValues.dot(new Vector3f(1/w1, 1/w2, 1/w3));
+								if (zBuffer[x][y] < zBuff){
+									colorBuffer.setRGB(x, colorBuffer.getHeight()-y-1,colors[0].getRGB());
+									zBuffer[x][y] = zBuff;
+								}
+							}
 						}
 					}
 					k = 0;
@@ -196,17 +186,22 @@ public class SWRenderContext implements RenderContext {
 		}
 	}
 
+	private Vector3f edgeValues(int x, int y, Matrix3f edgeFuncCoeff) {
+		float edgeValues[] = new float[3];
+		Vector3f edgeCoeff = new Vector3f();
+		for (int i = 0; i<3; i++){
+			edgeFuncCoeff.getColumn(i, edgeCoeff);
+			
+			float dotProd = edgeCoeff.dot(new Vector3f(x,y,1));
+			edgeValues[i] = dotProd;
+		}
+		return new Vector3f(edgeValues);
+	}
+
 	private void setPixel(Vector3f homogCoord, Color color) {
 		Point pixelCoord = homogeneousDivision(homogCoord);
 		zBuffer[pixelCoord.x][pixelCoord.y] = 1/homogCoord.z;
 	}
-
-//	private float zBuffer(Vector3f homogeneousVert1, Vector3f homogeneousVert2,
-//			Vector3f homogeneousVert3, int x, int y) {
-//	
-//		float w = homogeneousVert1.z + homogeneousVert2.z + homogeneousVert3.z;
-//		return 0;
-//	}
 
 	private Point[] getBoundingBox(Point pixelCoord1, Point pixelCoord2,
 			Point pixelCoord3) {
@@ -226,7 +221,7 @@ public class SWRenderContext implements RenderContext {
 	private Point homogeneousDivision(Vector3f homogeneousVec) {
 		int x = (int)(homogeneousVec.x/homogeneousVec.z); // the z-value is the w-value of the 4-dimensional vector before using homog2DCoord
 		int y = (int)(homogeneousVec.y/homogeneousVec.z);
-		
+		zBuffer[x][y] = homogeneousVec.z;
 		Point pixelCoord = new Point(x,y);
 		
 		return pixelCoord;
@@ -249,37 +244,21 @@ public class SWRenderContext implements RenderContext {
 		return true;
 	}
 	
-	private float alpha(Matrix3f edgeFuncCoeff, int x, int y){
-		Vector3f alphaCoeff = new Vector3f();
-		edgeFuncCoeff.getColumn(0, alphaCoeff);		
-		float dotProd = alphaCoeff.dot(new Vector3f(x,y,1));
-		return dotProd;
-	}
-	
-	private float beta(Matrix3f edgeFuncCoeff, int x, int y){
-		Vector3f betaCoeff = new Vector3f();
-		edgeFuncCoeff.getColumn(1, betaCoeff);		
-		float dotProd = betaCoeff.dot(new Vector3f(x,y,1));
-		return dotProd;
-	}
-	
-	private float gamma(Matrix3f edgeFuncCoeff, int x, int y){
-		Vector3f gammaCoeff = new Vector3f();
-		edgeFuncCoeff.getColumn(2, gammaCoeff);		
-		float dotProd = gammaCoeff.dot(new Vector3f(x,y,1));
-		return dotProd;
-	}
-	
-	private Matrix3f computeEdgeFuncCoeff(Vector3f homogeneousVert1,
-			Vector3f homogeneousVert2, Vector3f homogeneousVert3) {
-		Matrix3f edgeFuncCoeff = new Matrix3f();
+//	private Matrix3f computeEdgeFuncCoeff(Vector3f homogeneousVert1,
+//			Vector3f homogeneousVert2, Vector3f homogeneousVert3) {
+	private Matrix3f computeEdgeFuncCoeff(Vector4f[] pos) {
+		Matrix3f coeff = new Matrix3f();
+
 		
-		edgeFuncCoeff.setRow(0, homogeneousVert1);
-		edgeFuncCoeff.setRow(1, homogeneousVert2);
-		edgeFuncCoeff.setRow(2, homogeneousVert3);
+//		edgeFuncCoeff.setRow(0, homogeneousVert1);
+//		edgeFuncCoeff.setRow(1, homogeneousVert2);
+//		edgeFuncCoeff.setRow(2, homogeneousVert3);
 		
-		edgeFuncCoeff.invert();
-		return edgeFuncCoeff;
+		for (int i = 0; i<3;i++){
+			coeff.setRow(i, new Vector3f(pos[i].x, pos[i].y, pos[i].w));
+		}	
+		coeff.invert();
+		return coeff;
 	}
 
 	private void drawDots(Shape shape, Matrix4f t) {

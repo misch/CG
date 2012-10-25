@@ -109,8 +109,8 @@ public class ShowPoints {
 	{		
 		
 //		shape = new Cylinder(50,2,1).getShape();
-		shape = new Torus(40,2).getShape();
-//		shape = new Cube().getShape();
+//		shape = new Torus(40,2).getShape();
+		shape = new Cube().getShape();
 
 		// Make a scene manager and add the object
 		sceneManager = new SimpleSceneManager();
