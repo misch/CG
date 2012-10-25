@@ -58,7 +58,7 @@ public class ShowLandScape {
 	*/
 	public static void main(String[] args){	
 
-		int size = 4;
+		int size = 7;
 		int roughness = 3;
 		shape = setUpLandscape(size, roughness);
 

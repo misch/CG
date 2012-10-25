@@ -31,7 +31,6 @@ public class SWRenderContext implements RenderContext {
 	private BufferedImage colorBuffer;
 	private Matrix4f viewPortMatrix;
 	private Raster clear;
-//	private int width,height;
 	private float[][] zBuffer;
 		
 	public void setSceneManager(SceneManagerInterface sceneManager)
@@ -71,22 +70,22 @@ public class SWRenderContext implements RenderContext {
 	 * Set a new viewport size. The render context will also need to store
 	 * a viewport matrix, which you need to reset here. 
 	 */
-	public void setViewportSize(int width, int height)
+	public void setViewportSize(int w, int h) // w = width, h = height
 	{
-		this.zBuffer = new float[width][height];
-		viewPortMatrix = new Matrix4f();
-		viewPortMatrix.setZero();
-		viewPortMatrix.setM00(width/2f);
-		viewPortMatrix.setM11(height/2f);
-		viewPortMatrix.setM22(1/2f);
-		viewPortMatrix.setM33(1f);
-		viewPortMatrix.setM03(width/2f);
-		viewPortMatrix.setM13(height/2f);
-		viewPortMatrix.setM23(1/2f);
-
+		this.zBuffer = new float[w][h];
+			
+		viewPortMatrix = new Matrix4f(	w/2f,	0,	0,		w/2f,
+										0,		-h/2f,	0,		h/2f,
+										0,		0,	0.5f,	0.5f,
+										0,		0,	0,		1);
+//		viewPortMatrix.setZero();
+//		viewPortMatrix.setM00(width/2f);
+//		viewPortMatrix.setM11(height/2f);
+//		viewPortMatrix.setM22(1/2f);
+//		viewPortMatrix.setColumn(3, new Vector4f(width/2f, height/2f, 1/2f, 1));
 		
-		colorBuffer = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
-		BufferedImage clearBuffer = new BufferedImage(width,height, BufferedImage.TYPE_3BYTE_BGR);
+		colorBuffer = new BufferedImage(w, h, BufferedImage.TYPE_3BYTE_BGR);
+		BufferedImage clearBuffer = new BufferedImage(w,h, BufferedImage.TYPE_3BYTE_BGR);
 		this.clear = clearBuffer.getRaster();
 	}
 		
@@ -173,7 +172,7 @@ public class SWRenderContext implements RenderContext {
 								float zBuff = edgeValues.dot(new Vector3f(1/w1, 1/w2, 1/w3))/(edgeValues.x + edgeValues.y + edgeValues.z);
 								if (zBuffer[x][y] < zBuff){
 									zBuffer[x][y] = zBuff;
-									colorBuffer.setRGB(x, colorBuffer.getHeight()-y-1,colors[0].getRGB());
+									colorBuffer.setRGB(x, y,colors[0].getRGB());
 								}
 							}
 						}
@@ -196,11 +195,6 @@ public class SWRenderContext implements RenderContext {
 		return new Vector3f(edgeValues);
 	}
 
-	private void setPixel(Vector3f homogCoord, Color color) {
-		Point pixelCoord = homogeneousDivision(homogCoord);
-		zBuffer[pixelCoord.x][pixelCoord.y] = 1/homogCoord.z;
-	}
-
 	private Point[] getBoundingBox(Point pixelCoord1, Point pixelCoord2,
 			Point pixelCoord3) {
 		int minX = Math.min(Math.min(pixelCoord1.x, pixelCoord2.x), pixelCoord3.x);
@@ -214,15 +208,6 @@ public class SWRenderContext implements RenderContext {
 		
 		Point[] boundingBox = {upperLeft, lowerRight};
 		return boundingBox;
-	}
-
-	private Point homogeneousDivision(Vector3f homogeneousVec) {
-		int x = (int)(homogeneousVec.x/homogeneousVec.z); // the z-value is the w-value of the 4-dimensional vector before using homog2DCoord
-		int y = (int)(homogeneousVec.y/homogeneousVec.z);
-		zBuffer[x][y] = homogeneousVec.z;
-		Point pixelCoord = new Point(x,y);
-		
-		return pixelCoord;
 	}
 
 	private Vector4f getPoint(VertexElement vertexElement, int j) {
@@ -263,7 +248,8 @@ public class SWRenderContext implements RenderContext {
 			vec.scale(1/vec.w);
 			
 			if (pixelIsInWindow(vec.x, vec.y, colorBuffer)){
-			colorBuffer.setRGB((int)(vec.x), colorBuffer.getHeight() - (int)(vec.y)-1, new Color(255,255,255).getRGB());
+//			colorBuffer.setRGB((int)(vec.x), colorBuffer.getHeight() - (int)(vec.y)-1, new Color(255,255,255).getRGB());
+			colorBuffer.setRGB((int)(vec.x), (int)(vec.y), new Color(255,255,255).getRGB());
 			}
 		}
 	}
@@ -272,11 +258,6 @@ public class SWRenderContext implements RenderContext {
 		boolean inWindow = (x > 0 && x < cb.getWidth() && y > 0 && y < cb.getHeight());
 		return inWindow;
 	}
-	
-//	private Vector3f homog2DCoord(Tuple4f vec) {
-//		Vector3f homogeneous = new Vector3f(vec.x, vec.y, vec.w);
-//		return homogeneous;
-//	}
 
 	/**
 	 * Does nothing. We will not implement shaders for the software renderer.
