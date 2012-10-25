@@ -146,32 +146,32 @@ public class SWRenderContext implements RenderContext {
 					
 					Point[] boundingBox = computeBoundingBox(pos);
 					Vector3f wReciprocalValues = new Vector3f(1/pos[0].w, 1/pos[1].w, 1/pos[2].w);
-					
-					Vector3f red = computeRedColInterpolMatrix(pos, colors);
-					Vector3f blue = computeBlueColInterpolMatrix(pos, colors);
-					Vector3f green = computeGreenColInterpolMatrix(pos, colors);
-					Vector3f oneOverW = computeOneOverW(pos, colors);
+										
+					Vector3f[] interpolatedColors = interpolateColors(edgeFuncCoeff, colors);
+					Vector3f interpolatedOneOverW = computeOneOverW(edgeFuncCoeff, colors);
 					
 					for (int x = boundingBox[0].x; x <= boundingBox[1].x;x++){
 						for (int y = boundingBox[0].y; y <= boundingBox[1].y; y++){		
 							Vector3f edgeValues = edgeValues(x,y,edgeFuncCoeff);
-							
-												
+											
 							if (edgeValues != null){
-								float redUOverW = red.dot(new Vector3f(x,y,1)); 
-								float blueUOverW = blue.dot(new Vector3f(x,y,1));
-								float greenUOverW = green.dot(new Vector3f(x,y,1));
-								float allOneOverW = oneOverW.dot(new Vector3f(x,y,1));
 								
-								int redVal = (int)(redUOverW/allOneOverW);
-								int blueVal = (int)(blueUOverW/allOneOverW);
-								int greenVal = (int)(greenUOverW/allOneOverW);
+								float[] uOverW = new float[3];
+								for (int i=0;i<3;i++){
+									uOverW[i] = interpolatedColors[i].dot(new Vector3f(x,y,1));
+								}
+								float oneOverW = interpolatedOneOverW.dot(new Vector3f(x,y,1));
 								
-								Color c = new Color(redVal,greenVal,blueVal);
+								int[] colValues = new int[3];
+								for (int i=0;i<3;i++){
+									colValues[i] = (int)(uOverW[i]/oneOverW);
+								}
+								
+								Color c = new Color(colValues[0], colValues[1], colValues[2]);
 								float zBuff = edgeValues.dot(wReciprocalValues)/(edgeValues.x + edgeValues.y + edgeValues.z);
+								
 								if (zBuffer[x][y] < zBuff){
 									zBuffer[x][y] = zBuff;
-//									colorBuffer.setRGB(x, y,colors[0].getRGB());
 									colorBuffer.setRGB(x, y,c.getRGB());
 									
 								}
@@ -184,67 +184,24 @@ public class SWRenderContext implements RenderContext {
 		}
 	}
 
-	private Vector3f computeRedColInterpolMatrix(Vector4f[] pos, Color[] colors) {
-		Matrix3f coeff = new Matrix3f();
-
-		for (int i = 0; i<3;i++){
-			coeff.setRow(i, new Vector3f(pos[i].x, pos[i].y, pos[i].w));
-		}	
-		coeff.invert();
-		
+	private Vector3f[] interpolateColors(Matrix3f edgeFunctionCoeff, Color[] colors) {
 		Vector3f redValues = new Vector3f(colors[0].getRed(), colors[1].getRed(), colors[2].getRed());
-		
-		coeff.transform(redValues);
-		return redValues;
-	}
-	
-	private Vector3f computeBlueColInterpolMatrix(Vector4f[] pos, Color[] colors) {
-		Matrix3f coeff = new Matrix3f();
-
-		for (int i = 0; i<3;i++){
-			coeff.setRow(i, new Vector3f(pos[i].x, pos[i].y, pos[i].w));
-		}	
-		coeff.invert();
-		
+		Vector3f greenValues = new Vector3f(colors[0].getGreen(), colors[1].getGreen(), colors[2].getGreen());
 		Vector3f blueValues = new Vector3f(colors[0].getBlue(), colors[1].getBlue(), colors[2].getBlue());
 		
-		coeff.transform(blueValues);
-		return blueValues;
+		edgeFunctionCoeff.transform(redValues);
+		edgeFunctionCoeff.transform(greenValues);
+		edgeFunctionCoeff.transform(blueValues);
+		
+		Vector3f[] interpolatedColors = {redValues, greenValues, blueValues};
+		return interpolatedColors;
 	}
-	
-	
-	private Vector3f computeGreenColInterpolMatrix(Vector4f[] pos, Color[] colors) {
-		Matrix3f coeff = new Matrix3f();
-
-		for (int i = 0; i<3;i++){
-			coeff.setRow(i, new Vector3f(pos[i].x, pos[i].y, pos[i].w));
-		}	
-		coeff.invert();
 		
-		Vector3f redValues = new Vector3f(colors[0].getGreen(), colors[1].getGreen(), colors[2].getGreen());
-		
-		coeff.transform(redValues);
-		return redValues;
-	}
-	
-	private Vector3f computeOneOverW(Vector4f[] pos, Color[] colors) {
-		Matrix3f coeff = new Matrix3f();
-
-		for (int i = 0; i<3;i++){
-			coeff.setRow(i, new Vector3f(pos[i].x, pos[i].y, pos[i].w));
-		}	
-		coeff.invert();
-		
+	private Vector3f computeOneOverW(Matrix3f edgeFuncCoeff, Color[] colors) {
 		Vector3f oneValues = new Vector3f(1,1,1);
-		
-		coeff.transform(oneValues);
+		edgeFuncCoeff.transform(oneValues);
 		return oneValues;
 	}
-
-//	private Matrix3f computeColInterpolMatrix(Vector4f[] pos, Color[] colors) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
 
 	private Point[] computeBoundingBox(Vector4f[] pos) {
 		Point[] pixelCoord = new Point[3];
@@ -252,7 +209,6 @@ public class SWRenderContext implements RenderContext {
 		for (int i = 0; i<3; i++){
 			float w = pos[i].w;
 			pixelCoord[i] = new Point((int)(pos[i].x/w), (int) (pos[i].y/w));
-			
 		}
 		
 		int minX = Math.min(Math.min(pixelCoord[0].x, pixelCoord[1].x), pixelCoord[2].x);
