@@ -165,17 +165,10 @@ public class SWRenderContext implements RenderContext {
 							int blueVal = (int)(blueUOverW/allOneOverW);
 							int greenVal = (int)(greenUOverW/allOneOverW);
 							
-							if (redVal <0)
-								redVal = 0;
-							if (blueVal < 0)
-								blueVal = 0;
-							if (greenVal < 0)
-								greenVal = 0;
-							
-//							System.out.println("red: " + redVal + "\n" + "blue: " + blueVal + "\n" + "green: "+greenVal);
-							Color c = new Color(Math.min(redVal,255),Math.min(blueVal,255),Math.min(greenVal,255));
+//							System.out.println("red: " + redVal + "\n" + "blue: " + blueVal + "\n" + "green: "+greenVal+"\n");
 							
 							if (edgeValues != null){
+								Color c = new Color(redVal,blueVal,greenVal);
 								float zBuff = edgeValues.dot(wReciprocalValues)/(edgeValues.x + edgeValues.y + edgeValues.z);
 								if (zBuffer[x][y] < zBuff){
 									zBuffer[x][y] = zBuff;
@@ -243,10 +236,10 @@ public class SWRenderContext implements RenderContext {
 		}	
 		coeff.invert();
 		
-		Vector3f redValues = new Vector3f(1,1,1);
+		Vector3f oneValues = new Vector3f(1,1,1);
 		
-		coeff.transform(redValues);
-		return redValues;
+		coeff.transform(oneValues);
+		return oneValues;
 	}
 
 //	private Matrix3f computeColInterpolMatrix(Vector4f[] pos, Color[] colors) {
