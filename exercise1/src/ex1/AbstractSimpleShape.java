@@ -14,6 +14,7 @@ public abstract class AbstractSimpleShape implements IForm {
 	protected ArrayList<Float> vertices, colors; 
 	protected ArrayList<Float> normals = new ArrayList<Float>(); 
 	protected ArrayList<Integer> indices;
+	protected ArrayList<Float> texels = new ArrayList<Float>();
 	
 	protected float u,v;
 	protected VertexData vertexData;
@@ -31,11 +32,22 @@ public abstract class AbstractSimpleShape implements IForm {
 		vertexData.addElement(getVertices(), VertexData.Semantic.POSITION, 3);
 		if (this.normals.size() > 0)	
 			vertexData.addElement(getNormals(), VertexData.Semantic.NORMAL,3);
+		if (this.texels.size() > 0)
+			vertexData.addElement(getTexels(),  VertexData.Semantic.TEXCOORD, 2);
 		
 		vertexData.addIndices(getIndices());
 		return vertexData;
 	}
 	
+	private float[] getTexels() {
+		float[] t = new float[texels.size()];
+		
+		for (int i = 0; i<t.length; i++){
+			t[i] = vertices.get(i);
+		}
+		return t;
+	}
+
 	protected float[] getVertices() {
 		float[] v = new float[vertices.size()];
 		

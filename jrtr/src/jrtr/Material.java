@@ -5,4 +5,6 @@ package jrtr;
  * class in the "Shading and Texturing" project.
  */
 public class Material {
+	private Texture texture = new SWTexture();
+	
 }

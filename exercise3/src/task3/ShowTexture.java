@@ -1,4 +1,4 @@
-package task2;
+package task3;
 
 import jrtr.*;
 
@@ -16,7 +16,7 @@ import ex1.Torus;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class ShowRenderedTriangles {	
+public class ShowTexture {	
 	static RenderPanel renderPanel;
 	static RenderContext renderContext;
 	static SimpleSceneManager sceneManager;
@@ -97,17 +97,7 @@ public class ShowRenderedTriangles {
     	public void mouseReleased(MouseEvent e) {}
     	public void mouseEntered(MouseEvent e) {}
     	public void mouseExited(MouseEvent e) {}
-    	public void mouseClicked(MouseEvent e) {Matrix4f t = shape.getTransformation();
-		Matrix4f rotX = new Matrix4f();
-		rotX.rotX(angle);
-		Matrix4f rotY = new Matrix4f();
-		rotY.rotY(angle);
-		t.mul(rotX);
-		t.mul(rotY);
-		shape.setTransformation(t);
-		
-		// Trigger redrawing of the render window
-		renderPanel.getCanvas().repaint(); }
+    	public void mouseClicked(MouseEvent e) {}
 	}
 	
 	/**
@@ -118,18 +108,16 @@ public class ShowRenderedTriangles {
 	public static void main(String[] args) throws IOException
 	{		
 		
-		shape = new Torus(40,2).getShape();
-//		shape = makeHouse();
-		
-
 //		shape = new Cylinder(50,2,1).getShape();
-//		shape = new Cube().getShape();
-
+//		shape = new Torus(80,2).getShape();
+		shape = new Cube().getShape();
+//		shape = makeHouse();
 
 		// Make a scene manager and add the object
 		
-//		Camera camera = new Camera(new Vector3f(-10,40,40), new Vector3f(-5,0,0), new Vector3f(0,1,0));
-//		Frustum frustum = new Frustum(1,100,1,(float)(Math.PI/3));
+//		Camera camera = new Camera(new Vector3f(0,0,40), new Vector3f(0,0,0), new Vector3f(0,1,0));
+		Camera camera = new Camera(new Vector3f(-10,40,40), new Vector3f(-5,0,0), new Vector3f(0,1,0));
+		Frustum frustum = new Frustum(1,100,1,(float)(Math.PI/3));
 //		sceneManager = new SimpleSceneManager(camera, frustum);
 		sceneManager = new SimpleSceneManager();
 

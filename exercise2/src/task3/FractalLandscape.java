@@ -72,7 +72,6 @@ public class FractalLandscape extends AbstractSimpleShape{
 			heights[iDiamond-distance][jDiamond+distance]+
 			heights[iDiamond+distance][jDiamond-distance]+
 			heights[iDiamond+distance][jDiamond+distance])/4;
-		
 			heights[iDiamond][jDiamond]=heightDiamond + (((float) Math.random()-0.5f)*randomScale);
 	}
 	

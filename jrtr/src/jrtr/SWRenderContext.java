@@ -88,8 +88,8 @@ public class SWRenderContext implements RenderContext {
 	 */
 	private void beginFrame()
 	{
-		colorBuffer.setData(clear);
-		zBuffer = new float[colorBuffer.getWidth()][colorBuffer.getHeight()];
+		colorBuffer.getGraphics().clearRect(0, 0, width, height);
+		zBuffer = new float[width][height];
 	}
 	
 	private void endFrame(){}
@@ -143,11 +143,9 @@ public class SWRenderContext implements RenderContext {
 				{	
 					Matrix3f edgeFuncCoeff = computeEdgeFuncCoeff(pos);
 					
-					
 					Point[] boundingBox = computeBoundingBox(pos);
 					Vector3f wReciprocalValues = new Vector3f(1/pos[0].w, 1/pos[1].w, 1/pos[2].w);
-
-					// TODO: extract method to interpolate colors
+			
 					Vector3f[] interpolatedColors = interpolateColors(edgeFuncCoeff, colors);
 					Vector3f interpolatedOneOverW = computeOneOverW(edgeFuncCoeff, colors);
 					
@@ -166,15 +164,20 @@ public class SWRenderContext implements RenderContext {
 								int[] colValues = new int[3];
 								for (int i=0;i<3;i++){
 									colValues[i] = (int)(uOverW[i]/oneOverW);
+//									System.out.println("x: "+x+ " y: "+y);
+								}
+//								System.out.print("\n Color: ");
+								for (int f=0;f<3;f++){
+//									System.out.print(""+colValues[f]+" ");
 								}
 								
-								Color c = new Color(colValues[0], colValues[1], colValues[2]);
+//								Color c = new Color(colValues[0], colValues[1], colValues[2]);
+								Color c = interpolateColors2(edgeValues, colors);
 								float zBuff = edgeValues.dot(wReciprocalValues)/(edgeValues.x + edgeValues.y + edgeValues.z);
 								
 								if (zBuffer[x][y] < zBuff){
 									zBuffer[x][y] = zBuff;
 									colorBuffer.setRGB(x, y,c.getRGB());
-									
 								}
 							}
 						}
@@ -184,17 +187,34 @@ public class SWRenderContext implements RenderContext {
 			}
 		}
 	}
-
-	private Vector3f[] interpolateColors(Matrix3f edgeFunctionCoeff, Color[] colors) {
+	
+	private Color interpolateColors2(Vector3f edgeValues, Color[] colors) {
+		float w = edgeValues.x+edgeValues.y+edgeValues.z;
 		Vector3f redValues = new Vector3f(colors[0].getRed(), colors[1].getRed(), colors[2].getRed());
 		Vector3f greenValues = new Vector3f(colors[0].getGreen(), colors[1].getGreen(), colors[2].getGreen());
 		Vector3f blueValues = new Vector3f(colors[0].getBlue(), colors[1].getBlue(), colors[2].getBlue());
 		
-		edgeFunctionCoeff.transform(redValues);
+		int r = (int)(edgeValues.dot(redValues)/w);
+		int g = (int)(edgeValues.dot(greenValues)/w);
+		int b = (int)(edgeValues.dot(blueValues)/w);
+		
+		Color newRGB = new Color(r,g,b);
+		return newRGB;
+	}
+
+	private Vector3f[] interpolateColors(Matrix3f edgeFunctionCoeff, Color[] colors) {
+		Vector3f coeffRedValues = new Vector3f(colors[0].getRed(), colors[1].getRed(), colors[2].getRed());
+		Vector3f greenValues = new Vector3f(colors[0].getGreen(), colors[1].getGreen(), colors[2].getGreen());
+		Vector3f blueValues = new Vector3f(colors[0].getBlue(), colors[1].getBlue(), colors[2].getBlue());	
+
+		edgeFunctionCoeff.transform(coeffRedValues);
+		
 		edgeFunctionCoeff.transform(greenValues);
 		edgeFunctionCoeff.transform(blueValues);
 		
-		Vector3f[] interpolatedColors = {redValues, greenValues, blueValues};
+		Vector3f[] interpolatedColors = {coeffRedValues, greenValues, blueValues};
+		
+	
 		return interpolatedColors;
 	}
 		
