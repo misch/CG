@@ -72,34 +72,21 @@ public class ShowTexture {
 	{
 		public void run()
 		{
-			// Update transformation
-    		Matrix4f t = shape.getTransformation();
-    		Matrix4f rotX = new Matrix4f();
-    		rotX.rotX(angle);
-    		Matrix4f rotY = new Matrix4f();
-    		rotY.rotY(angle);
-    		t.mul(rotX);
-    		t.mul(rotY);
-    		shape.setTransformation(t);
-    		
-    		// Trigger redrawing of the render window
-    		renderPanel.getCanvas().repaint(); 
+//			// Update transformation
+//    		Matrix4f t = shape.getTransformation();
+//    		Matrix4f rotX = new Matrix4f();
+//    		rotX.rotX(angle);
+//    		Matrix4f rotY = new Matrix4f();
+//    		rotY.rotY(angle);
+//    		t.mul(rotX);
+//    		t.mul(rotY);
+//    		shape.setTransformation(t);
+//    		
+//    		// Trigger redrawing of the render window
+//    		renderPanel.getCanvas().repaint(); 
 		}
 	}
 
-	/**
-	 * A mouse listener for the main window of this application. This can be
-	 * used to process mouse events.
-	 */
-	public static class SimpleMouseListener implements MouseListener
-	{
-    	public void mousePressed(MouseEvent e) {}
-    	public void mouseReleased(MouseEvent e) {}
-    	public void mouseEntered(MouseEvent e) {}
-    	public void mouseExited(MouseEvent e) {}
-    	public void mouseClicked(MouseEvent e) {}
-	}
-	
 	/**
 	 * The main function opens a 3D rendering window, constructs a simple 3D
 	 * scene, and starts a timer task to generate an animation.
@@ -111,22 +98,23 @@ public class ShowTexture {
 //		shape = new Cylinder(50,2,1).getShape();
 //		shape = new Torus(80,2).getShape();
 //		shape = new Cube().getShape();
-		shape = new Square().getShape();
+//		shape = new Square().getShape();
 		
-//		shape = makeHouse();
+		shape = makeHouse();
 
 		// Make a scene manager and add the object
 		
 //		Camera camera = new Camera(new Vector3f(0,0,40), new Vector3f(0,0,0), new Vector3f(0,1,0));
-//		Camera camera = new Camera(new Vector3f(-10,40,40), new Vector3f(-5,0,0), new Vector3f(0,1,0));
-//		Frustum frustum = new Frustum(1,100,1,(float)(Math.PI/3));
-//		sceneManager = new SimpleSceneManager(camera, frustum);
-		sceneManager = new SimpleSceneManager();
+		Camera camera = new Camera(new Vector3f(0,0,3), new Vector3f(0,0,0), new Vector3f(0,1,0));
+		Frustum frustum = new Frustum(1,100,1,(float)(Math.PI/3));
+		sceneManager = new SimpleSceneManager(camera, frustum);
+//		sceneManager = new SimpleSceneManager();
 		SWTexture texture = new SWTexture();
 //		texture.load("pic.jpg");
 //		texture.load("schachbrett.gif");
-		texture.load("smiley.gif");
+//		texture.load("smiley.gif");
 //		texture.load("sea.jpg");
+		texture.load("dwarf.png");
 		
 		shape.setMaterial(new Material(texture));
 		sceneManager.addShape(shape);
@@ -143,8 +131,14 @@ public class ShowTexture {
 		jframe.setLocationRelativeTo(null); // center of screen
 		jframe.getContentPane().add(renderPanel.getCanvas());// put the canvas into a JFrame window
 
-	    jframe.addMouseListener(new SimpleMouseListener());
-		   	    	    
+//	    jframe.addMouseListener(new SimpleMouseListener());
+		LandscapeListener listener = new LandscapeListener(camera, renderPanel);
+		
+		renderPanel.getCanvas().addMouseListener(listener);
+		renderPanel.getCanvas().addMouseMotionListener(listener);
+//		renderPanel.getCanvas().addKeyListener(listener);
+		jframe.addKeyListener(listener);
+		
 	    jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    jframe.setVisible(true); // show window
 	}

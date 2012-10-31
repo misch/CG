@@ -181,12 +181,11 @@ public class SWRenderContext implements RenderContext {
 		float y = edgeValues.dot(yValues)/w;
 		
 		// nearest neighbour
-		Color c = texture.getNearestNeighbour(x,y);
+//		Color c = texture.getNearestNeighbour(x,y);
 		
 		
 		// bilinear
-//		Color c = texture.bilinearInterpolation(x, y);
-		// TODO
+		Color c = texture.bilinearInterpolation(x, y);
 		
 		return c;
 	}

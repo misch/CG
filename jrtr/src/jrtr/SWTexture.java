@@ -40,15 +40,15 @@ public class SWTexture implements Texture {
 		float distanceVertical = imageCoord.x - (int)imageCoord.x;
 		float distanceHorizontal = imageCoord.y - (int)imageCoord.y;
 		
-		int colTop = interpolate(colImagePix[0][1], colImagePix[1][1], distanceVertical);
-		int colBot = interpolate(colImagePix[0][0], colImagePix[1][0], distanceVertical);
+		int colTop = interpolate(colImagePix[1][1], colImagePix[0][1], distanceVertical);
+		int colBot = interpolate(colImagePix[1][0], colImagePix[0][0], distanceVertical);
 		int colMid = interpolate(colTop, colBot, distanceHorizontal);
 		
 		return new Color(colMid);
 	}
 	
 	private int interpolate(int rgb1, int rgb2, float distance) {
-		int red1 = (rgb1 & 0xff0000)>>16;// TODO implement it :-)
+		int red1 = (rgb1 & 0xff0000)>>16;
 		int red2 = (rgb2 & 0xff0000)>>16;
 		int newRed = (int)(distance*red1 + (1-distance)*red2);
 		
