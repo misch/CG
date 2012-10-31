@@ -72,18 +72,18 @@ public class ShowTexture {
 	{
 		public void run()
 		{
-//			// Update transformation
-//    		Matrix4f t = shape.getTransformation();
-//    		Matrix4f rotX = new Matrix4f();
-//    		rotX.rotX(angle);
-//    		Matrix4f rotY = new Matrix4f();
-//    		rotY.rotY(angle);
-//    		t.mul(rotX);
-//    		t.mul(rotY);
-//    		shape.setTransformation(t);
-//    		
-//    		// Trigger redrawing of the render window
-//    		renderPanel.getCanvas().repaint(); 
+			// Update transformation
+    		Matrix4f t = shape.getTransformation();
+    		Matrix4f rotX = new Matrix4f();
+    		rotX.rotX(angle);
+    		Matrix4f rotY = new Matrix4f();
+    		rotY.rotY(angle);
+    		t.mul(rotX);
+    		t.mul(rotY);
+    		shape.setTransformation(t);
+    		
+    		// Trigger redrawing of the render window
+    		renderPanel.getCanvas().repaint(); 
 		}
 	}
 
@@ -118,13 +118,15 @@ public class ShowTexture {
 		// Make a scene manager and add the object
 		
 //		Camera camera = new Camera(new Vector3f(0,0,40), new Vector3f(0,0,0), new Vector3f(0,1,0));
-		Camera camera = new Camera(new Vector3f(-10,40,40), new Vector3f(-5,0,0), new Vector3f(0,1,0));
-		Frustum frustum = new Frustum(1,100,1,(float)(Math.PI/3));
+//		Camera camera = new Camera(new Vector3f(-10,40,40), new Vector3f(-5,0,0), new Vector3f(0,1,0));
+//		Frustum frustum = new Frustum(1,100,1,(float)(Math.PI/3));
 //		sceneManager = new SimpleSceneManager(camera, frustum);
 		sceneManager = new SimpleSceneManager();
 		SWTexture texture = new SWTexture();
-		texture.load("pic.jpg");
+//		texture.load("pic.jpg");
 //		texture.load("schachbrett.gif");
+		texture.load("smiley.gif");
+//		texture.load("sea.jpg");
 		
 		shape.setMaterial(new Material(texture));
 		sceneManager.addShape(shape);
@@ -141,7 +143,6 @@ public class ShowTexture {
 		jframe.setLocationRelativeTo(null); // center of screen
 		jframe.getContentPane().add(renderPanel.getCanvas());// put the canvas into a JFrame window
 
-		// Add a mouse listener
 	    jframe.addMouseListener(new SimpleMouseListener());
 		   	    	    
 	    jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -164,6 +165,19 @@ public class ShowTexture {
 							-4,4,4, 0,8,4, 0,8,-4, -4,4,-4,
 							4,4,-4, -4,4,-4, 0,8,-4};
 
+		float texels[] = {0,0, 1,0, 1,1, 0,1,
+						 0,0, 1,0, 1,1, 0,1,
+						 0,0, 1,0, 1,1, 0,1,
+						 0,0, 1,0, 1,1, 0,1,
+						 0,0, 1,0, 1,1, 0,1,
+						 0,0, 1,0, 1,1, 0,1,
+						 
+						 0,0, 0,1, 1,1, 1,0,
+						 0,0, 1,0, 1,1, 1,0,
+						 0,0, 1,0, 1,1, 1,0,
+						 0,0, 1,0, 1,1, 1,0, 
+						 0,0,1,1};
+		
 		float normals[] = {0,0,1,  0,0,1,  0,0,1,  0,0,1,		// front face
 						   -1,0,0, -1,0,0, -1,0,0, -1,0,0,		// left face
 						   0,0,-1, 0,0,-1, 0,0,-1, 0,0,-1,		// back face
@@ -200,6 +214,8 @@ public class ShowTexture {
 		vertexData.addElement(colors, VertexData.Semantic.COLOR, 3);
 		// - one element for vertex normals
 		vertexData.addElement(normals, VertexData.Semantic.NORMAL, 3);
+		
+		vertexData.addElement(texels, VertexData.Semantic.TEXCOORD,2);
 		
 		// The index data that stores the connectivity of the triangles
 		int indices[] = {0,2,3, 0,1,2,			// front face

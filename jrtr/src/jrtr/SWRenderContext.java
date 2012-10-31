@@ -185,6 +185,7 @@ public class SWRenderContext implements RenderContext {
 		
 		
 		// bilinear
+//		Color c = texture.bilinearInterpolation(x, y);
 		// TODO
 		
 		return c;
