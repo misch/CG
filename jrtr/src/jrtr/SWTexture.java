@@ -13,29 +13,22 @@ import javax.imageio.ImageIO;
 public class SWTexture implements Texture {
 
 	private BufferedImage texture;
-//	private String fileName;
 	private File f;
 	private int width, height;
 	
 	
 	
 	public void load(String fileName) throws IOException {
-		
-//		this.fileName = fileName;
-		
-//		BufferedImage texture;
+
 		this.f = new File(fileName);
 		this.texture = ImageIO.read(f);
 		this.width = texture.getWidth();
 		this.height = texture.getHeight();
 	}
 	
-//	public Color nearestNeighbour(float x, float y){
-//		Color c = new Color(texture.getRGB(x, y))
-//		return null;
-//	}
-	
+
 	public Color bilinearInterpolation(int x, int y){
+		// TODO
 		return null;
 	}
 	

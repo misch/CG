@@ -157,7 +157,7 @@ public class SWRenderContext implements RenderContext {
 							if (edgeValues != null){								
 //								Color c = interpolateColors(edgeValues, colors);
 								Color c = interpolateTextureColors(edgeValues, texels, shape.getMaterial().getTexture());
-								float zBuff = edgeValues.dot(wReciprocalValues)/(edgeValues.x + edgeValues.y + edgeValues.z);
+								float zBuff = edgeValues.dot(wReciprocalValues);
 								if (zBuffer[x][y] < zBuff){
 									zBuffer[x][y] = zBuff;
 									colorBuffer.setRGB(x, y,c.getRGB());
@@ -173,18 +173,19 @@ public class SWRenderContext implements RenderContext {
 	
 	private Color interpolateTextureColors(Vector3f edgeValues, Point2f[] texels, SWTexture texture) {
 		float w = edgeValues.x+edgeValues.y+edgeValues.z;
-		
+				
 		Vector3f xValues = new Vector3f(texels[0].x, texels[1].x, texels[2].x);
 		Vector3f yValues = new Vector3f(texels[0].y, texels[1].y, texels[2].y);
 		
-		float x = edgeValues.dot(xValues);
-		float y = edgeValues.dot(yValues);
+		float x = edgeValues.dot(xValues)/w;
+		float y = edgeValues.dot(yValues)/w;
 		
 		// nearest neighbour
 		Color c = texture.getNearestNeighbour(x,y);
 		
 		
-			// bilinear
+		// bilinear
+		// TODO
 		
 		return c;
 	}

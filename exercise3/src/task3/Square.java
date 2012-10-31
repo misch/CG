@@ -8,12 +8,12 @@ public class Square extends AbstractSimpleShape{
 	public Square(){
 		setVertices();
 		setIndices();
-		setColors();
+//		setColors();
 		setTextures();
 	}
 	
 	protected void setTextures(){
-		float textures[] = {0,0, 1,0, 1,1, 0,1};
+		float textures[] = {0,0, 0,1, 1,0, 1,1};
 		
 		ArrayList<Float> t = new ArrayList<Float>();
 		
@@ -48,17 +48,17 @@ public class Square extends AbstractSimpleShape{
 		this.indices = ind;
 	}
 	
-	protected void setColors(){
-		// The vertex colors
-		float[] colors = {1,1,1, 1,1,1, 1,1,1, 1,1,1};
-		
-		ArrayList<Float> col = new ArrayList<Float>();
-		
-		for (int i = 0;i<colors.length;i++)
-			col.add(colors[i]);
-		
-		this.colors = col;
-	}
+//	protected void setColors(){
+//		// The vertex colors
+//		float[] colors = {1,1,0, 0,1,1, 1,0,1, 1,0,0};
+//		
+//		ArrayList<Float> col = new ArrayList<Float>();
+//		
+//		for (int i = 0;i<colors.length;i++)
+//			col.add(colors[i]);
+//		
+//		this.colors = col;
+//	}
 	
 	@Override
 	protected float x(float u, float v) {return 0;}

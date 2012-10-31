@@ -29,6 +29,7 @@ public abstract class AbstractSimpleShape implements IForm {
 	
 	public VertexData getVertexData(){
 		vertexData = new VertexData(getVertices().length/3);
+		vertexData.addElement(getVertices(), VertexData.Semantic.POSITION, 3);
 		
 		if (this.colors.size()>0)
 			vertexData.addElement(getColors(),VertexData.Semantic.COLOR, 3);
@@ -36,9 +37,7 @@ public abstract class AbstractSimpleShape implements IForm {
 			vertexData.addElement(getNormals(), VertexData.Semantic.NORMAL,3);
 		if (this.texels.size() > 0)
 			vertexData.addElement(getTexels(),  VertexData.Semantic.TEXCOORD, 2);
-		
-		vertexData.addElement(getVertices(), VertexData.Semantic.POSITION, 3);
-		
+				
 		
 		vertexData.addIndices(getIndices());
 		return vertexData;

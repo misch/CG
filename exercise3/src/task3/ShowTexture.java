@@ -72,18 +72,18 @@ public class ShowTexture {
 	{
 		public void run()
 		{
-			// Update transformation
-    		Matrix4f t = shape.getTransformation();
-    		Matrix4f rotX = new Matrix4f();
-    		rotX.rotX(angle);
-    		Matrix4f rotY = new Matrix4f();
-    		rotY.rotY(angle);
-    		t.mul(rotX);
-    		t.mul(rotY);
-    		shape.setTransformation(t);
-    		
-    		// Trigger redrawing of the render window
-    		renderPanel.getCanvas().repaint(); 
+//			// Update transformation
+//    		Matrix4f t = shape.getTransformation();
+//    		Matrix4f rotX = new Matrix4f();
+//    		rotX.rotX(angle);
+//    		Matrix4f rotY = new Matrix4f();
+//    		rotY.rotY(angle);
+//    		t.mul(rotX);
+//    		t.mul(rotY);
+//    		shape.setTransformation(t);
+//    		
+//    		// Trigger redrawing of the render window
+//    		renderPanel.getCanvas().repaint(); 
 		}
 	}
 
@@ -123,7 +123,8 @@ public class ShowTexture {
 //		sceneManager = new SimpleSceneManager(camera, frustum);
 		sceneManager = new SimpleSceneManager();
 		SWTexture texture = new SWTexture();
-		texture.load("pic.jpg");
+//		texture.load("pic.jpg");
+		texture.load("schachbrett.gif");
 		
 		shape.setMaterial(new Material(texture));
 		sceneManager.addShape(shape);
