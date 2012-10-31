@@ -118,9 +118,9 @@ public class ShowRenderedTriangles {
 	public static void main(String[] args) throws IOException
 	{		
 		
-		shape = new Torus(40,2).getShape();		
+//		shape = new Torus(40,2).getShape();		
 
-//		shape = new Cylinder(50,2,1).getShape();
+		shape = new Cylinder(50,2,1).getShape();
 //		shape = new Cube().getShape();
 
 

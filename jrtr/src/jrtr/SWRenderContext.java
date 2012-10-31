@@ -146,21 +146,27 @@ public class SWRenderContext implements RenderContext {
 				if(k == 3)
 				{	
 					Matrix3f edgeFuncCoeff = computeEdgeFuncCoeff(pos);
+					if (edgeFuncCoeff != null){
+						Point[] boundingBox = computeBoundingBox(pos);
+						Vector3f wReciprocalValues = new Vector3f(1/pos[0].w, 1/pos[1].w, 1/pos[2].w);
 					
-					Point[] boundingBox = computeBoundingBox(pos);
-					Vector3f wReciprocalValues = new Vector3f(1/pos[0].w, 1/pos[1].w, 1/pos[2].w);
-					
-					for (int x = boundingBox[0].x; x <= boundingBox[1].x;x++){
-						for (int y = boundingBox[0].y; y <= boundingBox[1].y; y++){		
-							Vector3f edgeValues = edgeValues(x,y,edgeFuncCoeff);
+						for (int x = boundingBox[0].x; x <= boundingBox[1].x;x++){
+							for (int y = boundingBox[0].y; y <= boundingBox[1].y; y++){		
+								Vector3f edgeValues = edgeValues(x,y,edgeFuncCoeff);
 											
-							if (edgeValues != null){								
-//								Color c = interpolateColors(edgeValues, colors);
-								Color c = interpolateTextureColors(edgeValues, texels, shape.getMaterial().getTexture());
-								float zBuff = edgeValues.dot(wReciprocalValues);
-								if (zBuffer[x][y] < zBuff){
-									zBuffer[x][y] = zBuff;
-									colorBuffer.setRGB(x, y,c.getRGB());
+								if (edgeValues != null){								
+									Color c;
+									if (shape.getMaterial() ==null){
+									c = interpolateColors(edgeValues, colors);
+									}
+									else{
+									c = interpolateTextureColors(edgeValues, texels, shape.getMaterial().getTexture());
+									}
+									float zBuff = edgeValues.dot(wReciprocalValues);
+									if (zBuffer[x][y] < zBuff){
+										zBuffer[x][y] = zBuff;
+										colorBuffer.setRGB(x, y,c.getRGB());
+									}
 								}
 							}
 						}
@@ -256,6 +262,10 @@ public class SWRenderContext implements RenderContext {
 		for (int i = 0; i<3;i++){
 			coeff.setRow(i, new Vector3f(pos[i].x, pos[i].y, pos[i].w));
 		}	
+		float det = coeff.determinant();
+		if (det ==0){
+			return null;
+		}
 		coeff.invert();
 		return coeff;
 	}

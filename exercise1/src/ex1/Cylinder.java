@@ -30,7 +30,7 @@ public class Cylinder extends AbstractSimpleShape{
 		ArrayList<Float> v = new ArrayList<Float>();
 		ArrayList<Integer> indices = new ArrayList<Integer>();
 	
-		Point3f upperCenter = new Point3f(0,height,0);
+		Point3f upperCenter = new Point3f(0,height+0.5f,0);
 		Point3f lowerCenter = new Point3f(0,0,0);
 				
 		int indexUpperCenter = addVertex(v, upperCenter);

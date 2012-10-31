@@ -105,7 +105,7 @@ public class ShowTexture {
 		// Make a scene manager and add the object
 		
 //		Camera camera = new Camera(new Vector3f(0,0,40), new Vector3f(0,0,0), new Vector3f(0,1,0));
-		Camera camera = new Camera(new Vector3f(0,0,3), new Vector3f(0,0,0), new Vector3f(0,1,0));
+		Camera camera = new Camera(new Vector3f(0,0,50), new Vector3f(0,0,0), new Vector3f(0,1,0));
 		Frustum frustum = new Frustum(1,100,1,(float)(Math.PI/3));
 		sceneManager = new SimpleSceneManager(camera, frustum);
 //		sceneManager = new SimpleSceneManager();
@@ -114,7 +114,9 @@ public class ShowTexture {
 //		texture.load("schachbrett.gif");
 //		texture.load("smiley.gif");
 //		texture.load("sea.jpg");
-		texture.load("dwarf.png");
+//		texture.load("dwarf.png");
+//		texture.load("holz.png");
+		texture.load("house.png");
 		
 		shape.setMaterial(new Material(texture));
 		sceneManager.addShape(shape);
@@ -159,18 +161,18 @@ public class ShowTexture {
 							-4,4,4, 0,8,4, 0,8,-4, -4,4,-4,
 							4,4,-4, -4,4,-4, 0,8,-4};
 
-		float texels[] = {0,0, 1,0, 1,1, 0,1,
-						 0,0, 1,0, 1,1, 0,1,
-						 0,0, 1,0, 1,1, 0,1,
-						 0,0, 1,0, 1,1, 0,1,
-						 0,0, 1,0, 1,1, 0,1,
-						 0,0, 1,0, 1,1, 0,1,
+		float texels[] = {0,0, 1,0, 1,0.5f, 0,0.5f,	// walls
+						 0,0, 1,0, 1,0.5f, 0,0.5f,
+						 0,0, 1,0, 1,0.5f, 0,0.5f,
+						 0,0, 1,0, 1,0.5f, 0,0.5f,
+						 0,0, 1,0, 1,0.5f, 0,0.5f,
+						 0,0, 1,0, 1,0.5f, 0,0.5f,
 						 
-						 0,0, 0,1, 1,1, 1,0,
-						 0,0, 1,0, 1,1, 1,0,
-						 0,0, 1,0, 1,1, 1,0,
-						 0,0, 1,0, 1,1, 1,0, 
-						 0,0,1,1};
+						 0,0.5f, 0.5f,0.5f, 0,1, 0.5f,1, //floor
+						 0.5f,0.5f, 1,0.5f, 0.75f,1, 	//roof
+						 0.5f,0.5f, 1,0.5f, 1,1, 0.5f,1, 
+						 0.5f,0.5f, 1,0.5f, 1,1, 0.5f,1,
+						 0.5f,0.5f, 1,0.5f, 0.75f,1};
 		
 		float normals[] = {0,0,1,  0,0,1,  0,0,1,  0,0,1,		// front face
 						   -1,0,0, -1,0,0, -1,0,0, -1,0,0,		// left face

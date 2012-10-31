@@ -31,11 +31,15 @@ public class SWTexture implements Texture {
 		Point2f imageCoord = new Point2f(scaledX(x), scaledY(y));
 		
 		int[][] colImagePix = new int[2][2];
-		
+		try{
 		colImagePix[0][0] = texture.getRGB((int)imageCoord.x,  (int)imageCoord.y);
 		colImagePix[1][0] = texture.getRGB((int)imageCoord.x+1, (int)imageCoord.y);
 		colImagePix[0][1] = texture.getRGB((int)imageCoord.x, (int)imageCoord.y+1);
 		colImagePix[1][1] = texture.getRGB((int)imageCoord.x+1, (int)imageCoord.y+1);
+		}
+		catch(ArrayIndexOutOfBoundsException a){
+			return getNearestNeighbour(x,y);
+		}
 		
 		float distanceVertical = imageCoord.x - (int)imageCoord.x;
 		float distanceHorizontal = imageCoord.y - (int)imageCoord.y;
