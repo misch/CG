@@ -70,9 +70,9 @@ public class ShowLandScape {
 
 		// Make a render panel. The init function of the renderPanel
 		// (see above) will be called back for initialization.
-//		renderPanel = new SimpleRenderPanel();
+		renderPanel = new SimpleRenderPanel();
 		
-		renderPanel = new MyRenderPanel();
+//		renderPanel = new MyRenderPanel();
 
 		// Make the main window of this application and add the renderer to it
 		JFrame jframe = new JFrame("simple");

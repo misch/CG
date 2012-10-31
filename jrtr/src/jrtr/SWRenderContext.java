@@ -9,6 +9,7 @@ import java.awt.image.*;
 
 import javax.vecmath.Matrix3f;
 import javax.vecmath.Matrix4f;
+import javax.vecmath.Point2f;
 import javax.vecmath.Tuple4f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
@@ -27,7 +28,6 @@ public class SWRenderContext implements RenderContext {
 	private SceneManagerInterface sceneManager;
 	private BufferedImage colorBuffer;
 	private Matrix4f viewPortMatrix;
-	private Raster clear;
 	private float[][] zBuffer;
 	private int width, height;
 		
@@ -79,8 +79,6 @@ public class SWRenderContext implements RenderContext {
 										0,		0,		0,		1);
 		
 		colorBuffer = new BufferedImage(w, h, BufferedImage.TYPE_3BYTE_BGR);
-		BufferedImage clearBuffer = new BufferedImage(w,h, BufferedImage.TYPE_3BYTE_BGR);
-		this.clear = clearBuffer.getRaster();
 	}
 		
 	/**
@@ -115,6 +113,7 @@ public class SWRenderContext implements RenderContext {
 		Color colors[] = new Color[3];
 		Vector4f pos[] = new Vector4f[3];
 		Vector4f normals[] = new Vector4f[3];
+		Point2f texels[] = new Point2f[3];
 		
 		int k = 0; // index of triangle vertex, k is 0,1, or 2
 		
@@ -137,6 +136,11 @@ public class SWRenderContext implements RenderContext {
 					Vector4f n = getPoint(vertexElement,indices[j]);
 					normals[k] = n;
 				}
+				else if (vertexElement.getSemantic() == VertexData.Semantic.TEXCOORD){
+					float[] data = vertexElement.getData();
+					Point2f tex = new Point2f(data[indices[j]*2],data[indices[j]*2+1]);
+					texels[k] = tex;
+				}
 				
 				// Draw triangle as soon as we collected the data for 3 vertices
 				if(k == 3)
@@ -145,36 +149,15 @@ public class SWRenderContext implements RenderContext {
 					
 					Point[] boundingBox = computeBoundingBox(pos);
 					Vector3f wReciprocalValues = new Vector3f(1/pos[0].w, 1/pos[1].w, 1/pos[2].w);
-			
-					Vector3f[] interpolatedColors = interpolateColors(edgeFuncCoeff, colors);
-					Vector3f interpolatedOneOverW = computeOneOverW(edgeFuncCoeff, colors);
 					
 					for (int x = boundingBox[0].x; x <= boundingBox[1].x;x++){
 						for (int y = boundingBox[0].y; y <= boundingBox[1].y; y++){		
 							Vector3f edgeValues = edgeValues(x,y,edgeFuncCoeff);
 											
-							if (edgeValues != null){
-								
-								float[] uOverW = new float[3];
-								for (int i=0;i<3;i++){
-									uOverW[i] = interpolatedColors[i].dot(new Vector3f(x,y,1));
-								}
-								float oneOverW = interpolatedOneOverW.dot(new Vector3f(x,y,1));
-								
-								int[] colValues = new int[3];
-								for (int i=0;i<3;i++){
-									colValues[i] = (int)(uOverW[i]/oneOverW);
-//									System.out.println("x: "+x+ " y: "+y);
-								}
-//								System.out.print("\n Color: ");
-								for (int f=0;f<3;f++){
-//									System.out.print(""+colValues[f]+" ");
-								}
-								
-//								Color c = new Color(colValues[0], colValues[1], colValues[2]);
-								Color c = interpolateColors2(edgeValues, colors);
+							if (edgeValues != null){								
+//								Color c = interpolateColors(edgeValues, colors);
+								Color c = interpolateTextureColors(edgeValues, texels, shape.getMaterial().getTexture());
 								float zBuff = edgeValues.dot(wReciprocalValues)/(edgeValues.x + edgeValues.y + edgeValues.z);
-								
 								if (zBuffer[x][y] < zBuff){
 									zBuffer[x][y] = zBuff;
 									colorBuffer.setRGB(x, y,c.getRGB());
@@ -188,7 +171,25 @@ public class SWRenderContext implements RenderContext {
 		}
 	}
 	
-	private Color interpolateColors2(Vector3f edgeValues, Color[] colors) {
+	private Color interpolateTextureColors(Vector3f edgeValues, Point2f[] texels, SWTexture texture) {
+		float w = edgeValues.x+edgeValues.y+edgeValues.z;
+		
+		Vector3f xValues = new Vector3f(texels[0].x, texels[1].x, texels[2].x);
+		Vector3f yValues = new Vector3f(texels[0].y, texels[1].y, texels[2].y);
+		
+		float x = edgeValues.dot(xValues);
+		float y = edgeValues.dot(yValues);
+		
+		// nearest neighbour
+		Color c = texture.getNearestNeighbour(x,y);
+		
+		
+			// bilinear
+		
+		return c;
+	}
+
+	private Color interpolateColors(Vector3f edgeValues, Color[] colors) {
 		float w = edgeValues.x+edgeValues.y+edgeValues.z;
 		Vector3f redValues = new Vector3f(colors[0].getRed(), colors[1].getRed(), colors[2].getRed());
 		Vector3f greenValues = new Vector3f(colors[0].getGreen(), colors[1].getGreen(), colors[2].getGreen());
@@ -200,28 +201,6 @@ public class SWRenderContext implements RenderContext {
 		
 		Color newRGB = new Color(r,g,b);
 		return newRGB;
-	}
-
-	private Vector3f[] interpolateColors(Matrix3f edgeFunctionCoeff, Color[] colors) {
-		Vector3f coeffRedValues = new Vector3f(colors[0].getRed(), colors[1].getRed(), colors[2].getRed());
-		Vector3f greenValues = new Vector3f(colors[0].getGreen(), colors[1].getGreen(), colors[2].getGreen());
-		Vector3f blueValues = new Vector3f(colors[0].getBlue(), colors[1].getBlue(), colors[2].getBlue());	
-
-		edgeFunctionCoeff.transform(coeffRedValues);
-		
-		edgeFunctionCoeff.transform(greenValues);
-		edgeFunctionCoeff.transform(blueValues);
-		
-		Vector3f[] interpolatedColors = {coeffRedValues, greenValues, blueValues};
-		
-	
-		return interpolatedColors;
-	}
-		
-	private Vector3f computeOneOverW(Matrix3f edgeFuncCoeff, Color[] colors) {
-		Vector3f oneValues = new Vector3f(1,1,1);
-		edgeFuncCoeff.transform(oneValues);
-		return oneValues;
 	}
 
 	private Point[] computeBoundingBox(Vector4f[] pos) {

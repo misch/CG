@@ -1,5 +1,6 @@
 package jrtr;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -12,15 +13,35 @@ import javax.imageio.ImageIO;
 public class SWTexture implements Texture {
 
 	private BufferedImage texture;
-	private String fileName;
+//	private String fileName;
+	private File f;
+	private int width, height;
+	
+	
 	
 	public void load(String fileName) throws IOException {
 		
-		fileName = "pic.jpg";
+//		this.fileName = fileName;
 		
-		BufferedImage texture;
-		File f = new File(fileName);
-		texture = ImageIO.read(f);
+//		BufferedImage texture;
+		this.f = new File(fileName);
+		this.texture = ImageIO.read(f);
+		this.width = texture.getWidth();
+		this.height = texture.getHeight();
+	}
+	
+//	public Color nearestNeighbour(float x, float y){
+//		Color c = new Color(texture.getRGB(x, y))
+//		return null;
+//	}
+	
+	public Color bilinearInterpolation(int x, int y){
+		return null;
+	}
+	
+	public Color getNearestNeighbour(float x, float y){
+		Color c = new Color(texture.getRGB(Math.round(x/width), Math.round(y/height)));
+		return c;
 	}
 
 }

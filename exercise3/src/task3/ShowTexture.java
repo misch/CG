@@ -110,7 +110,9 @@ public class ShowTexture {
 		
 //		shape = new Cylinder(50,2,1).getShape();
 //		shape = new Torus(80,2).getShape();
-		shape = new Cube().getShape();
+//		shape = new Cube().getShape();
+		shape = new Square().getShape();
+		
 //		shape = makeHouse();
 
 		// Make a scene manager and add the object
@@ -120,8 +122,10 @@ public class ShowTexture {
 		Frustum frustum = new Frustum(1,100,1,(float)(Math.PI/3));
 //		sceneManager = new SimpleSceneManager(camera, frustum);
 		sceneManager = new SimpleSceneManager();
-
-//		shape = new Shape(ObjReader.read("teapot.obj", 1));
+		SWTexture texture = new SWTexture();
+		texture.load("pic.jpg");
+		
+		shape.setMaterial(new Material(texture));
 		sceneManager.addShape(shape);
 
 		// Make a render panel. The init function of the renderPanel

@@ -179,7 +179,7 @@ public class Trackball {
 		jframe.setVisible(true); // show window
 	}
 	
-	public static Shape makeHouse()
+	private static Shape makeHouse()
 	{
 		// A house
 		float vertices[] = {-4,-4,4, 4,-4,4, 4,4,4, -4,4,4,		// front face
