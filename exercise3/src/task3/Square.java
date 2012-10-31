@@ -25,7 +25,7 @@ public class Square extends AbstractSimpleShape{
 
 	protected void setVertices(){
 		// The vertex positions of the cube
-		float vertices[] = {-1,-1,1, 1,-1,1, 1,1,1, -1,1,1};
+		float vertices[] = {-2,-2,1, 2,-2,1, 2,2,1, -2,2,1};
 		
 		ArrayList<Float> v = new ArrayList<Float>();
 		

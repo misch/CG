@@ -13,15 +13,13 @@ import javax.imageio.ImageIO;
 public class SWTexture implements Texture {
 
 	private BufferedImage texture;
-//	private File f;
 	private int width, height;
 	
 	
 	
 	public void load(String fileName) throws IOException {
 
-		File f = new File(fileName);
-		this.texture = ImageIO.read(f);
+		this.texture = ImageIO.read(new File(fileName));
 		this.width = texture.getWidth();
 		this.height = texture.getHeight();
 	}
@@ -33,7 +31,7 @@ public class SWTexture implements Texture {
 	}
 	
 	public Color getNearestNeighbour(float x, float y){
-		Color c = new Color(texture.getRGB(Math.round(x*(width-1)), Math.round(y*(height-1))));
+		Color c = new Color(texture.getRGB(Math.round(x*(width-1)), Math.round((1-y)*(height-1))));
 		return c;
 	}
 
