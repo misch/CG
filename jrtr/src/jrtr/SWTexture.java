@@ -38,7 +38,8 @@ public class SWTexture implements Texture {
 		colImagePix[1][1] = texture.getRGB((int)imageCoord.x+1, (int)imageCoord.y+1);
 		}
 		catch(ArrayIndexOutOfBoundsException a){
-			return getNearestNeighbour(x,y);
+//			return getNearestNeighbour(x,y);
+			return new Color(0,0,0);
 		}
 		
 		float distanceVertical = imageCoord.x - (int)imageCoord.x;

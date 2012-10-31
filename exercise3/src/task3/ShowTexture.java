@@ -72,18 +72,18 @@ public class ShowTexture {
 	{
 		public void run()
 		{
-//			// Update transformation
-//    		Matrix4f t = shape.getTransformation();
-//    		Matrix4f rotX = new Matrix4f();
-//    		rotX.rotX(angle);
-//    		Matrix4f rotY = new Matrix4f();
-//    		rotY.rotY(angle);
-//    		t.mul(rotX);
-//    		t.mul(rotY);
-//    		shape.setTransformation(t);
-//    		
-//    		// Trigger redrawing of the render window
-//    		renderPanel.getCanvas().repaint(); 
+			// Update transformation
+    		Matrix4f t = shape.getTransformation();
+    		Matrix4f rotX = new Matrix4f();
+    		rotX.rotX(angle);
+    		Matrix4f rotY = new Matrix4f();
+    		rotY.rotY(angle);
+    		t.mul(rotX);
+    		t.mul(rotY);
+    		shape.setTransformation(t);
+    		
+    		// Trigger redrawing of the render window
+    		renderPanel.getCanvas().repaint(); 
 		}
 	}
 
@@ -95,17 +95,17 @@ public class ShowTexture {
 	public static void main(String[] args) throws IOException
 	{		
 		
-//		shape = new Cylinder(50,2,1).getShape();
+		shape = new Cylinder(50,2,0.5f).getShape();
 //		shape = new Torus(80,2).getShape();
 //		shape = new Cube().getShape();
 //		shape = new Square().getShape();
 		
-		shape = makeHouse();
+//		shape = makeHouse();
 
 		// Make a scene manager and add the object
 		
 //		Camera camera = new Camera(new Vector3f(0,0,40), new Vector3f(0,0,0), new Vector3f(0,1,0));
-		Camera camera = new Camera(new Vector3f(0,0,50), new Vector3f(0,0,0), new Vector3f(0,1,0));
+		Camera camera = new Camera(new Vector3f(0,0,5), new Vector3f(0,0,0), new Vector3f(0,1,0));
 		Frustum frustum = new Frustum(1,100,1,(float)(Math.PI/3));
 		sceneManager = new SimpleSceneManager(camera, frustum);
 //		sceneManager = new SimpleSceneManager();
@@ -116,7 +116,8 @@ public class ShowTexture {
 //		texture.load("sea.jpg");
 //		texture.load("dwarf.png");
 //		texture.load("holz.png");
-		texture.load("house.png");
+//		texture.load("house.png");
+		texture.load("redbull.png");
 		
 		shape.setMaterial(new Material(texture));
 		sceneManager.addShape(shape);

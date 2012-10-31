@@ -29,12 +29,15 @@ public class Cylinder extends AbstractSimpleShape{
 	protected void setVertices() {
 		ArrayList<Float> v = new ArrayList<Float>();
 		ArrayList<Integer> indices = new ArrayList<Integer>();
+		ArrayList<Float> t = new ArrayList<Float>();
 	
-		Point3f upperCenter = new Point3f(0,height+0.5f,0);
+		Point3f upperCenter = new Point3f(0,height,0);
 		Point3f lowerCenter = new Point3f(0,0,0);
 				
 		int indexUpperCenter = addVertex(v, upperCenter);
+		addTexel(t, 1,1);
 		int indexLowerCenter = addVertex(v, lowerCenter);
+		addTexel(t, 1,1);
 		
 		for (float angle = 0; angle<2*PI; angle += (2*PI)/segments){
 			Point3f upperPoint = new Point3f(x(angle,radius),height,z(angle,radius));	
@@ -43,9 +46,14 @@ public class Cylinder extends AbstractSimpleShape{
 			Point3f nextLowerPoint = new Point3f(x(angle+(2*PI)/segments,radius), 0, z(angle+(2*PI)/segments,radius));
 			
 			int indexUpperPoint = addVertex(v,upperPoint);
+			addTexel(t, angle/(2*PI), 1);
 			int indexNextUpperPoint = addVertex(v,nextUpperPoint);
+			addTexel(t, (angle + 2*PI/segments)/(2*PI), 1);
 			int indexLowerPoint = addVertex(v,lowerPoint);
+			addTexel(t, angle/(2*PI), 0);
 			int indexNextLowerPoint = addVertex(v,nextLowerPoint);
+			addTexel(t, (angle+(2*PI/segments))/(2*PI), 0);
+			
 			
 			addTriangle(indices, indexUpperPoint,indexNextUpperPoint,indexUpperCenter);
 			addTriangle(indices, indexLowerPoint,indexNextLowerPoint,indexLowerCenter);
@@ -56,6 +64,7 @@ public class Cylinder extends AbstractSimpleShape{
 		
 		this.vertices = v;
 		this.indices = indices;
+		this.texels = t;
 	}
 
 	protected void setColors(){

@@ -263,10 +263,12 @@ public class SWRenderContext implements RenderContext {
 			coeff.setRow(i, new Vector3f(pos[i].x, pos[i].y, pos[i].w));
 		}	
 		float det = coeff.determinant();
-		if (det ==0){
+		if (det == 0){
 			return null;
 		}
+		else{
 		coeff.invert();
+		}
 		return coeff;
 	}
 

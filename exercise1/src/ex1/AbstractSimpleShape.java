@@ -1,5 +1,6 @@
 package ex1;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
 import javax.vecmath.Color3f;
@@ -116,6 +117,11 @@ public abstract class AbstractSimpleShape implements IForm {
 	n.add(normal.y);
 	n.add(normal.z);
 }
+	
+	protected void addTexel(ArrayList<Float> t, float x, float y){
+		t.add(x);
+		t.add(y);
+	}
 	
 	
 	protected abstract float x(float u, float v);
