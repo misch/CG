@@ -13,7 +13,7 @@ public class Square extends AbstractSimpleShape{
 	}
 	
 	protected void setTextures(){
-		float textures[] = {0,0, 0,1, 1,0, 1,1};
+		float textures[] = {0,0, 1,0, 1,1, 0,1};
 		
 		ArrayList<Float> t = new ArrayList<Float>();
 		
