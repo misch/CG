@@ -30,7 +30,11 @@ public class SWRenderContext implements RenderContext {
 	private Matrix4f viewPortMatrix;
 	private float[][] zBuffer;
 	private int width, height;
-		
+	private boolean triangles;
+	
+	public SWRenderContext(boolean drawTriangles){
+		this.triangles = drawTriangles;
+	}
 	public void setSceneManager(SceneManagerInterface sceneManager)
 	{
 		this.sceneManager = sceneManager;
@@ -43,12 +47,11 @@ public class SWRenderContext implements RenderContext {
 	public void display()
 	{
 		if(sceneManager == null) return;
-		
+			
 		beginFrame();
-	
 		SceneManagerIterator iterator = sceneManager.iterator();	
-		while(iterator.hasNext())
-		{
+		
+		while(iterator.hasNext()){
 			draw(iterator.next());
 		}
 		endFrame();
@@ -103,8 +106,13 @@ public class SWRenderContext implements RenderContext {
 		t.mul(sceneManager.getFrustum().getProjectionMatrix(),t);
 		t.mul(viewPortMatrix, t);
 		
-//		drawDots(renderItem.getShape(), t);
-		drawTriangles(renderItem.getShape(), t);
+		if (triangles){
+			drawTriangles(renderItem.getShape(), t);
+		}
+		else{
+			drawDots(renderItem.getShape(), t);
+		}
+		
 		
 	}
 	private void drawTriangles(Shape shape, Matrix4f t) {		
@@ -156,8 +164,8 @@ public class SWRenderContext implements RenderContext {
 											
 								if (edgeValues != null){								
 									Color c;
-									if (shape.getMaterial() ==null){
-									c = interpolateColors(edgeValues, colors);
+									if (shape.getMaterial() == null){
+										c = interpolateColors(edgeValues, colors);
 									}
 									else{
 									c = interpolateTextureColors(edgeValues, texels, shape.getMaterial().getTexture());

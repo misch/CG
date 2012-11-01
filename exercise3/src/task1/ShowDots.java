@@ -1,4 +1,4 @@
-package task2;
+package task1;
 
 import jrtr.*;
 
@@ -9,6 +9,8 @@ import java.io.IOException;
 
 import javax.vecmath.*;
 
+import task3.FractalLandscape;
+
 import ex1.Cube;
 import ex1.Cylinder;
 import ex1.Torus;
@@ -16,7 +18,7 @@ import ex1.Torus;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class ShowRenderedTriangles {	
+public class ShowDots {	
 	static RenderPanel renderPanel;
 	static RenderContext renderContext;
 	static SimpleSceneManager sceneManager;
@@ -24,10 +26,9 @@ public class ShowRenderedTriangles {
 	static float angle;
 
 	/**
-	 * An extension of {@link GLRenderPanel} or {@link SWRenderPanel} to 
+	 * An extension of {@link SWRenderPanel} to 
 	 * provide a call-back function for initialization. 
 	 */ 
-
 	public final static class MyRenderPanel extends SWRenderPanel
 	{
 		public MyRenderPanel(boolean drawTriangles){
@@ -80,25 +81,24 @@ public class ShowRenderedTriangles {
 	public static void main(String[] args) throws IOException
 	{		
 		
-		shape = new Torus(40,2).getShape();		
-//		shape = new Cylinder(50,2,1).getShape();
+		shape = new Cylinder(50,2,1).getShape();
+//		shape = new Torus(80,2).getShape();
 //		shape = new Cube().getShape();
-
-
+		
 		// Make a scene manager and add the object
 		sceneManager = new SimpleSceneManager();
 		sceneManager.addShape(shape);
 
 		// Make a render panel. The init function of the renderPanel
 		// (see above) will be called back for initialization.
-		
-		renderPanel = new MyRenderPanel(true);	// MyRenderPanel(boolean drawTriangles)
+		renderPanel = new MyRenderPanel(false); // MyRenderPanel(boolean drawTriangles)
 		
 		// Make the main window of this application and add the renderer to it
 		JFrame jframe = new JFrame("simple");
 		jframe.setSize(500, 500);
 		jframe.setLocationRelativeTo(null); // center of screen
-		jframe.getContentPane().add(renderPanel.getCanvas());// put the canvas into a JFrame window		   	    	    
+		jframe.getContentPane().add(renderPanel.getCanvas()); // put the canvas into a JFrame window
+		   	    	    
 	    jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    jframe.setVisible(true); // show window
 	}

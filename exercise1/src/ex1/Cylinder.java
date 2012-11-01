@@ -35,9 +35,9 @@ public class Cylinder extends AbstractSimpleShape{
 		Point3f lowerCenter = new Point3f(0,0,0);
 				
 		int indexUpperCenter = addVertex(v, upperCenter);
-		addTexel(t, 1,1);
+		addTexel(t, 0.5f,1);
 		int indexLowerCenter = addVertex(v, lowerCenter);
-		addTexel(t, 1,1);
+		addTexel(t, 0.5f,0.01f);
 		
 		for (float angle = 0; angle<2*PI; angle += (2*PI)/segments){
 			Point3f upperPoint = new Point3f(x(angle,radius),height,z(angle,radius));	

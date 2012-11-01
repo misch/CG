@@ -18,9 +18,9 @@ public abstract class SWRenderPanel implements RenderPanel {
 	private SWJPanel canvas;
 	private SWRenderContext renderContext;
 	
-	public SWRenderPanel()
+	public SWRenderPanel(boolean drawDots)
 	{
-		renderContext = new SWRenderContext();
+		renderContext = new SWRenderContext(drawDots);
 		canvas = new SWJPanel(renderContext);
 		
 		// Invoke user provided init call-back

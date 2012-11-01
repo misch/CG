@@ -27,8 +27,12 @@ public class ShowTexture {
 	 * An extension of {@link GLRenderPanel} or {@link SWRenderPanel} to 
 	 * provide a call-back function for initialization. 
 	 */ 
-	public final static class SimpleRenderPanel extends GLRenderPanel
+	
+	public final static class MyRenderPanel extends SWRenderPanel
 	{
+		public MyRenderPanel(boolean drawTriangles){
+			super(drawTriangles);
+		}
 		/**
 		 * Initialization call-back. We initialize our renderer here.
 		 * 
@@ -38,7 +42,7 @@ public class ShowTexture {
 		{
 			renderContext = r;
 			renderContext.setSceneManager(sceneManager);
-	
+			
 			// Register a timer task
 		    Timer timer = new Timer();
 		    angle = 0.01f;
@@ -46,28 +50,6 @@ public class ShowTexture {
 		}
 	}
 
-	public final static class MyRenderPanel extends SWRenderPanel
-	{
-		/**
-		 * Initialization call-back. We initialize our renderer here.
-		 * 
-		 * @param r	the render context that is associated with this render panel
-		 */
-		public void init(RenderContext r)
-		{
-			renderContext = r;
-			renderContext.setSceneManager(sceneManager);
-	
-			// Register a timer task
-		    Timer timer = new Timer();
-		    angle = 0.01f;
-		    timer.scheduleAtFixedRate(new AnimationTask(), 0, 10);
-		}
-	}
-	/**
-	 * A timer task that generates an animation. This task triggers
-	 * the redrawing of the 3D scene every time it is executed.
-	 */
 	public static class AnimationTask extends TimerTask
 	{
 		public void run()
@@ -78,7 +60,6 @@ public class ShowTexture {
     		rotX.rotX(angle);
     		Matrix4f rotY = new Matrix4f();
     		rotY.rotY(angle);
-    		t.mul(rotX);
     		t.mul(rotY);
     		shape.setTransformation(t);
     		
@@ -86,7 +67,7 @@ public class ShowTexture {
     		renderPanel.getCanvas().repaint(); 
 		}
 	}
-
+	
 	/**
 	 * The main function opens a 3D rendering window, constructs a simple 3D
 	 * scene, and starts a timer task to generate an animation.
@@ -95,38 +76,46 @@ public class ShowTexture {
 	public static void main(String[] args) throws IOException
 	{		
 		
+		
+		SWTexture texture = new SWTexture();
+		
+		// Redbull
 		shape = new Cylinder(50,2,0.5f).getShape();
-//		shape = new Torus(80,2).getShape();
-//		shape = new Cube().getShape();
+		texture.load("redbull.png");
+		Camera camera = new Camera(new Vector3f(0,2,5), new Vector3f(0,0,0), new Vector3f(0,1,0));
+		
+		// Dwarf: Nearest neighbour vs. bilinear interpolation
 //		shape = new Square().getShape();
-		
-//		shape = makeHouse();
+//		texture.load("dwarf.png");
+//		Camera camera = new Camera(new Vector3f(0,2,5), new Vector3f(0,0,0), new Vector3f(0,1,0));
 
-		// Make a scene manager and add the object
-		
+		// house
+//		shape = makeHouse();
 //		Camera camera = new Camera(new Vector3f(0,0,40), new Vector3f(0,0,0), new Vector3f(0,1,0));
-		Camera camera = new Camera(new Vector3f(0,0,5), new Vector3f(0,0,0), new Vector3f(0,1,0));
+//		texture.load("house.png");
+		
+
+		
 		Frustum frustum = new Frustum(1,100,1,(float)(Math.PI/3));
 		sceneManager = new SimpleSceneManager(camera, frustum);
-//		sceneManager = new SimpleSceneManager();
-		SWTexture texture = new SWTexture();
+
+		// Load a texture
+		
 //		texture.load("pic.jpg");
 //		texture.load("schachbrett.gif");
 //		texture.load("smiley.gif");
 //		texture.load("sea.jpg");
-//		texture.load("dwarf.png");
+
 //		texture.load("holz.png");
-//		texture.load("house.png");
-		texture.load("redbull.png");
+//		
+	
 		
 		shape.setMaterial(new Material(texture));
 		sceneManager.addShape(shape);
 
 		// Make a render panel. The init function of the renderPanel
 		// (see above) will be called back for initialization.
-
-//		renderPanel = new SimpleRenderPanel();
-		renderPanel = new MyRenderPanel();
+		renderPanel = new MyRenderPanel(true);	// MyRenderPanel(boolean drawTriangles)
 		
 		// Make the main window of this application and add the renderer to it
 		JFrame jframe = new JFrame("simple");
@@ -134,12 +123,10 @@ public class ShowTexture {
 		jframe.setLocationRelativeTo(null); // center of screen
 		jframe.getContentPane().add(renderPanel.getCanvas());// put the canvas into a JFrame window
 
-//	    jframe.addMouseListener(new SimpleMouseListener());
 		LandscapeListener listener = new LandscapeListener(camera, renderPanel);
 		
 		renderPanel.getCanvas().addMouseListener(listener);
 		renderPanel.getCanvas().addMouseMotionListener(listener);
-//		renderPanel.getCanvas().addKeyListener(listener);
 		jframe.addKeyListener(listener);
 		
 	    jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -1,7 +1,10 @@
-package task3;
+package task1;
 
 import javax.swing.JFrame;
 import javax.vecmath.Vector3f;
+
+import task3.FractalLandscape;
+import task3.LandscapeListener;
 
 import jrtr.Camera;
 import jrtr.Frustum;
@@ -12,7 +15,7 @@ import jrtr.SWRenderPanel;
 import jrtr.Shape;
 import jrtr.SimpleSceneManager;
 
-public class ShowLandScape {
+public class ShowDotLandScape {
 	static RenderPanel renderPanel;
 	static RenderContext renderContext;
 	static SimpleSceneManager sceneManager;
@@ -23,19 +26,6 @@ public class ShowLandScape {
 	* An extension of {@link GLRenderPanel} or {@link SWRenderPanel} to
 	* provide a call-back function for initialization.
 	*/
-	public final static class SimpleRenderPanel extends GLRenderPanel
-	{
-		/**
-		 * Initialization call-back. We initialize our renderer here.
-		 * @param r the render context that is associated with this render panel
-		 */
-		public void init(RenderContext r)
-		{
-			renderContext = r;
-			renderContext.setSceneManager(sceneManager);
-		}		
-	}
-	
 	public final static class MyRenderPanel extends SWRenderPanel
 	{
 		public MyRenderPanel(boolean drawTriangles){
@@ -51,8 +41,6 @@ public class ShowLandScape {
 			renderContext.setSceneManager(sceneManager);
 		}		
 	}
-	
-	
 	
 	/**
 	* The main function opens a 3D rendering window, constructs a simple 3D
@@ -73,9 +61,7 @@ public class ShowLandScape {
 
 		// Make a render panel. The init function of the renderPanel
 		// (see above) will be called back for initialization.
-		renderPanel = new SimpleRenderPanel();
-		
-//		renderPanel = new MyRenderPanel(false);
+		renderPanel = new MyRenderPanel(false);	// MyRenderPanel(boolean drawTriangles)
 
 		// Make the main window of this application and add the renderer to it
 		JFrame jframe = new JFrame("simple");
@@ -97,7 +83,7 @@ public class ShowLandScape {
 	}
 
 	private static Shape setUpLandscape(int size, float roughness) {
-		float heightTopLeft = 0;
+		float heightTopLeft = 10;
 		float heightBottomLeft = 0;
 		float heightTopRight = 0;
 		float heightBottomRight = 0;
