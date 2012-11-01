@@ -82,6 +82,8 @@ public class ShowRenderedTriangles {
 		
 		shape = new Torus(40,2).getShape();		
 //		shape = new Cylinder(50,2,1).getShape();
+		
+		// To demonstrate color interpolation:
 //		shape = new Cube().getShape();
 
 
