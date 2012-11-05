@@ -84,9 +84,9 @@ public class ShowDotLandScape {
 
 	private static Shape setUpLandscape(int size, float roughness) {
 		float heightTopLeft = 10;
-		float heightBottomLeft = 0;
+		float heightBottomLeft = 6;
 		float heightTopRight = 0;
-		float heightBottomRight = 0;
+		float heightBottomRight = 3;
 
 		float[] cornerHeights = new float[4];
 		cornerHeights[0] = heightTopLeft;

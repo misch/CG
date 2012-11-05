@@ -170,7 +170,7 @@ public class SWRenderContext implements RenderContext {
 									else{
 									c = interpolateTextureColors(edgeValues, texels, shape.getMaterial().getTexture());
 									}
-									float zBuff = edgeValues.dot(wReciprocalValues);
+									float zBuff = edgeValues.dot(wReciprocalValues)/(edgeValues.x+edgeValues.y+edgeValues.z);
 									if (zBuffer[x][y] < zBuff){
 										zBuffer[x][y] = zBuff;
 										colorBuffer.setRGB(x, y,c.getRGB());
