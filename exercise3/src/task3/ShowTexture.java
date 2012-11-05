@@ -81,12 +81,12 @@ public class ShowTexture {
 		
 		// Redbull
 		shape = new Cylinder(50,2,0.5f).getShape();
-		texture.load("redbull.png");
+		texture.load("../jrtr/textures/redbull.png");
 		Camera camera = new Camera(new Vector3f(0,2,5), new Vector3f(0,0,0), new Vector3f(0,1,0));
 		
 		// Dwarf: Nearest neighbour vs. bilinear interpolation
 //		shape = new Square().getShape();
-//		texture.load("dwarf.png");
+//		texture.load("../jrtr/textures/dwarf.png");
 //		Camera camera = new Camera(new Vector3f(0,2,5), new Vector3f(0,0,0), new Vector3f(0,1,0));
 
 		// house
