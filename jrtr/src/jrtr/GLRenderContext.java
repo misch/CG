@@ -242,6 +242,7 @@ public class GLRenderContext implements RenderContext {
 	 */
 	private void setMaterial(Material m)
 	{
+		// TODO
 	}
 	
 	/**
@@ -252,6 +253,7 @@ public class GLRenderContext implements RenderContext {
 	 */
 	void setLights()
 	{	
+		// TODO
 	}
 
 	/**
@@ -261,6 +263,7 @@ public class GLRenderContext implements RenderContext {
 	 */
 	private void cleanMaterial(Material m)
 	{
+		// TODO
 	}
 
 	public Shader makeShader()
