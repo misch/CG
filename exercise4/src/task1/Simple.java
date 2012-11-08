@@ -115,12 +115,12 @@ public class Simple
 				    0,1,0, 0,1,0, 0,1,0, 0,1,0, 
 				    0,-1,0, 0,-1,0, 0,-1,0,  0,-1,0};  
 		
-//		float uv[] = {0,0, 1,0, 1,1, 0,1,
-//					  0,0, 1,0, 1,1, 0,1,
-//					  0,0, 1,0, 1,1, 0,1,
-//					  0,0, 1,0, 1,1, 0,1,
-//					  0,0, 1,0, 1,1, 0,1,
-//					  0,0, 1,0, 1,1, 0,1};
+		float uv[] = {0,0, 1,0, 1,1, 0,1,
+					  0,0, 1,0, 1,1, 0,1,
+					  0,0, 1,0, 1,1, 0,1,
+					  0,0, 1,0, 1,1, 0,1,
+					  0,0, 1,0, 1,1, 0,1,
+					  0,0, 1,0, 1,1, 0,1};
 		
 		// Construct a data structure that stores the vertices, their
 		// attributes, and the triangle mesh connectivity
@@ -128,7 +128,7 @@ public class Simple
 		vertexData.addElement(c, VertexData.Semantic.COLOR, 3);
 		vertexData.addElement(v, VertexData.Semantic.POSITION, 3);
 		vertexData.addElement(n, VertexData.Semantic.NORMAL, 3);
-//		vertexData.addElement(uv, VertexData.Semantic.TEXCOORD, 2);
+		vertexData.addElement(uv, VertexData.Semantic.TEXCOORD, 2);
 		
 		// The triangles (three vertex indices for each triangle)
 		int indices[] = {0,2,3, 0,1,2,			// front face
@@ -154,7 +154,7 @@ public class Simple
 		shape3 = new Shape(vertexData);
 		shape3.setMaterial(new Material(0.2f));
 		
-		translateShape(shape1, new Vector3f(-1,0,0));
+		translateShape(shape1, new Vector3f(-2,0,-2));
 		translateShape(shape2, new Vector3f(2,0,0));
 		translateShape(shape3, new Vector3f(0,0,2));
 		
@@ -163,7 +163,9 @@ public class Simple
 		sceneManager.addShape(shape3);
 		
 		sceneManager.addLightSource(new PointLight(80,new Point3f(0,0,10)));
-//		sceneManager.addLightSource(new PointLight(800, new Point3f(0,0,0)));
+		sceneManager.addLightSource(new PointLight(80, new Point3f(0,0,-10)));
+		sceneManager.addLightSource(new PointLight(80, new Point3f(10,0,0)));
+		sceneManager.addLightSource(new PointLight(80, new Point3f(-10,0,0)));
 
 		// Make a render panel. The init function of the renderPanel
 		// (see above) will be called back for initialization.

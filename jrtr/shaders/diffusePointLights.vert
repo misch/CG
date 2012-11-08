@@ -1,6 +1,6 @@
 #version 150
 // Default vertex shader
-#define MAX_LIGHTS 2
+#define MAX_LIGHTS 8
 // Uniform variables, set in main program
 uniform mat4 projection; 
 uniform mat4 modelview;
@@ -26,7 +26,7 @@ void main()
 	for (int i = 0; i<MAX_LIGHTS; i++){
 		vec3 light_direction = (camera*vec4(light_position[i],1)-modelview*position).xyz;
 		float radiance = source_radiance[i]/dot(light_direction,light_direction);
-		diffuse_light += radiance * reflection_coeff * max(0,dot((modelview*vec4(normal,0)).xyz, normalize(light_direction)));
+		diffuse_light += radiance * reflection_coeff * max(0.0,dot((modelview*vec4(normal,0)).xyz, normalize(light_direction)));
 	}
 	
 	

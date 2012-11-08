@@ -239,7 +239,6 @@ public class GLRenderContext implements RenderContext {
 
 	/**
 	 * Pass the material properties to OpenGL, including textures and shaders.
-	 * 
 	 * To be implemented in the "Textures and Shading" project.
 	 */
 	private void setMaterial(Material m)
@@ -256,7 +255,7 @@ public class GLRenderContext implements RenderContext {
 	 */
 	void setLights()
 	{	
-		final int MAX_LIGHTS = 2;
+		final int MAX_LIGHTS = 8;
 		Iterator<PointLight> lights = sceneManager.lightIterator();
 		float[] sourceRadiance = new float[MAX_LIGHTS];
 		Point3f[] position = new Point3f[MAX_LIGHTS];
