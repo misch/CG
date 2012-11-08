@@ -4,8 +4,9 @@
 // Uniform variables, set in main program
 uniform mat4 projection; 
 uniform mat4 modelview;
+uniform mat4 camera;
 uniform float source_radiance[MAX_LIGHTS];
-uniform vec4 light_position[MAX_LIGHTS];
+uniform vec3 light_position[MAX_LIGHTS];
 uniform float reflection_coeff;
 
 // Input vertex attributes; passed in from host program to shader
@@ -21,23 +22,13 @@ out vec2 frag_texcoord;
 
 void main()
 {		
-	// Compute light direction 
-	vec4 light_direction[MAX_LIGHTS];
-	for (int i = 0; i<MAX_LIGHTS; i++){
-		light_direction[i] = normalize(light_position[i]-position);
-	}
-	
-	// Compute radiance
-	float radiance[MAX_LIGHTS];
-	for (int i = 0; i<MAX_LIGHTS; i++) {
-		radiance[i] = source_radiance[i]/dot((light_position[i]-position),(light_position[i]-position));
-	}
-	
-	// Compute diffuse light
 	diffuse_light = 0;
 	for (int i = 0; i<MAX_LIGHTS; i++){
-		diffuse_light += radiance[i]*reflection_coeff*max(dot(modelview* vec4(normal,0),light_direction[i]),0);
+		vec3 light_direction = (camera* vec4(light_position[i],0)- modelview*position).xyz;
+		float radiance = source_radiance[i]/dot(light_direction,light_direction);
+		diffuse_light += radiance * reflection_coeff * max(0.0, dot((modelview * vec4(normal,0)).xyz, normalize(light_direction)));
 	}
+	
 	
 	// Pass texture coordinates to fragment shader, OpenGL automatically
 	// interpolates them to each pixel  (in a perspectively correct manner) 

@@ -140,8 +140,8 @@ public class Simple
 		shape = new Shape(vertexData);
 		shape.setMaterial(new Material());
 		sceneManager.addShape(shape);
-		sceneManager.addLightSource(new PointLight(2,new Point4f(0,5,0,1)));
-//		sceneManager.addLightSource(new PointLight(2, new Point4f(0,3,0,1)));
+		sceneManager.addLightSource(new PointLight(10,new Point3f(-3,0,0)));
+//		sceneManager.addLightSource(new PointLight(10, new Point3f(3,0,0)));
 
 		// Make a render panel. The init function of the renderPanel
 		// (see above) will be called back for initialization.

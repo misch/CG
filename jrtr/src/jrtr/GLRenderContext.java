@@ -175,7 +175,7 @@ public class GLRenderContext implements RenderContext {
 		// Set modelview and projection matrices in shader
 		gl.glUniformMatrix4fv(gl.glGetUniformLocation(activeShader.programId(), "modelview"), 1, false, matrix4fToFloat16(t), 0);
 		gl.glUniformMatrix4fv(gl.glGetUniformLocation(activeShader.programId(), "projection"), 1, false, matrix4fToFloat16(sceneManager.getFrustum().getProjectionMatrix()), 0);
-	     		
+		gl.glUniformMatrix4fv(gl.glGetUniformLocation(activeShader.programId(), "camera"), 1, false, matrix4fToFloat16(sceneManager.getCamera().getCameraMatrix()), 0);		
 		// Steps to pass vertex data to OpenGL:
 		// 1. For all vertex attributes (position, normal, etc.)
 			// Copy vertex data into float buffers that can be passed to OpenGL
@@ -259,7 +259,7 @@ public class GLRenderContext implements RenderContext {
 		final int MAX_LIGHTS = 2;
 		Iterator<PointLight> lights = sceneManager.lightIterator();
 		float[] sourceRadiance = new float[MAX_LIGHTS];
-		Point4f[] position = new Point4f[MAX_LIGHTS];
+		Point3f[] position = new Point3f[MAX_LIGHTS];
 		Matrix4f cam = sceneManager.getCamera().getCameraMatrix();
 		
 		for (int i = 0; i<MAX_LIGHTS && lights.hasNext(); i++){
@@ -276,7 +276,7 @@ public class GLRenderContext implements RenderContext {
 		
 		int idPos = gl.glGetUniformLocation(activeShader.programId(),  "light_position");
 		
-		float[] posArray = new float[position.length*4];
+		float[] posArray = new float[position.length*3];
 		for (int i = 0; i < position.length; i++){
 			if (position[i] != null){
 			posArray[3*i] = position[i].x;
