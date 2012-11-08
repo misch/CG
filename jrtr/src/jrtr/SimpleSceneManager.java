@@ -13,20 +13,19 @@ public class SimpleSceneManager implements SceneManagerInterface {
 	private LinkedList<Shape> shapes;
 	private Camera camera;
 	private Frustum frustum;
-	private List<Light> lightSources;
+	private List<PointLight> lightSources;
 	
 	public SimpleSceneManager()
 	{
-		shapes = new LinkedList<Shape>();
-		camera = new Camera();
-		frustum = new Frustum();
+		this(new Camera(), new Frustum());
 	}
 	
 	public SimpleSceneManager(Camera camera, Frustum frustum)
 	{
 		this.camera = camera;
 		this.frustum = frustum;
-		shapes = new LinkedList<Shape>();
+		this.shapes = new LinkedList<Shape>();
+		this.lightSources = new LinkedList<PointLight>();
 	}
 	
 	public Camera getCamera()
@@ -52,12 +51,17 @@ public class SimpleSceneManager implements SceneManagerInterface {
 	/**
 	 * To be implemented in the "Textures and Shading" project.
 	 */
-	public Iterator<Light> lightIterator()
+	public Iterator<PointLight> lightIterator()
 	{
 		return lightSources.iterator();
 	}
 	
-	public void addLightSource(Light source){
+//	public Iterator<Light> lightIterator()
+//	{
+//		return null;
+//	}
+	
+	public void addLightSource(PointLight source){
 		lightSources.add(source);
 	}
 

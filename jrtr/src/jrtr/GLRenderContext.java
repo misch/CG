@@ -2,6 +2,7 @@ package jrtr;
 
 import java.nio.IntBuffer;
 import java.nio.FloatBuffer;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import javax.media.opengl.GL3;
@@ -51,7 +52,8 @@ public class GLRenderContext implements RenderContext {
         // Load and use default shader
         GLShader defaultShader = new GLShader(gl);
         try {
-        	defaultShader.load("../jrtr/shaders/diffuse.vert","../jrtr/shaders/diffuse.frag");
+//        	defaultShader.load("../jrtr/shaders/diffuse.vert","../jrtr/shaders/diffuse.frag");
+        	defaultShader.load("../jrtr/shaders/diffusePointLights.vert","../jrtr/shaders/diffusePointLights.frag");
         } catch(Exception e) {
 	    	System.out.print("Problem with shader:\n");
 	    	System.out.print(e.getMessage());
@@ -242,7 +244,8 @@ public class GLRenderContext implements RenderContext {
 	 */
 	private void setMaterial(Material m)
 	{
-		// TODO
+		int id = gl.glGetUniformLocation(activeShader.programId(), "reflection_coeff");
+		gl.glUniform1f(id,m.getDiffuseReflectionCoeff());
 	}
 	
 	/**
@@ -253,7 +256,33 @@ public class GLRenderContext implements RenderContext {
 	 */
 	void setLights()
 	{	
-		// TODO
+		final int MAX_LIGHTS = 2;
+		Iterator<PointLight> lights = sceneManager.lightIterator();
+		float[] sourceRadiance = new float[MAX_LIGHTS];
+		Point4f[] position = new Point4f[MAX_LIGHTS];
+		Matrix4f cam = sceneManager.getCamera().getCameraMatrix();
+		
+		for (int i = 0; i<MAX_LIGHTS && lights.hasNext(); i++){
+			PointLight light = lights.next();
+			sourceRadiance[i] = light.getRadiance();
+			
+			position[i] = light.getPosition();
+			// TODO camera matrix in draw-methode übergeben und Berechnung in Shader machen, weil sie sich immer wieder verändern kann
+			cam.transform(position[i]);
+		}
+		
+		int idRadiance = gl.glGetUniformLocation(activeShader.programId(), "source_radiance");
+		gl.glUniform1fv(idRadiance, MAX_LIGHTS, sourceRadiance, 0);
+		
+		int idPos = gl.glGetUniformLocation(activeShader.programId(),  "light_position");
+		
+		float[] posArray = new float[position.length*4];
+		for (int i = 0; i < position.length; i++){
+			posArray[3*i] = position[i].x;
+			posArray[3*i+1] = position[i].y;
+			posArray[3*i+2] = position[i].z;
+		}
+		gl.glUniform3fv(idPos, MAX_LIGHTS, posArray, 0);
 	}
 
 	/**

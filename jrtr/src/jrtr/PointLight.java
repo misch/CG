@@ -1,13 +1,31 @@
 package jrtr;
 
-import javax.vecmath.Vector3f;
+import javax.vecmath.Point3f;
+import javax.vecmath.Point4f;
 
 public class PointLight extends Light {
 	private float radiance;
-	private Vector3f position;
+	private Point4f position;
 	
-	public PointLight(float radiance, Vector3f position){
+	public PointLight(float radiance, Point4f position){
+		this.setRadiance(radiance);
+		this.setPosition(position);
+	}
+
+	public float getRadiance() {
+		return radiance;
+	}
+
+	public void setRadiance(float radiance) {
 		this.radiance = radiance;
+	}
+
+	public Point4f getPosition() {
+		return position;
+	}
+
+	public void setPosition(Point4f position) {
 		this.position = position;
 	}
+	
 }

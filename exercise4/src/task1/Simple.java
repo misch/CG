@@ -139,6 +139,8 @@ public class Simple
 		sceneManager = new SimpleSceneManager();
 		shape = new Shape(vertexData);
 		sceneManager.addShape(shape);
+		sceneManager.addLightSource(new PointLight(2,new Point4f(0,2,0,1)));
+		sceneManager.addLightSource(new PointLight(2, new Point4f(0,3,0,1)));
 
 		// Make a render panel. The init function of the renderPanel
 		// (see above) will be called back for initialization.

@@ -35,4 +35,8 @@ public class Material {
 	public Shader getShader(){
 		return shader;
 	}
+	
+	public float getDiffuseReflectionCoeff(){
+		return diffuseReflectionCoeff;
+	}
 }
