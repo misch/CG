@@ -69,7 +69,8 @@ public class GLRenderContext implements RenderContext {
 		try {
 			// Load texture from file
 			tex = new GLTexture(gl);
-			tex.load("../jrtr/textures/plant.jpg");
+//			tex.load("../jrtr/textures/plant.jpg");
+			tex.load("../jrtr/textures/cityHouse.png");
 			// OpenGL calls to activate the texture 
 			gl.glActiveTexture(0);	// Work with texture unit 0
 			gl.glEnable(GL3.GL_TEXTURE_2D);
@@ -81,7 +82,6 @@ public class GLRenderContext implements RenderContext {
 		} catch(Exception e) {
 			System.out.print("Could not load texture\n");
 		}
-		
 	}
 		
 	/**

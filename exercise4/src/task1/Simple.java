@@ -166,6 +166,7 @@ public class Simple
 		sceneManager.addLightSource(new PointLight(80, new Point3f(0,0,-10)));
 		sceneManager.addLightSource(new PointLight(80, new Point3f(10,0,0)));
 		sceneManager.addLightSource(new PointLight(80, new Point3f(-10,0,0)));
+		sceneManager.addLightSource(new PointLight(80, new Point3f(0,5,0)));
 
 		// Make a render panel. The init function of the renderPanel
 		// (see above) will be called back for initialization.
