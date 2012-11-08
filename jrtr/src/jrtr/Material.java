@@ -16,6 +16,10 @@ public class Material {
 		this(texture,1);
 	}
 	
+	public Material(float diffuseReflectionCoeff){
+		this(null, diffuseReflectionCoeff);
+	}
+	
 //	public Material(SWTexture texture, Shader shader, float diffuseReflectionCoeff){
 	public Material(SWTexture texture,float diffuseReflectionCoeff){
 		this.texture = texture;

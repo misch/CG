@@ -3,6 +3,7 @@
 	<name>exercise4</name>
 	<comment></comment>
 	<projects>
+		<project>exercise1</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

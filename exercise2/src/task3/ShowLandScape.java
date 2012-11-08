@@ -85,7 +85,6 @@ public class ShowLandScape {
 
 		// Add a LanscapeListener to use mouse and keys
 		LandscapeListener listener = new LandscapeListener(camera, renderPanel);
-		
 		renderPanel.getCanvas().addMouseListener(listener);
 		renderPanel.getCanvas().addMouseMotionListener(listener);
 		renderPanel.getCanvas().addKeyListener(listener);
