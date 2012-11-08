@@ -260,15 +260,12 @@ public class GLRenderContext implements RenderContext {
 		Iterator<PointLight> lights = sceneManager.lightIterator();
 		float[] sourceRadiance = new float[MAX_LIGHTS];
 		Point3f[] position = new Point3f[MAX_LIGHTS];
-		Matrix4f cam = sceneManager.getCamera().getCameraMatrix();
-		
+	
 		for (int i = 0; i<MAX_LIGHTS && lights.hasNext(); i++){
 			PointLight light = lights.next();
 			sourceRadiance[i] = light.getRadiance();
 			
 			position[i] = light.getPosition();
-			// TODO camera matrix in draw-methode übergeben und Berechnung in Shader machen, weil sie sich immer wieder verändern kann
-//			cam.transform(position[i]);
 		}
 		
 		int idRadiance = gl.glGetUniformLocation(activeShader.programId(), "source_radiance");

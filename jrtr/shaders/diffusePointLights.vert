@@ -24,9 +24,9 @@ void main()
 {		
 	diffuse_light = 0;
 	for (int i = 0; i<MAX_LIGHTS; i++){
-		vec3 light_direction = (camera* vec4(light_position[i],0)- modelview*position).xyz;
+		vec3 light_direction = (vec4(light_position[i],0)-modelview*position).xyz;
 		float radiance = source_radiance[i]/dot(light_direction,light_direction);
-		diffuse_light += radiance * reflection_coeff * max(0.0, dot((modelview * vec4(normal,0)).xyz, normalize(light_direction)));
+		diffuse_light += radiance * reflection_coeff * max(0,dot((modelview*vec4(normal,0)).xyz, normalize(light_direction)));
 	}
 	
 	

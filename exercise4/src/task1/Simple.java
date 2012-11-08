@@ -38,7 +38,7 @@ public class Simple
 	
 			// Register a timer task
 		    Timer timer = new Timer();
-		    angle = 0.01f;
+		    angle = 0.005f;
 		    timer.scheduleAtFixedRate(new AnimationTask(), 0, 10);
 		}
 	}
@@ -57,7 +57,7 @@ public class Simple
     		rotX.rotX(angle);
     		Matrix4f rotY = new Matrix4f();
     		rotY.rotY(angle);
-//    		t.mul(rotX);
+    		t.mul(rotX);
     		t.mul(rotY);
     		shape.setTransformation(t);
     		
@@ -140,8 +140,8 @@ public class Simple
 		shape = new Shape(vertexData);
 		shape.setMaterial(new Material());
 		sceneManager.addShape(shape);
-		sceneManager.addLightSource(new PointLight(10,new Point3f(-3,0,0)));
-//		sceneManager.addLightSource(new PointLight(10, new Point3f(3,0,0)));
+		sceneManager.addLightSource(new PointLight(20,new Point3f(0,5,0)));
+		sceneManager.addLightSource(new PointLight(20, new Point3f(0,-5,0)));
 
 		// Make a render panel. The init function of the renderPanel
 		// (see above) will be called back for initialization.
