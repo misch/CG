@@ -22,9 +22,9 @@ out vec2 frag_texcoord;
 void main()
 {		
 	// Compute light direction 
-	vec3 lightDirection[MAX_LIGHTS];
+	vec4 light_direction[MAX_LIGHTS];
 	for (int i = 0; i<MAX_LIGHTS; i++){
-		lightDirection[i] = normalize(light_position[i]-position[i]);
+		light_direction[i] = normalize(light_position[i]-position);
 	}
 	
 	// Compute radiance
@@ -36,7 +36,7 @@ void main()
 	// Compute diffuse light
 	diffuse_light = 0;
 	for (int i = 0; i<MAX_LIGHTS; i++){
-		diffuse_light += radiance[i]*reflection_coeff*max(dot(modelview*normal,lightDirection[i],0));
+		diffuse_light += radiance[i]*reflection_coeff*max(dot(modelview* vec4(normal,0),light_direction[i]),0);
 	}
 	
 	// Pass texture coordinates to fragment shader, OpenGL automatically

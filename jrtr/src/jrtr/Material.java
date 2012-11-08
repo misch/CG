@@ -8,33 +8,32 @@ import java.io.IOException;
  */
 public class Material {
 	private SWTexture texture;
-	private Shader shader;
+//	private Shader shader;
 	private float diffuseReflectionCoeff;
-//	private float diffuse;
-//	private float specular;
-//	private float ambient;
 	
 	public Material(SWTexture texture){
-		this.texture = texture;
+//		this.texture = texture;
+		this(texture,1);
 	}
 	
-//	public Material(SWTexture texture, Shader shader, float[] properties){
-	public Material(SWTexture texture, Shader shader, float diffuseReflectionCoeff){
+//	public Material(SWTexture texture, Shader shader, float diffuseReflectionCoeff){
+	public Material(SWTexture texture,float diffuseReflectionCoeff){
 		this.texture = texture;
-		this.shader = shader;
+//		this.shader = shader;
 		this.diffuseReflectionCoeff = diffuseReflectionCoeff;
-//		diffuse = properties[0];
-//		specular = properties[1];
-//		ambient = properties[2];
+	}
+	
+	public Material(){
+		this(null);
 	}
 	
 	public SWTexture getTexture(){
 		return texture;
 	}
 	
-	public Shader getShader(){
-		return shader;
-	}
+//	public Shader getShader(){
+//		return shader;
+//	}
 	
 	public float getDiffuseReflectionCoeff(){
 		return diffuseReflectionCoeff;

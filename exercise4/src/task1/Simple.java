@@ -57,7 +57,7 @@ public class Simple
     		rotX.rotX(angle);
     		Matrix4f rotY = new Matrix4f();
     		rotY.rotY(angle);
-    		t.mul(rotX);
+//    		t.mul(rotX);
     		t.mul(rotY);
     		shape.setTransformation(t);
     		
@@ -138,9 +138,10 @@ public class Simple
 		// Make a scene manager and add the object
 		sceneManager = new SimpleSceneManager();
 		shape = new Shape(vertexData);
+		shape.setMaterial(new Material());
 		sceneManager.addShape(shape);
-		sceneManager.addLightSource(new PointLight(2,new Point4f(0,2,0,1)));
-		sceneManager.addLightSource(new PointLight(2, new Point4f(0,3,0,1)));
+		sceneManager.addLightSource(new PointLight(2,new Point4f(0,5,0,1)));
+//		sceneManager.addLightSource(new PointLight(2, new Point4f(0,3,0,1)));
 
 		// Make a render panel. The init function of the renderPanel
 		// (see above) will be called back for initialization.

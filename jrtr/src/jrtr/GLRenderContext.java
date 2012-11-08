@@ -268,7 +268,7 @@ public class GLRenderContext implements RenderContext {
 			
 			position[i] = light.getPosition();
 			// TODO camera matrix in draw-methode übergeben und Berechnung in Shader machen, weil sie sich immer wieder verändern kann
-			cam.transform(position[i]);
+//			cam.transform(position[i]);
 		}
 		
 		int idRadiance = gl.glGetUniformLocation(activeShader.programId(), "source_radiance");
@@ -278,9 +278,11 @@ public class GLRenderContext implements RenderContext {
 		
 		float[] posArray = new float[position.length*4];
 		for (int i = 0; i < position.length; i++){
+			if (position[i] != null){
 			posArray[3*i] = position[i].x;
 			posArray[3*i+1] = position[i].y;
 			posArray[3*i+2] = position[i].z;
+			}
 		}
 		gl.glUniform3fv(idPos, MAX_LIGHTS, posArray, 0);
 	}
