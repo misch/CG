@@ -7,39 +7,56 @@ import java.io.IOException;
  * class in the "Shading and Texturing" project.
  */
 public class Material {
-	private SWTexture texture;
-//	private Shader shader;
+//	private SWTexture SWTexture;
 	private float diffuseReflectionCoeff;
-	
-	public Material(SWTexture texture){
-//		this.texture = texture;
-		this(texture,1);
-	}
+	private String GLTexFilePath;
+//	private GLTexture GLTexture = null;
+	private Texture tex;
 	
 	public Material(float diffuseReflectionCoeff){
 		this(null, diffuseReflectionCoeff);
 	}
 	
-//	public Material(SWTexture texture, Shader shader, float diffuseReflectionCoeff){
-	public Material(SWTexture texture,float diffuseReflectionCoeff){
-		this.texture = texture;
-//		this.shader = shader;
+	public Material(String texFilePath,float diffuseReflectionCoeff){
+		this.GLTexFilePath = texFilePath;
 		this.diffuseReflectionCoeff = diffuseReflectionCoeff;
 	}
 	
+	public Material(SWTexture texture){
+//		this.SWTexture = texture;
+		this.tex = texture;
+	}
 	public Material(){
 		this(null);
 	}
 	
-	public SWTexture getTexture(){
-		return texture;
-	}
-	
-//	public Shader getShader(){
-//		return shader;
+//	public SWTexture getTexture(){
+//		return SWTexture;
 //	}
 	
+	public Texture getTexture(){
+		return this.tex;
+	}
+	public String getTexFile(){
+		return this.GLTexFilePath;
+	}
+	
+	
+//	public void setGLTexture(GLTexture texture){
+//		this.GLTexture = texture;
+//	}
+	
+	public void setTexture(Texture tex){
+		this.tex = tex;
+	}
+	
+//	public GLTexture getGLTexture(){
+//		return this.GLTexture;
+//	}
 	public float getDiffuseReflectionCoeff(){
 		return diffuseReflectionCoeff;
+	}
+
+	public void clear() {
 	}
 }

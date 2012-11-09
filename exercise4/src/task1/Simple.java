@@ -8,6 +8,7 @@ import javax.vecmath.*;
 
 import task3.LandscapeListener;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -40,7 +41,20 @@ public class Simple
 		{
 			renderContext = r;
 			renderContext.setSceneManager(sceneManager);
-	
+			
+			Texture tex1 = renderContext.makeTexture();
+			Texture tex2 = renderContext.makeTexture();
+			
+			try{
+				tex1.load(shape1.getMaterial().getTexFile());
+				tex2.load(shape2.getMaterial().getTexFile());
+				shape1.getMaterial().setTexture(tex1);
+				shape2.getMaterial().setTexture(tex2);
+			}
+			catch (Exception e){
+				System.out.print("Could not load a texture\n");
+			}
+			
 			// Register a timer task
 		    Timer timer = new Timer();
 		    angle = 0.005f;
@@ -146,13 +160,15 @@ public class Simple
 		sceneManager = new SimpleSceneManager(camera,frustum);
 	
 		shape1 = new Shape(vertexData);
-		shape1.setMaterial(new Material(2));
-		
+		String tex1File = "../jrtr/textures/cityHouse.png";
+		shape1.setMaterial(new Material(tex1File,0.2f));
+			
 		shape2 = new Shape(vertexData);
-		shape2.setMaterial(new Material(2));
+		String tex2File = "../jrtr/textures/plant.jpg";
+		shape2.setMaterial(new Material(tex2File,0.2f));
 		
 		shape3 = new Shape(vertexData);
-		shape3.setMaterial(new Material(0.2f));
+		shape3.setMaterial(new Material(2));
 		
 		translateShape(shape1, new Vector3f(-2,0,-2));
 		translateShape(shape2, new Vector3f(2,0,0));

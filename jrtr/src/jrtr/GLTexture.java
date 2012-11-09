@@ -22,6 +22,10 @@ public class GLTexture implements Texture {
 		this.gl = gl;
 		id = IntBuffer.allocate(1);	// Make the buffer that will store the texture identifier
 	}
+	
+	public GLTexture(){
+		this(null);
+	}
 
 	/**
 	 * Load the texture from an image file.
@@ -67,5 +71,9 @@ public class GLTexture implements Texture {
 			}
 		}
 		return buf;
+	}
+	
+	public void setGL(GL3 gl){
+		this.gl = gl;
 	}
 }
