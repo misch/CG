@@ -27,17 +27,18 @@ out vec2 frag_texcoord;
 
 void main()
 {		
-	vec3 look_from_direction = (camera*vec4(cam_position,1) - modelview* position).xyz;
+	//vec3 look_from_direction = (camera*vec4(cam_position,1) - modelview* position).xyz;
 	
+	vec3 look_from_direction = - normalize((modelview*position).xyz);
 	// Compute diffuse light
 	diffuse_light = 0;
 	specular_light = 0;
 	for (int i = 0; i<MAX_LIGHTS; i++){
 		vec3 light_direction = (camera*vec4(light_position[i],1)-modelview*position).xyz;
 		float radiance = source_radiance[i]/dot(light_direction,light_direction);
-		diffuse_light += radiance * reflection_coeff * max(0.0,dot((modelview*vec4(normal,0)).xyz, normalize(light_direction)));
+		diffuse_light += radiance * reflection_coeff * max(0.0,dot(normalize((modelview*vec4(normal,0)).xyz), normalize(light_direction)));
 		
-		vec3 reflection_direction = reflect(-light_direction, normalize(modelview * vec4(normal,0)).xyz);
+		vec3 reflection_direction = reflect(-normalize(light_direction), normalize(modelview * vec4(normal,0)).xyz);
 		specular_light += radiance * specular_coeff * pow(max(dot(reflection_direction,look_from_direction),0.0),phong_exponent);
 	}
 	

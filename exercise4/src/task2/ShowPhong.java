@@ -4,6 +4,8 @@ import jrtr.*;
 import javax.swing.*;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+
 import javax.vecmath.*;
 
 import task3.LandscapeListener;
@@ -88,8 +90,9 @@ public class ShowPhong
 	/**
 	 * The main function opens a 3D rendering window, constructs a simple 3D
 	 * scene, and starts a timer task to generate an animation.
+	 * @throws IOException 
 	 */
-	public static void main(String[] args)
+	public static void main(String[] args) throws IOException
 	{		
 		// Make a simple geometric object: a cube
 		
@@ -146,15 +149,17 @@ public class ShowPhong
 		Frustum frustum = new Frustum(1,100,1,(float)(Math.PI/3));
 		sceneManager = new SimpleSceneManager(camera,frustum);
 	
+//		shape1 = new Shape(ObjReader.read("teapot_tex.obj", 1));
 		shape1 = new Shape(vertexData);
 		String tex1File = "../jrtr/textures/cityHouse.png";
 		shape1.setMaterial(new Material(tex1File,1));
+//		
 			
 		shape2 = new Shape(vertexData);
 		String tex2File = "../jrtr/textures/plant.jpg";
 		shape2.setMaterial(new Material(tex2File,0.4f));
-		shape2.getMaterial().setSpecularReflection(1);
-		shape2.getMaterial().setPhongExponent(50);
+		shape2.getMaterial().setSpecularReflection(2);
+		shape2.getMaterial().setPhongExponent(2);
 		
 		shape3 = new Shape(vertexData);
 		shape3.setMaterial(new Material(2));
@@ -167,11 +172,8 @@ public class ShowPhong
 		sceneManager.addShape(shape2);
 		sceneManager.addShape(shape3);
 		
-		sceneManager.addLightSource(new PointLight(80,new Point3f(0,0,10)));
-		sceneManager.addLightSource(new PointLight(80, new Point3f(0,0,-10)));
-		sceneManager.addLightSource(new PointLight(80, new Point3f(10,0,0)));
-		sceneManager.addLightSource(new PointLight(80, new Point3f(-10,0,0)));
-		sceneManager.addLightSource(new PointLight(80, new Point3f(0,5,0)));
+		addLights();
+		
 
 		// Make a render panel. The init function of the renderPanel
 		// (see above) will be called back for initialization.
@@ -196,6 +198,15 @@ public class ShowPhong
 	    jframe.setVisible(true); // show window
 	}
 	
+	private static void addLights() {
+//		sceneManager.addLightSource(new PointLight(80,new Point3f(0,0,10)));
+//		sceneManager.addLightSource(new PointLight(80, new Point3f(0,0,-10)));
+//		sceneManager.addLightSource(new PointLight(80, new Point3f(10,0,0)));
+//		sceneManager.addLightSource(new PointLight(80, new Point3f(-10,0,0)));
+		sceneManager.addLightSource(new PointLight(80, new Point3f(0,5,0)));
+		
+	}
+
 	private static void translateShape(Shape shape, Vector3f vec) {
 		Matrix4f t = shape.getTransformation();		
 		Matrix4f translation = new Matrix4f();
