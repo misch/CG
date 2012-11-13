@@ -149,11 +149,12 @@ public class ShowPhong
 		Frustum frustum = new Frustum(1,100,1,(float)(Math.PI/3));
 		sceneManager = new SimpleSceneManager(camera,frustum);
 	
-//		shape1 = new Shape(ObjReader.read("teapot_tex.obj", 1));
-		shape1 = new Shape(vertexData);
-		String tex1File = "../jrtr/textures/cityHouse.png";
+		shape1 = new Shape(ObjReader.read("teapot_tex.obj", 1));
+//		shape1 = new Shape(vertexData);
+		String tex1File = "../jrtr/textures/rot.png";
 		shape1.setMaterial(new Material(tex1File,1));
-//		
+		shape1.getMaterial().setSpecularReflection(2);
+		shape1.getMaterial().setPhongExponent(200);
 			
 		shape2 = new Shape(vertexData);
 		String tex2File = "../jrtr/textures/plant.jpg";
@@ -169,8 +170,8 @@ public class ShowPhong
 		translateShape(shape3, new Vector3f(0,0,2));
 		
 		sceneManager.addShape(shape1);
-		sceneManager.addShape(shape2);
-		sceneManager.addShape(shape3);
+//		sceneManager.addShape(shape2);
+//		sceneManager.addShape(shape3);
 		
 		addLights();
 		
