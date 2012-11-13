@@ -1,4 +1,4 @@
-package task1;
+package task2;
 
 import jrtr.*;
 import javax.swing.*;
@@ -16,7 +16,7 @@ import java.util.TimerTask;
  * Implements a simple application that opens a 3D rendering window and 
  * shows a rotating cube.
  */
-public class Simple
+public class ShowPhong
 {	
 	static RenderPanel renderPanel;
 	static RenderContext renderContext;

@@ -58,7 +58,21 @@ public class LandscapeListener implements KeyListener, MouseListener, MouseMotio
 				
 				go(left);
 				break;	
+			
+			case 'r':
+				Vector3f up = cam.getyAxis();
+				up.normalize();
+				go(up);
+				break;
+				
+			case 'f':
+				Vector3f down = cam.getyAxis();
+				down.scale(-1);
+				down.normalize();
+				go(down);
+				break;
 			}
+			
 			renderPanel.getCanvas().repaint();
 		}
 
