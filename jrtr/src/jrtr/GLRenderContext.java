@@ -34,7 +34,8 @@ public class GLRenderContext implements RenderContext {
         GLShader defaultShader = new GLShader(gl);
         try {
 //        	defaultShader.load("../jrtr/shaders/diffuse.vert","../jrtr/shaders/diffuse.frag");
-        	defaultShader.load("../jrtr/shaders/diffusePointLights.vert","../jrtr/shaders/diffusePointLights.frag");
+//        	defaultShader.load("../jrtr/shaders/diffusePointLights.vert","../jrtr/shaders/diffusePointLights.frag");
+        	defaultShader.load("../jrtr/shaders/specular.vert", "../jrtr/shaders/specular.frag");
         } catch(Exception e) {
 	    	System.out.print("Problem with shader:\n");
 	    	System.out.print(e.getMessage());
@@ -138,7 +139,9 @@ public class GLRenderContext implements RenderContext {
 		// Set modelview and projection matrices in shader
 		gl.glUniformMatrix4fv(gl.glGetUniformLocation(activeShader.programId(), "modelview"), 1, false, matrix4fToFloat16(t), 0);
 		gl.glUniformMatrix4fv(gl.glGetUniformLocation(activeShader.programId(), "projection"), 1, false, matrix4fToFloat16(sceneManager.getFrustum().getProjectionMatrix()), 0);
-		gl.glUniformMatrix4fv(gl.glGetUniformLocation(activeShader.programId(), "camera"), 1, false, matrix4fToFloat16(sceneManager.getCamera().getCameraMatrix()), 0);		
+		gl.glUniformMatrix4fv(gl.glGetUniformLocation(activeShader.programId(), "camera"), 1, false, matrix4fToFloat16(sceneManager.getCamera().getCameraMatrix()), 0);
+		Vector3f camPos = sceneManager.getCamera().getCenterOfProjection();
+		gl.glUniform3f(gl.glGetUniformLocation(activeShader.programId(),  "cam_position"), camPos.x,camPos.y,camPos.z);
 		// Steps to pass vertex data to OpenGL:
 		// 1. For all vertex attributes (position, normal, etc.)
 			// Copy vertex data into float buffers that can be passed to OpenGL
@@ -219,6 +222,13 @@ public class GLRenderContext implements RenderContext {
 			id = gl.glGetUniformLocation(activeShader.programId(), "myTexture");
 			gl.glUniform1i(id, 0);	// The variable in the shader needs to be set to the desired texture unit, i.e., 0
 		}
+		// else: unable texturing
+		
+		id = gl.glGetUniformLocation(activeShader.programId(),  "phong_exponent");
+		gl.glUniform1f(id,  m.getPhongExponent());
+		
+		id = gl.glGetUniformLocation(activeShader.programId(), "specular_coeff");
+		gl.glUniform1f(id, m.getSpecularReflectionCoeff());
 	}
 	
 	/**

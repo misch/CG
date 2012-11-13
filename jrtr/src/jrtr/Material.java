@@ -9,9 +9,11 @@ import java.io.IOException;
 public class Material {
 //	private SWTexture SWTexture;
 	private float diffuseReflectionCoeff;
+	private float specularReflectionCoeff;
+	private float phongExponent;
 	private String GLTexFilePath;
 //	private GLTexture GLTexture = null;
-	private Texture tex;
+	private Texture tex = null;
 	
 	public Material(float diffuseReflectionCoeff){
 		this(null, diffuseReflectionCoeff);
@@ -22,7 +24,7 @@ public class Material {
 		this.diffuseReflectionCoeff = diffuseReflectionCoeff;
 	}
 	
-	public Material(SWTexture texture){
+	public Material(Texture texture){
 //		this.SWTexture = texture;
 		this.tex = texture;
 	}
@@ -30,9 +32,21 @@ public class Material {
 		this(null);
 	}
 	
-//	public SWTexture getTexture(){
-//		return SWTexture;
-//	}
+	public float getPhongExponent(){
+		return phongExponent;
+	}
+	
+	public float getSpecularReflectionCoeff(){
+		return specularReflectionCoeff;
+	}
+	
+	public void setPhongExponent(float phong){
+		this.phongExponent = phong;
+	}
+	
+	public void setSpecularReflection(float specular){
+		this.specularReflectionCoeff = specular;
+	}
 	
 	public Texture getTexture(){
 		return this.tex;

@@ -86,19 +86,6 @@ public class Simple
 	}
 
 	/**
-	 * A mouse listener for the main window of this application. This can be
-	 * used to process mouse events.
-	 */
-	public static class SimpleMouseListener implements MouseListener
-	{
-    	public void mousePressed(MouseEvent e) {}
-    	public void mouseReleased(MouseEvent e) {}
-    	public void mouseEntered(MouseEvent e) {}
-    	public void mouseExited(MouseEvent e) {}
-    	public void mouseClicked(MouseEvent e) {}
-	}
-	
-	/**
 	 * The main function opens a 3D rendering window, constructs a simple 3D
 	 * scene, and starts a timer task to generate an animation.
 	 */
@@ -161,11 +148,13 @@ public class Simple
 	
 		shape1 = new Shape(vertexData);
 		String tex1File = "../jrtr/textures/cityHouse.png";
-		shape1.setMaterial(new Material(tex1File,0.2f));
+		shape1.setMaterial(new Material(tex1File,1));
 			
 		shape2 = new Shape(vertexData);
 		String tex2File = "../jrtr/textures/plant.jpg";
-		shape2.setMaterial(new Material(tex2File,0.2f));
+		shape2.setMaterial(new Material(tex2File,0.4f));
+		shape2.getMaterial().setSpecularReflection(1);
+		shape2.getMaterial().setPhongExponent(50);
 		
 		shape3 = new Shape(vertexData);
 		shape3.setMaterial(new Material(2));
@@ -202,7 +191,6 @@ public class Simple
 		renderPanel.getCanvas().addMouseMotionListener(listener);
 		renderPanel.getCanvas().addKeyListener(listener);
 		jframe.addKeyListener(listener);
-	    jframe.addMouseListener(new SimpleMouseListener());
 		   	    	    
 	    jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    jframe.setVisible(true); // show window
