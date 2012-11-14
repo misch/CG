@@ -47,6 +47,8 @@ public class ShowGlossMap
 			Texture tex1 = renderContext.makeTexture();
 			Texture tex2 = renderContext.makeTexture();
 			
+			Shader shader1 = renderContext.makeShader();
+			
 			try{
 				tex1.load(shape1.getMaterial().getTexFile());
 				tex2.load(shape2.getMaterial().getTexFile());
@@ -55,6 +57,14 @@ public class ShowGlossMap
 			}
 			catch (Exception e){
 				System.out.print("Could not load a texture\n");
+			}
+			
+			try{
+				shader1.load(shape1.getMaterial().getFragmentShaderPath(), shape1.getMaterial().getVertexShaderPath());
+				shape1.getMaterial().setShader(shader1);
+			}
+			catch (Exception e){
+				System.out.println("Could not load shader");
 			}
 			
 			// Register a timer task
@@ -158,12 +168,17 @@ public class ShowGlossMap
 	
 		shape1 = new Shape(ObjReader.read("teapot_tex.obj", 1));
 		String tex1File = "../jrtr/textures/cityHouse.png";
+		String vertShaderPath1 = "../jrtr/shaders/glossMap.vert";
+		String fragShaderPath1 = "../jrtr/shaders/glossMap.frag";
+				
 		shape1.setMaterial(new Material(tex1File,1));
+		shape1.getMaterial().setVertexShaderPath(vertShaderPath1);
+		shape1.getMaterial().setFragmentShaderPath(fragShaderPath1);
 		shape1.getMaterial().setSpecularReflection(20);
 		shape1.getMaterial().setPhongExponent(10);
 		
 		shape2 = new Shape(ObjReader.read("teapot_tex.obj", 1));
-		String tex2File = "../jrtr/textures/plant.jpg";
+		String tex2File = "../jrtr/textures/darkHouse.png";
 		shape2.setMaterial(new Material(tex2File,1));
 		shape2.getMaterial().setSpecularReflection(20);
 		shape2.getMaterial().setPhongExponent(100);

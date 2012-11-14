@@ -7,13 +7,14 @@ import java.io.IOException;
  * class in the "Shading and Texturing" project.
  */
 public class Material {
-//	private SWTexture SWTexture;
 	private float diffuseReflectionCoeff;
 	private float specularReflectionCoeff;
 	private float phongExponent;
 	private String GLTexFilePath;
-//	private GLTexture GLTexture = null;
 	private Texture tex = null;
+	private String vertexShaderPath;
+	private String fragmentShaderPath;
+	private Shader shader = null;
 	
 	public Material(float diffuseReflectionCoeff){
 		this(null, diffuseReflectionCoeff);
@@ -25,7 +26,6 @@ public class Material {
 	}
 	
 	public Material(Texture texture){
-//		this.SWTexture = texture;
 		this.tex = texture;
 	}
 	public Material(){
@@ -54,23 +54,39 @@ public class Material {
 	public String getTexFile(){
 		return this.GLTexFilePath;
 	}
-	
-	
-//	public void setGLTexture(GLTexture texture){
-//		this.GLTexture = texture;
-//	}
-	
+		
 	public void setTexture(Texture tex){
 		this.tex = tex;
 	}
-	
-//	public GLTexture getGLTexture(){
-//		return this.GLTexture;
-//	}
+
 	public float getDiffuseReflectionCoeff(){
 		return diffuseReflectionCoeff;
 	}
 
 	public void clear() {
+	}
+
+	public Shader getShader() {
+		return shader;
+	}
+
+	public void setShader(Shader shader) {
+		this.shader = shader;
+	}
+
+	public String getVertexShaderPath() {
+		return vertexShaderPath;
+	}
+
+	public void setVertexShaderPath(String vertexShaderPath) {
+		this.vertexShaderPath = vertexShaderPath;
+	}
+
+	public String getFragmentShaderPath() {
+		return fragmentShaderPath;
+	}
+
+	public void setFragmentShaderPath(String fragmentShaderPath) {
+		this.fragmentShaderPath = fragmentShaderPath;
 	}
 }
