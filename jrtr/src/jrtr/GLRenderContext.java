@@ -17,6 +17,7 @@ public class GLRenderContext implements RenderContext {
 	private SceneManagerInterface sceneManager;
 	private GL3 gl;
 	private GLShader activeShader;
+	private GLShader defaultShader;
 	
 	/**
 	 * This constructor is called by {@link GLRenderPanel}.
@@ -45,10 +46,10 @@ public class GLRenderContext implements RenderContext {
 	    }
         defaultShader.use();	  
         activeShader = defaultShader;
-
-        // Pass light direction to shader
-		int id = gl.glGetUniformLocation(activeShader.programId(), "lightDirection");
-		gl.glUniform4f(id, 0, 0, 1, 0);		// Set light direction
+//
+//        // Pass light direction to shader
+//		int id = gl.glGetUniformLocation(activeShader.programId(), "lightDirection");
+//		gl.glUniform4f(id, 0, 0, 1, 0);		// Set light direction
 	}
 		
 	/**
@@ -76,7 +77,10 @@ public class GLRenderContext implements RenderContext {
 		while(iterator.hasNext())
 		{
 			RenderItem r = iterator.next();
-			if(r.getShape()!=null) draw(r);
+			if(r.getShape()!=null){
+				setShader(r);
+				draw(r);
+			}
 		}		
 		
 		endFrame();
@@ -87,9 +91,7 @@ public class GLRenderContext implements RenderContext {
 	 * scene drawing starts.
 	 */
 	private void beginFrame()
-	{
-		setLights();
-		
+	{		
         gl.glClear(GL3.GL_COLOR_BUFFER_BIT);
         gl.glClear(GL3.GL_DEPTH_BUFFER_BIT);
 	}
@@ -123,6 +125,7 @@ public class GLRenderContext implements RenderContext {
 	 */
 	private void draw(RenderItem renderItem)
 	{
+		setLights();
 		VertexData vertexData = renderItem.getShape().getVertexData();
 		LinkedList<VertexData.VertexElement> vertexElements = vertexData.getElements();
 		int indices[] = vertexData.getIndices();
@@ -232,6 +235,26 @@ public class GLRenderContext implements RenderContext {
 		
 		id = gl.glGetUniformLocation(activeShader.programId(), "specular_coeff");
 		gl.glUniform1f(id, m.getSpecularReflectionCoeff());
+	}
+	
+	
+	void setShader(RenderItem renderItem){
+		  // Load and use default shader
+        GLShader shader = new GLShader(gl);
+        shader = (GLShader)renderItem.getShape().getMaterial().getShader();
+        
+        if (shader != null){
+        	shader.use();	  
+        	activeShader = shader;
+        }
+//        else{
+//        	defaultShader.use();
+//        	activeShader = defaultShader;
+//        }
+
+        // Pass light direction to shader
+		int id = gl.glGetUniformLocation(activeShader.programId(), "lightDirection");
+		gl.glUniform4f(id, 0, 0, 1, 0);		// Set light direction
 	}
 	
 	/**
