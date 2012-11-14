@@ -244,20 +244,25 @@ public class GLRenderContext implements RenderContext {
 		Iterator<PointLight> lights = sceneManager.lightIterator();
 		float[] sourceRadiance = new float[MAX_LIGHTS];
 		Point3f[] position = new Point3f[MAX_LIGHTS];
+		Color3f[] color = new Color3f[MAX_LIGHTS];
 	
 		for (int i = 0; i<MAX_LIGHTS && lights.hasNext(); i++){
 			PointLight light = lights.next();
 			sourceRadiance[i] = light.getRadiance();
 			
 			position[i] = light.getPosition();
+			color[i] = light.getColor();
 		}
 		
 		int idRadiance = gl.glGetUniformLocation(activeShader.programId(), "source_radiance");
 		gl.glUniform1fv(idRadiance, MAX_LIGHTS, sourceRadiance, 0);
 		
 		int idPos = gl.glGetUniformLocation(activeShader.programId(),  "light_position");
+		int idCol = gl.glGetUniformLocation(activeShader.programId(), "light_color");
 		
 		float[] posArray = new float[position.length*3];
+		float[] colArray = new float[color.length*3];
+		
 		for (int i = 0; i < position.length; i++){
 			if (position[i] != null){
 			posArray[3*i] = position[i].x;
@@ -265,7 +270,14 @@ public class GLRenderContext implements RenderContext {
 			posArray[3*i+2] = position[i].z;
 			}
 		}
+		
+//		for (int i = 0; i < color.length; i++){
+//			colArray[3*i] = color[i].x;
+//			colArray[3*i+1] = color[i].y;
+//			colArray[3*i+2] = color[i].z;
+//		}
 		gl.glUniform3fv(idPos, MAX_LIGHTS, posArray, 0);
+		gl.glUniform3fv(idPos, MAX_LIGHTS, colArray, 0);
 	}
 
 	/**
