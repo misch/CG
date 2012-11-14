@@ -20,81 +20,6 @@ public class ShowDiffusePointLights
 	static Shape shape1;
 	static Shape shape2;
 	static Shape shape3;
-	static float angle;
-
-	/**
-	 * An extension of {@link GLRenderPanel} or {@link SWRenderPanel} to 
-	 * provide a call-back function for initialization. 
-	 */ 
-	public final static class SimpleRenderPanel extends GLRenderPanel
-	{
-		/**
-		 * Initialization call-back. We initialize our renderer here.
-		 * 
-		 * @param r	the render context that is associated with this render panel
-		 */
-		public void init(RenderContext r)
-		{
-			renderContext = r;
-			renderContext.setSceneManager(sceneManager);
-			
-			Texture tex1 = renderContext.makeTexture();
-			Texture tex2 = renderContext.makeTexture();
-			
-			Shader shader= renderContext.makeShader();
-			String vertShaderPath = "../jrtr/shaders/diffusePointLights.vert";
-			String fragShaderPath = "../jrtr/shaders/diffusePointLights.frag";
-			
-			try{
-				tex1.load(shape1.getMaterial().getTexFile());
-				tex2.load(shape2.getMaterial().getTexFile());
-				shape1.getMaterial().setTexture(tex1);
-				shape2.getMaterial().setTexture(tex2);
-			}
-			catch (Exception e){
-				System.out.print("Could not load a texture\n");
-			}
-			
-			try{
-				shader.load(vertShaderPath, fragShaderPath);
-				shape1.getMaterial().setShader(shader);
-				shape2.getMaterial().setShader(shader);
-				shape3.getMaterial().setShader(shader);
-				
-			}
-			catch (Exception e){
-				System.out.println("Could not load shader");
-			}
-			
-			// Register a timer task
-		    Timer timer = new Timer();
-		    angle = 0.005f;
-		    timer.scheduleAtFixedRate(new AnimationTask(), 0, 10);
-		}
-	}
-
-	/**
-	 * A timer task that generates an animation. This task triggers
-	 * the redrawing of the 3D scene every time it is executed.
-	 */
-	public static class AnimationTask extends TimerTask
-	{
-		public void run()
-		{
-			// Update transformation
-    		Matrix4f t = shape1.getTransformation();
-    		Matrix4f rotX = new Matrix4f();
-    		rotX.rotX(angle);
-    		Matrix4f rotY = new Matrix4f();
-    		rotY.rotY(angle);
-//    		t.mul(rotX);
-//    		t.mul(rotY);
-    		shape1.setTransformation(t);
-    		
-    		// Trigger redrawing of the render window
-    		renderPanel.getCanvas().repaint(); 
-		}
-	}
 
 	/**
 	 * The main function opens a 3D rendering window, constructs a simple 3D
@@ -157,16 +82,26 @@ public class ShowDiffusePointLights
 		Frustum frustum = new Frustum(1,100,1,(float)(Math.PI/3));
 		sceneManager = new SimpleSceneManager(camera,frustum);
 
+		String vertShaderPath = "../jrtr/shaders/diffusePointLights.vert";
+		String fragShaderPath = "../jrtr/shaders/diffusePointLights.frag";
+		
 		shape1 = new Shape(vertexData);
 		String tex1File = "../jrtr/textures/cityHouse.png";
 		shape1.setMaterial(new Material(tex1File,1));
+		shape1.getMaterial().setFragmentShaderPath(fragShaderPath);
+		shape1.getMaterial().setVertexShaderPath(vertShaderPath);
+		
 					
 		shape2 = new Shape(vertexData);
 		String tex2File = "../jrtr/textures/plant.jpg";
 		shape2.setMaterial(new Material(tex2File,0.4f));
+		shape2.getMaterial().setFragmentShaderPath(fragShaderPath);
+		shape2.getMaterial().setVertexShaderPath(vertShaderPath);
 		
 		shape3 = new Shape(vertexData);
-		shape3.setMaterial(new Material(2));
+		shape3.setMaterial(new Material(tex2File,2));
+		shape3.getMaterial().setFragmentShaderPath(fragShaderPath);
+		shape3.getMaterial().setVertexShaderPath(vertShaderPath);
 				
 		translateShape(shape1, new Vector3f(-2,0,-2));
 		translateShape(shape2, new Vector3f(2,0,0));
@@ -178,9 +113,8 @@ public class ShowDiffusePointLights
 		
 		addLights();
 
-		// Make a render panel. The init function of the renderPanel
-		// (see above) will be called back for initialization.
-		renderPanel = new SimpleRenderPanel();
+		Shape[] shapes = {shape1, shape2, shape3};
+		renderPanel = new SimpleRenderPanelTexShad(sceneManager, shapes);
 		
 		// Make the main window of this application and add the renderer to it
 		JFrame jframe = new JFrame("simple");

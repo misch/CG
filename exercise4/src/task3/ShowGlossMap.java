@@ -8,6 +8,7 @@ import java.io.IOException;
 
 import javax.vecmath.*;
 
+import task1.SimpleRenderPanelTexShad;
 import task3.LandscapeListener;
 
 import java.util.ArrayList;
@@ -26,87 +27,6 @@ public class ShowGlossMap
 	static Shape shape1;
 	static Shape shape2;
 	static Shape shape3;
-	static float angle;
-
-	/**
-	 * An extension of {@link GLRenderPanel} or {@link SWRenderPanel} to 
-	 * provide a call-back function for initialization. 
-	 */ 
-	public final static class SimpleRenderPanel extends GLRenderPanel
-	{
-		/**
-		 * Initialization call-back. We initialize our renderer here.
-		 * 
-		 * @param r	the render context that is associated with this render panel
-		 */
-		public void init(RenderContext r)
-		{
-			renderContext = r;
-			renderContext.setSceneManager(sceneManager);
-			
-			Texture tex1 = renderContext.makeTexture();
-			Texture tex2 = renderContext.makeTexture();
-			
-			Shader shader1 = renderContext.makeShader();
-			Shader shader2 = renderContext.makeShader();
-			
-			try{
-				tex1.load(shape1.getMaterial().getTexFile());
-				tex2.load(shape2.getMaterial().getTexFile());
-				shape1.getMaterial().setTexture(tex1);
-				shape2.getMaterial().setTexture(tex2);
-			}
-			catch (Exception e){
-				System.out.print("Could not load a texture\n");
-			}
-			
-			try{
-				shader1.load(shape1.getMaterial().getVertexShaderPath(), shape1.getMaterial().getFragmentShaderPath());
-				shape1.getMaterial().setShader(shader1);
-				
-				shader2.load(shape2.getMaterial().getVertexShaderPath(), shape2.getMaterial().getFragmentShaderPath());
-				shape2.getMaterial().setShader(shader2);
-			}
-			catch (Exception e){
-				System.out.println("Could not load shader");
-			}
-			
-			// Register a timer task
-		    Timer timer = new Timer();
-		    angle = 0.01f;
-		    timer.scheduleAtFixedRate(new AnimationTask(), 0, 10);
-		}
-	}
-
-	/**
-	 * A timer task that generates an animation. This task triggers
-	 * the redrawing of the 3D scene every time it is executed.
-	 */
-	public static class AnimationTask extends TimerTask
-	{
-		public void run()
-		{
-			// Update transformation
-    		Matrix4f t1 = shape1.getTransformation();
-    		Matrix4f t2 = shape2.getTransformation();
-    		Matrix4f t3 = shape3.getTransformation();
-    		
-    		Matrix4f rotX = new Matrix4f();
-    		rotX.rotX(angle);
-    		Matrix4f rotY = new Matrix4f();
-    		rotY.rotY(angle);
-    		
-    		t1.mul(rotX);
-    		t1.mul(rotY);
-    		t2.mul(rotX);
-    		t2.mul(rotY);
-    		t3.mul(rotX);
-    		t3.mul(rotY);
-    		
-    		// Trigger redrawing of the render window
-    		renderPanel.getCanvas().repaint(); 
-		}
-	}
 
 	/**
 	 * The main function opens a 3D rendering window, constructs a simple 3D
@@ -205,8 +125,9 @@ public class ShowGlossMap
 		
 
 		// Make a render panel. The init function of the renderPanel
-		// (see above) will be called back for initialization.
-		renderPanel = new SimpleRenderPanel();
+		// will be called back for initialization.
+		Shape[] shapes = {shape1, shape2};
+		renderPanel = new SimpleRenderPanelTexShad(sceneManager,shapes);
 		
 		// Make the main window of this application and add the renderer to it
 		JFrame jframe = new JFrame("simple");
