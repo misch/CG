@@ -21,7 +21,7 @@ void main()
 	// Pass texture coordinates, normals and vertex positions to fragment shader, OpenGL automatically
 	// interpolates them to each pixel (in a perpectively correct manner)
 	frag_normal = normal;
-	frag_texcoord = texcoord;
+	//frag_texcoord = texcoord;
 	frag_position = position;
 
 	// Transform position, including projection matrix

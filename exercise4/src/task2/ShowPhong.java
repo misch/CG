@@ -153,8 +153,8 @@ public class ShowPhong
 //		shape1 = new Shape(vertexData);
 		String tex1File = "../jrtr/textures/sand.png";
 		shape1.setMaterial(new Material(tex1File,1));
-		shape1.getMaterial().setSpecularReflection(20);
-		shape1.getMaterial().setPhongExponent(600);
+		shape1.getMaterial().setSpecularReflection(200);
+		shape1.getMaterial().setPhongExponent(1000);
 		
 		shape2 = new Shape(vertexData);
 		String tex2File = "../jrtr/textures/plant.jpg";
@@ -200,11 +200,11 @@ public class ShowPhong
 	}
 	
 	private static void addLights() {
-		sceneManager.addLightSource(new PointLight(80,new Point3f(0,0,10)));
-		sceneManager.addLightSource(new PointLight(80, new Point3f(0,0,-10)));
-		sceneManager.addLightSource(new PointLight(80, new Point3f(10,0,0)));
-		sceneManager.addLightSource(new PointLight(80, new Point3f(-10,0,0)));
-		sceneManager.addLightSource(new PointLight(80, new Point3f(0,5,0)));
+		sceneManager.addLightSource(new PointLight(80,new Point3f(0,0,10), new Color3f(0,0,1)));
+		sceneManager.addLightSource(new PointLight(30, new Point3f(0,0,-10)));
+		sceneManager.addLightSource(new PointLight(30, new Point3f(10,0,0)));
+		sceneManager.addLightSource(new PointLight(30, new Point3f(-10,0,0)));
+		sceneManager.addLightSource(new PointLight(30, new Point3f(0,5,0)));
 		
 	}
 
