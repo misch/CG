@@ -1,4 +1,4 @@
-package task2;
+package task3;
 
 import jrtr.*;
 import javax.swing.*;
@@ -18,7 +18,7 @@ import java.util.TimerTask;
  * Implements a simple application that opens a 3D rendering window and 
  * shows a rotating cube.
  */
-public class ShowPhong
+public class ShowPhongWithTexture
 {	
 	static RenderPanel renderPanel;
 	static RenderContext renderContext;
@@ -157,7 +157,7 @@ public class ShowPhong
 		sceneManager = new SimpleSceneManager(camera,frustum);
 	
 		shape1 = new Shape(ObjReader.read("teapot_tex.obj", 1));
-		String tex1File = "../jrtr/textures/sand.png";
+		String tex1File = "../jrtr/textures/wood.jpg";
 		shape1.setMaterial(new Material(tex1File,1));
 		shape1.getMaterial().setSpecularReflection(200);
 		shape1.getMaterial().setPhongExponent(1000);

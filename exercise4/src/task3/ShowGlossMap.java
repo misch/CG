@@ -1,4 +1,4 @@
-package task2;
+package task3;
 
 import jrtr.*;
 import javax.swing.*;
@@ -18,7 +18,7 @@ import java.util.TimerTask;
  * Implements a simple application that opens a 3D rendering window and 
  * shows a rotating cube.
  */
-public class ShowPhong
+public class ShowGlossMap
 {	
 	static RenderPanel renderPanel;
 	static RenderContext renderContext;
@@ -157,10 +157,10 @@ public class ShowPhong
 		sceneManager = new SimpleSceneManager(camera,frustum);
 	
 		shape1 = new Shape(ObjReader.read("teapot_tex.obj", 1));
-		String tex1File = "../jrtr/textures/sand.png";
+		String tex1File = "../jrtr/textures/cityHouse.png";
 		shape1.setMaterial(new Material(tex1File,1));
-		shape1.getMaterial().setSpecularReflection(200);
-		shape1.getMaterial().setPhongExponent(1000);
+		shape1.getMaterial().setSpecularReflection(20);
+		shape1.getMaterial().setPhongExponent(10);
 		
 		shape2 = new Shape(ObjReader.read("teapot_tex.obj", 1));
 		String tex2File = "../jrtr/textures/plant.jpg";
@@ -172,11 +172,11 @@ public class ShowPhong
 		shape3.setMaterial(new Material(1));
 		
 		translateShape(shape1, new Vector3f(-2,0,-2));
-		translateShape(shape2, new Vector3f(2,0,0));
+		translateShape(shape2, new Vector3f(0,0,0));
 		translateShape(shape3, new Vector3f(0,0,2));
 		
 		sceneManager.addShape(shape1);
-//		sceneManager.addShape(shape2);
+		sceneManager.addShape(shape2);
 //		sceneManager.addShape(shape3);
 		
 		addLights();
