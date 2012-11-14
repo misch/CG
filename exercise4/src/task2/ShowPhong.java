@@ -1,6 +1,7 @@
 package task2;
 
 import jrtr.*;
+
 import javax.swing.*;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
@@ -40,12 +41,14 @@ public class ShowPhong
 		 * @param r	the render context that is associated with this render panel
 		 */
 		public void init(RenderContext r)
-		{
+		{				
 			renderContext = r;
 			renderContext.setSceneManager(sceneManager);
 			
 			Texture tex1 = renderContext.makeTexture();
 			Texture tex2 = renderContext.makeTexture();
+			
+			Shader shader1 = renderContext.makeShader();
 			
 			try{
 				tex1.load(shape1.getMaterial().getTexFile());
@@ -55,6 +58,14 @@ public class ShowPhong
 			}
 			catch (Exception e){
 				System.out.print("Could not load a texture\n");
+			}
+			
+			try{
+				shader1.load(shape1.getMaterial().getVertexShaderPath(), shape1.getMaterial().getFragmentShaderPath());
+				shape1.getMaterial().setShader(shader1);
+			}
+			catch (Exception e){
+				System.out.println("Could not load shader");
 			}
 			
 			// Register a timer task
@@ -158,7 +169,11 @@ public class ShowPhong
 	
 		shape1 = new Shape(ObjReader.read("teapot_tex.obj", 1));
 		String tex1File = "../jrtr/textures/sand.png";
+		String vertShaderPath1 = "../jrtr/shaders/phongWithoutTexture.vert";
+		String fragShaderPath1 = "../jrtr/shaders/phongWithoutTexture.frag";
 		shape1.setMaterial(new Material(tex1File,1));
+		shape1.getMaterial().setVertexShaderPath(vertShaderPath1);
+		shape1.getMaterial().setFragmentShaderPath(fragShaderPath1);
 		shape1.getMaterial().setSpecularReflection(200);
 		shape1.getMaterial().setPhongExponent(1000);
 		

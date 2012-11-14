@@ -1,14 +1,10 @@
 package task1;
 
 import jrtr.*;
+
 import javax.swing.*;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseEvent;
 import javax.vecmath.*;
-
 import task3.LandscapeListener;
-
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -45,6 +41,10 @@ public class ShowDiffusePointLights
 			Texture tex1 = renderContext.makeTexture();
 			Texture tex2 = renderContext.makeTexture();
 			
+			Shader shader= renderContext.makeShader();
+			String vertShaderPath = "../jrtr/shaders/diffusePointLights.vert";
+			String fragShaderPath = "../jrtr/shaders/diffusePointLights.frag";
+			
 			try{
 				tex1.load(shape1.getMaterial().getTexFile());
 				tex2.load(shape2.getMaterial().getTexFile());
@@ -53,6 +53,17 @@ public class ShowDiffusePointLights
 			}
 			catch (Exception e){
 				System.out.print("Could not load a texture\n");
+			}
+			
+			try{
+				shader.load(vertShaderPath, fragShaderPath);
+				shape1.getMaterial().setShader(shader);
+				shape2.getMaterial().setShader(shader);
+				shape3.getMaterial().setShader(shader);
+				
+			}
+			catch (Exception e){
+				System.out.println("Could not load shader");
 			}
 			
 			// Register a timer task
@@ -145,18 +156,18 @@ public class ShowDiffusePointLights
 		Camera camera = new Camera(new Vector3f(0,0,10), new Vector3f(0,0,0), new Vector3f(0,1,0));
 		Frustum frustum = new Frustum(1,100,1,(float)(Math.PI/3));
 		sceneManager = new SimpleSceneManager(camera,frustum);
-	
+
 		shape1 = new Shape(vertexData);
 		String tex1File = "../jrtr/textures/cityHouse.png";
 		shape1.setMaterial(new Material(tex1File,1));
-			
+					
 		shape2 = new Shape(vertexData);
 		String tex2File = "../jrtr/textures/plant.jpg";
 		shape2.setMaterial(new Material(tex2File,0.4f));
 		
 		shape3 = new Shape(vertexData);
 		shape3.setMaterial(new Material(2));
-		
+				
 		translateShape(shape1, new Vector3f(-2,0,-2));
 		translateShape(shape2, new Vector3f(2,0,0));
 		translateShape(shape3, new Vector3f(0,0,2));
@@ -165,11 +176,7 @@ public class ShowDiffusePointLights
 		sceneManager.addShape(shape2);
 		sceneManager.addShape(shape3);
 		
-		sceneManager.addLightSource(new PointLight(80,new Point3f(0,0,10)));
-		sceneManager.addLightSource(new PointLight(80, new Point3f(0,0,-10)));
-		sceneManager.addLightSource(new PointLight(80, new Point3f(10,0,0)));
-		sceneManager.addLightSource(new PointLight(80, new Point3f(-10,0,0)));
-		sceneManager.addLightSource(new PointLight(80, new Point3f(0,5,0)));
+		addLights();
 
 		// Make a render panel. The init function of the renderPanel
 		// (see above) will be called back for initialization.
@@ -192,6 +199,14 @@ public class ShowDiffusePointLights
 		   	    	    
 	    jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    jframe.setVisible(true); // show window
+	}
+
+	private static void addLights() {
+		sceneManager.addLightSource(new PointLight(80,new Point3f(0,0,10)));
+		sceneManager.addLightSource(new PointLight(80, new Point3f(0,0,-10)));
+		sceneManager.addLightSource(new PointLight(80, new Point3f(10,0,0)));
+		sceneManager.addLightSource(new PointLight(80, new Point3f(-10,0,0)));
+		sceneManager.addLightSource(new PointLight(80, new Point3f(0,5,0)));
 	}
 	
 	private static void translateShape(Shape shape, Vector3f vec) {

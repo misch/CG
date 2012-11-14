@@ -170,15 +170,15 @@ public class ShowGlossMap
 		Frustum frustum = new Frustum(1,100,1,(float)(Math.PI/3));
 		sceneManager = new SimpleSceneManager(camera,frustum);
 	
-		shape1 = new Shape(ObjReader.read("teapot_tex.obj", 1));
-		String tex1File = "../jrtr/textures/cityHouse.png";
+		shape1 = new Shape(ObjReader.read("teapot_tex.obj", 1.5f));
+		String tex1File = "../jrtr/textures/darkHouse.png";
 		String vertShaderPath1 = "../jrtr/shaders/glossMap.vert";
 		String fragShaderPath1 = "../jrtr/shaders/glossMap.frag";
 		shape1.setMaterial(new Material(tex1File,1));
 		shape1.getMaterial().setVertexShaderPath(vertShaderPath1);
 		shape1.getMaterial().setFragmentShaderPath(fragShaderPath1);
 		shape1.getMaterial().setSpecularReflection(20);
-		shape1.getMaterial().setPhongExponent(10);
+		shape1.getMaterial().setPhongExponent(100);
 		
 		shape2 = new Shape(ObjReader.read("teapot_tex.obj", 1.5f));
 		String tex2File = "../jrtr/textures/darkHouse.png";

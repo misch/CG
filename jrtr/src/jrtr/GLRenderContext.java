@@ -34,22 +34,19 @@ public class GLRenderContext implements RenderContext {
         // Load and use default shader
         GLShader defaultShader = new GLShader(gl);
         try {
+        	defaultShader.load("../jrtr/shaders/default.vert","../jrtr/shaders/default.frag");
 //        	defaultShader.load("../jrtr/shaders/normal.vert","../jrtr/shaders/normal.frag");
 //        	defaultShader.load("../jrtr/shaders/diffuse.vert","../jrtr/shaders/diffuse.frag");
 //        	defaultShader.load("../jrtr/shaders/diffusePointLights.vert","../jrtr/shaders/diffusePointLights.frag");
 //        	defaultShader.load("../jrtr/shaders/specular.vert", "../jrtr/shaders/specular.frag");
 //        	defaultShader.load("../jrtr/shaders/phongWithTexture.vert", "../jrtr/shaders/phongWithTexture.frag");
-        	defaultShader.load("../jrtr/shaders/glossMap.vert", "../jrtr/shaders/glossMap.frag");
+//        	defaultShader.load("../jrtr/shaders/glossMap.vert", "../jrtr/shaders/glossMap.frag");
         } catch(Exception e) {
 	    	System.out.print("Problem with shader:\n");
 	    	System.out.print(e.getMessage());
 	    }
         defaultShader.use();	  
         activeShader = defaultShader;
-//
-//        // Pass light direction to shader
-//		int id = gl.glGetUniformLocation(activeShader.programId(), "lightDirection");
-//		gl.glUniform4f(id, 0, 0, 1, 0);		// Set light direction
 	}
 		
 	/**
@@ -239,7 +236,6 @@ public class GLRenderContext implements RenderContext {
 	
 	
 	void setShader(RenderItem renderItem){
-		  // Load and use default shader
         GLShader shader = new GLShader(gl);
         shader = (GLShader)renderItem.getShape().getMaterial().getShader();
         
@@ -247,14 +243,6 @@ public class GLRenderContext implements RenderContext {
         	shader.use();	  
         	activeShader = shader;
         }
-//        else{
-//        	defaultShader.use();
-//        	activeShader = defaultShader;
-//        }
-
-        // Pass light direction to shader
-		int id = gl.glGetUniformLocation(activeShader.programId(), "lightDirection");
-		gl.glUniform4f(id, 0, 0, 1, 0);		// Set light direction
 	}
 	
 	/**
@@ -265,6 +253,10 @@ public class GLRenderContext implements RenderContext {
 	 */
 	void setLights()
 	{	
+      // Pass default light direction to shader
+		int id = gl.glGetUniformLocation(activeShader.programId(), "lightDirection");
+		gl.glUniform4f(id, 0, 0, 1, 0);
+		
 		final int MAX_LIGHTS = 8;
 		Iterator<PointLight> lights = sceneManager.lightIterator();
 		float[] sourceRadiance = new float[MAX_LIGHTS];
