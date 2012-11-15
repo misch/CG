@@ -98,8 +98,8 @@ public class ShowPhong
 		shape1.setMaterial(new Material(tex1File,1));
 		shape1.getMaterial().setVertexShaderPath(vertShaderPath1);
 		shape1.getMaterial().setFragmentShaderPath(fragShaderPath1);
-		shape1.getMaterial().setSpecularReflection(200);
-		shape1.getMaterial().setPhongExponent(1000);
+		shape1.getMaterial().setSpecularReflection(20);
+		shape1.getMaterial().setPhongExponent(100);
 		
 		shape2 = new Shape(ObjReader.read("teapot_tex.obj", 1));
 		String tex2File = "../jrtr/textures/plant.jpg";

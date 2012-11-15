@@ -1,33 +1,31 @@
-package task3;
+package task4;
 
-import jrtr.*;
-
-import javax.swing.*;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 
-import javax.vecmath.*;
+import javax.swing.JFrame;
+import javax.vecmath.Color3f;
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Point3f;
+import javax.vecmath.Vector3f;
 
+import jrtr.Camera;
+import jrtr.Frustum;
+import jrtr.Material;
+import jrtr.ObjReader;
+import jrtr.PointLight;
+import jrtr.RenderContext;
+import jrtr.RenderPanel;
+import jrtr.Shape;
+import jrtr.SimpleSceneManager;
+import jrtr.VertexData;
 import task1.SimpleRenderPanelTexShad;
 import task3.LandscapeListener;
 
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
-
-/**
- * Implements a simple application that opens a 3D rendering window and 
- * shows a rotating cube.
- */
-public class ShowPhongWithTexture
-{	
+public class ShowBumpySurface {
 	static RenderPanel renderPanel;
 	static RenderContext renderContext;
 	static SimpleSceneManager sceneManager;
-	static Shape shape1;
-	static Shape shape2;
-	static Shape shape3;
+	static Shape shape;
 
 	/**
 	 * The main function opens a 3D rendering window, constructs a simple 3D
@@ -87,43 +85,31 @@ public class ShowPhongWithTexture
 		vertexData.addIndices(indices);
 				
 		// Make a scene manager and add the object
-		Camera camera = new Camera(new Vector3f(0,0,5), new Vector3f(0,0,0), new Vector3f(0,1,0));
+		Camera camera = new Camera(new Vector3f(0,0,10), new Vector3f(0,0,0), new Vector3f(0,1,0));
 		Frustum frustum = new Frustum(1,100,1,(float)(Math.PI/3));
 		sceneManager = new SimpleSceneManager(camera,frustum);
 	
-		shape1 = new Shape(ObjReader.read("teapot_tex.obj", 1));
-		String tex1File = "../jrtr/textures/wood.jpg";
-		String vertShaderPath1 = "../jrtr/shaders/phongWithTexture.vert";
-		String fragShaderPath1 = "../jrtr/shaders/phongWithTexture.frag";
-		shape1.setMaterial(new Material(tex1File,1));
-		shape1.getMaterial().setSpecularReflection(200);
-		shape1.getMaterial().setPhongExponent(1000);
-		shape1.getMaterial().setFragmentShaderPath(fragShaderPath1);
-		shape1.getMaterial().setVertexShaderPath(vertShaderPath1);
+		shape = new Shape(ObjReader.read("teapot_tex.obj", 3));
+
+		String tex2File = "../jrtr/textures/wood.jpg";
+		String vertShaderPath2 = "../jrtr/shaders/bumpy.vert";
+		String fragShaderPath2 = "../jrtr/shaders/bumpy.frag";
+		shape.setMaterial(new Material(tex2File,1));
+		shape.getMaterial().setFragmentShaderPath(fragShaderPath2);
+		shape.getMaterial().setVertexShaderPath(vertShaderPath2);
+		shape.getMaterial().setSpecularReflection(2);
+		shape.getMaterial().setPhongExponent(20);
 		
-		shape2 = new Shape(ObjReader.read("teapot_tex.obj", 1));
-		String tex2File = "../jrtr/textures/plant.jpg";
-		shape2.setMaterial(new Material(tex2File,1));
-		shape2.getMaterial().setSpecularReflection(20);
-		shape2.getMaterial().setPhongExponent(100);
-		
-		shape3 = new Shape(ObjReader.read("teapot_tex.obj", 1));
-		shape3.setMaterial(new Material(1));
-		
-		translateShape(shape1, new Vector3f(-2,0,-2));
-		translateShape(shape2, new Vector3f(2,0,0));
-		translateShape(shape3, new Vector3f(0,0,2));
-		
-		sceneManager.addShape(shape1);
-		sceneManager.addShape(shape2);
-//		sceneManager.addShape(shape3);
+		translateShape(shape, new Vector3f(0,0,0));
+
+		sceneManager.addShape(shape);
 		
 		addLights();
 		
 
 		// Make a render panel. The init function of the renderPanel
-		// (see above) will be called back for initialization.
-		Shape[] shapes = {shape1, shape2};
+		// will be called back for initialization.
+		Shape[] shapes= {shape};
 		renderPanel = new SimpleRenderPanelTexShad(sceneManager,shapes);
 		
 		// Make the main window of this application and add the renderer to it
@@ -146,11 +132,8 @@ public class ShowPhongWithTexture
 	}
 	
 	private static void addLights() {
-		sceneManager.addLightSource(new PointLight(80,new Point3f(0,0,10), new Color3f(0,0,1)));
-		sceneManager.addLightSource(new PointLight(30, new Point3f(0,0,-10)));
-		sceneManager.addLightSource(new PointLight(30, new Point3f(10,0,0)));
-		sceneManager.addLightSource(new PointLight(30, new Point3f(-10,0,0)));
-		sceneManager.addLightSource(new PointLight(30, new Point3f(0,5,0)));
+		sceneManager.addLightSource(new PointLight(80, new Point3f(10,3,0), new Color3f(1,1,1)));
+		sceneManager.addLightSource(new PointLight(80,new Point3f(0,5,10), new Color3f(1,1,1)));
 	}
 
 	private static void translateShape(Shape shape, Vector3f vec) {
@@ -158,6 +141,7 @@ public class ShowPhongWithTexture
 		Matrix4f translation = new Matrix4f();
 		translation.setIdentity();
 		translation.setTranslation(vec);
+	
 		t.mul(translation);
 	}
 }
