@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Stack;
 
+import javax.vecmath.Matrix4f;
+
 import jrtr.Camera;
 import jrtr.Frustum;
 import jrtr.PointLight;
@@ -61,18 +63,36 @@ public class GraphSceneManager implements SceneManagerInterface {
 		}
 		
 		public RenderItem next()
-		{
-			//TODO
+		{	
 			// If top stack element is a (transformation) group
-			//		pop
-			//		multiply transformation matrix of transformation group
-			//		push children onto stack
-			//
+			if (sceneGraphStack.peek().getChildren() != null){
+				
+				// pop
+				Node node = sceneGraphStack.pop();
+				
+				for (Node child : node.getChildren()){
+					
+					// multiply transformation matrix of transformation group
+					child.getTransformationMatrix().mul(node.getTransformationMatrix(), child.getTransformationMatrix());
+					
+					// push children onto stack
+					sceneGraphStack.push(child);
+				}
+			}
+			
 			// If top stack element is a Leaf
-			//		pop
-			//		multiply its transformation matrix
-			//		return it
-			return null;
+			if (sceneGraphStack.peek().getChildren() == null){
+				
+				// pop
+				Node node = sceneGraphStack.pop();
+				
+				// multiply its transformation matrix
+				Matrix4f shapeMatrix = node.getShape().getTransformation();
+				shapeMatrix.mul(node.getTransformationMatrix(),shapeMatrix);
+			}
+			
+			ShapeNode returnNode = (ShapeNode) sceneGraphStack.pop();
+			return new RenderItem(returnNode.getShape(), returnNode.getShape().getTransformation());
 		}
 	}
 }
