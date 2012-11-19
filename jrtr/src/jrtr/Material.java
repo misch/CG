@@ -12,8 +12,8 @@ public class Material {
 	private float phongExponent;
 	private String GLTexFilePath;
 	private Texture tex = null;
-	private String vertexShaderPath;
-	private String fragmentShaderPath;
+	private String vertexShaderPath = "";
+	private String fragmentShaderPath = "";
 	private Shader shader = null;
 	
 	public Material(float diffuseReflectionCoeff){

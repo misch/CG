@@ -4,6 +4,7 @@ import java.util.Timer;
 
 import jrtr.GLRenderPanel;
 import jrtr.RenderContext;
+import jrtr.SceneManagerInterface;
 import jrtr.Shader;
 import jrtr.Shape;
 import jrtr.SimpleSceneManager;
@@ -15,10 +16,12 @@ import jrtr.Texture;
  */ 
 public class SimpleRenderPanelTexShad extends GLRenderPanel {
 	private RenderContext renderContext;
-	private SimpleSceneManager sceneManager;
+//	private SimpleSceneManager sceneManager;
+	private SceneManagerInterface sceneManager;
 	private Shape[] shapes;
 	
-	public SimpleRenderPanelTexShad(SimpleSceneManager sceneManager, Shape[] shapes){
+//	public SimpleRenderPanelTexShad(SimpleSceneManager sceneManager, Shape[] shapes){
+	public SimpleRenderPanelTexShad(SceneManagerInterface sceneManager, Shape[] shapes){
 		this.sceneManager = sceneManager;	
 		this.shapes = shapes;
 	}

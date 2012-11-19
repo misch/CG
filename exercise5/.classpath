@@ -2,5 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/exercise1"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jrtr"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/exercise2"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/exercise4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

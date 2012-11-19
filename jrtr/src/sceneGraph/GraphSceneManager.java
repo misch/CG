@@ -1,6 +1,9 @@
 package sceneGraph;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ListIterator;
 import java.util.Stack;
 
@@ -19,8 +22,7 @@ public class GraphSceneManager implements SceneManagerInterface {
 
 	private Node root;
 	private Camera camera;
-	private Frustum frustum;
-	
+	private Frustum frustum;	
 	
 	public GraphSceneManager(Node root, Camera camera, Frustum frustum){
 		this.root = root;
@@ -34,8 +36,9 @@ public class GraphSceneManager implements SceneManagerInterface {
 
 	@Override
 	public Iterator<PointLight> lightIterator() {
-		// TODO Auto-generated method stub
-		return (Iterator<PointLight>) new Stack<PointLight>();
+		List<PointLight> empty = new ArrayList<PointLight>();
+		return empty.iterator();
+		
 	}
 
 	@Override

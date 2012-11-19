@@ -25,14 +25,16 @@ public class AnimationTask extends TimerTask
 	public void run()
 	{
 		// Update transformation
-		Matrix4f t = shapes[0].getTransformation();
-		Matrix4f rotX = new Matrix4f();
-		rotX.rotX(angle);
-		Matrix4f rotY = new Matrix4f();
-		rotY.rotY(angle);
-		t.mul(rotX);
-		t.mul(rotY);
-		shapes[0].setTransformation(t);
+		for (int i = 0; i<shapes.length; i++){
+			Matrix4f t = shapes[i].getTransformation();
+			Matrix4f rotX = new Matrix4f();
+			rotX.rotX(angle);
+			Matrix4f rotY = new Matrix4f();
+			rotY.rotY(angle);
+			t.mul(rotX);
+			t.mul(rotY);
+			shapes[i].setTransformation(t);
+		}
 		
 		// Trigger redrawing of the render window
 		renderPanel.getCanvas().repaint(); 
