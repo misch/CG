@@ -70,7 +70,7 @@ public class GraphSceneManager implements SceneManagerInterface {
 				
 				for (Node child : nodeWrap.node.getChildren()){
 					Matrix4f new_mat = new Matrix4f();
-					new_mat.mul(nodeWrap.node.getTransformationMatrix(), child.getTransformationMatrix());
+					new_mat.mul(nodeWrap.transformation, child.getTransformationMatrix());
 					sceneGraphStack.push(new NodeWrapper(child,new_mat));
 				}
 				

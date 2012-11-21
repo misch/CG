@@ -111,7 +111,7 @@ public class ShowSceneGraph {
 		leftUpperArm.addChild(leftArmUp);
 //		leftUpperArm.addChild(leftArmDown);
 		
-		leftLowerArm.addChild(leftArmDown);
+//		leftLowerArm.addChild(leftArmDown);
 
 		
 //		ShapeNode rightArmUp = new ShapeNode(new Cylinder(50, 0.5f, 0.2f).getShape());
