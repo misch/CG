@@ -94,18 +94,40 @@ public class ShowSceneGraph {
 		Camera camera = new Camera(new Vector3f(0,0,10), new Vector3f(0,0,0), new Vector3f(0,1,0));
 		Frustum frustum = new Frustum(1,100,1,(float)(Math.PI/3));
 		
-//		shape = new Shape(ObjReader.read("teapot_tex.obj", 3));
+		TransformGroup robo = new TransformGroup();
 		TransformGroup body = new TransformGroup();
+		TransformGroup leftUpperArm = new TransformGroup();
+		leftUpperArm.setTranslation(new Vector3f(-1.2f,-1.2f,0));
+		TransformGroup leftLowerArm = new TransformGroup();
 		
-		ShapeNode corpus = new ShapeNode(new Cylinder(50,1,1).getShape());
-		ShapeNode leg1 = new ShapeNode(new Cylinder(50, 0.5f,0.2f).getShape());
-		leg1.getTransformationMatrix().setTranslation(new Vector3f(0,-1,0));
+		ShapeNode corpus = new ShapeNode(new Cylinder(50,2,1).getShape());
+		ShapeNode leftArmUp = new ShapeNode(new Cylinder(50, 2,0.2f).getShape());
+		ShapeNode leftArmDown = new ShapeNode(new Cylinder(50,2,0.2f).getShape());
 		
+		robo.addChild(body);
+		body.addChild(leftUpperArm);
 		body.addChild(corpus);
-		body.addChild(leg1);
+		leftUpperArm.addChild(leftLowerArm);
+		leftUpperArm.addChild(leftArmUp);
+//		leftUpperArm.addChild(leftArmDown);
+		
+		leftLowerArm.addChild(leftArmDown);
+
+		
+//		ShapeNode rightArmUp = new ShapeNode(new Cylinder(50, 0.5f, 0.2f).getShape());
+//		TransformGroup rightLowerArm = new TransformGroup();
+//		leftUpperArm.addChild(leftLowerArm);
+//		rightUpperArm.addChild(rightArmUp);
+//		rightUpperArm.addChild(rightLowerArm);
 		
 		
-		sceneManager = new GraphSceneManager(body,camera,frustum);
+//		ShapeNode rightArmDown = new ShapeNode(new Cylinder(50,0.5f,0.2f).getShape());
+//		
+//		rightLowerArm.addChild(rightArmDown);
+//		leftLowerArm.addChild(leftArmDown);
+		
+		
+		sceneManager = new GraphSceneManager(robo,camera,frustum);
 		
 //		String tex2File = "../jrtr/textures/wood.jpg";
 //		String vertShaderPath2 = "../jrtr/shaders/disco.vert";

@@ -1,6 +1,7 @@
 package sceneGraph;
 
 import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3f;
 
 
 public class TransformGroup extends Group {
@@ -15,6 +16,14 @@ public class TransformGroup extends Group {
 	@Override
 	public Matrix4f getTransformationMatrix() {
 		return transformation;
+	}
+	
+	public void setTransformationMatrix(Matrix4f transformation){
+		this.transformation = transformation;
+	}
+	
+	public void setTranslation(Vector3f translation){
+		this.transformation.setTranslation(translation);
 	}
 
 }

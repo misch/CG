@@ -38,7 +38,6 @@ public class GraphSceneManager implements SceneManagerInterface {
 	public Iterator<PointLight> lightIterator() {
 		List<PointLight> empty = new ArrayList<PointLight>();
 		return empty.iterator();
-		
 	}
 
 	@Override
@@ -52,12 +51,11 @@ public class GraphSceneManager implements SceneManagerInterface {
 	}
 	
 	private class GraphSceneManagerItr implements SceneManagerIterator {
-		
-		private Stack<Node> sceneGraphStack = new Stack<Node>();
+		private Stack<NodeWrapper> sceneGraphStack = new Stack<NodeWrapper>();
 		
 		public GraphSceneManagerItr(GraphSceneManager sceneManager)
 		{
-			sceneGraphStack.push(sceneManager.root);
+			sceneGraphStack.push(new NodeWrapper(root, root.getTransformationMatrix()));
 		}
 		
 		public boolean hasNext()
@@ -67,18 +65,32 @@ public class GraphSceneManager implements SceneManagerInterface {
 		
 		public RenderItem next()
 		{
-			while (sceneGraphStack.peek().getChildren() != null){
+			while (sceneGraphStack.peek().node.getChildren() != null){
+				NodeWrapper nodeWrap = sceneGraphStack.pop();
 				
-				Node node = sceneGraphStack.pop();
+				for (Node child : nodeWrap.node.getChildren()){
+					Matrix4f new_mat = new Matrix4f();
+					new_mat.mul(nodeWrap.node.getTransformationMatrix(), child.getTransformationMatrix());
+					sceneGraphStack.push(new NodeWrapper(child,new_mat));
+				}
 				
-				for (Node child : node.getChildren()){
-					child.getTransformationMatrix().mul(node.getTransformationMatrix(), child.getTransformationMatrix());
-					sceneGraphStack.push(child);
+				if (sceneGraphStack.isEmpty()){
+					return new RenderItem(nodeWrap.node.getShape(),  nodeWrap.transformation);
 				}
 			}
 			
-			Node top = sceneGraphStack.pop();
-			return new RenderItem(top.getShape(), top.getTransformationMatrix());
+			NodeWrapper top = sceneGraphStack.pop();
+			return new RenderItem(top.node.getShape(), top.transformation);
+		}
+		
+		private class NodeWrapper{
+			private Node node;
+			private Matrix4f transformation;
+			
+			public NodeWrapper(Node node, Matrix4f t){
+				this.node = node;
+				this.transformation = t;
+			}
 		}
 	}
 }
