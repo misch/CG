@@ -45,7 +45,8 @@ public class ShowRobot {
 		Camera 	camera = new Camera(new Vector3f(0,0,10), new Vector3f(0,0,0), new Vector3f(0,1,0));
 		Frustum	frustum = new Frustum(1,100,1,(float)(Math.PI/3));
 	
-		TransformGroup 	body = new TransformGroup(),
+		TransformGroup 	world = new TransformGroup(),
+						body = new TransformGroup(),
 						leftShoulder = new TransformGroup(),
 						rightShoulder = new TransformGroup(),
 						leftUpperArm = new TransformGroup(),
@@ -82,6 +83,8 @@ public class ShowRobot {
 					lowerLeg = new ShapeNode(new Cylinder(50, lowerLegLength, legDiam).getShape()),
 					headShape = new ShapeNode(new Cylinder(50,headHeight, headDiam).getShape());
 		
+		body.setTranslation(new Vector3f(3,0,0));
+		
 		leftShoulder.setTranslation(new Vector3f(-(armDiam+bodyDiam),1.8f,0));
 		rightShoulder.setTranslation(new Vector3f(armDiam+bodyDiam,1.8f,0));
 		
@@ -96,7 +99,6 @@ public class ShowRobot {
 		
 		rightUpperArm.setTranslation(new Vector3f(0,-upperArmLength,0));
 		
-	
 		rightElbow.setTranslation(new Vector3f(0,-0.2f,0));
 		rightLowerArm.setTranslation(new Vector3f(0,-lowerArmLength,0));		
 		
@@ -114,6 +116,11 @@ public class ShowRobot {
 		
 		head.setTranslation(new Vector3f(0,bodyHeight,0));
 
+		
+		// build graph
+		
+		world.addChild(body);
+		
 		body.addChild(leftShoulder,rightShoulder,corpus, leftHip, rightHip, head);
 		
 		leftShoulder.addChild(leftUpperArm);
@@ -140,7 +147,7 @@ public class ShowRobot {
 		leftLowerLeg.addChild(lowerLeg);
 		
 		head.addChild(headShape);
-		sceneManager = new GraphSceneManager(body,camera,frustum);
+		sceneManager = new GraphSceneManager(world,camera,frustum);
 		
 //		String tex2File = "../jrtr/textures/wood.jpg";
 //		String vertShaderPath2 = "../jrtr/shaders/disco.vert";
@@ -160,14 +167,14 @@ public class ShowRobot {
 
 		// Make a render panel. The init function of the renderPanel
 		// will be called back for initialization.
-		TransformGroup[] transformGroups = {leftShoulder,leftElbow};
+		TransformGroup[] transformGroups = {leftShoulder,leftElbow,body,world};
 		Shape[] shapes= {};
 //		renderPanel = new RoboRenderPanel(sceneManager,shapes);
 		renderPanel = new RoboRenderPanel(sceneManager,shapes,transformGroups);
 		
 		// Make the main window of this application and add the renderer to it
-		JFrame jframe = new JFrame("simple");
-		jframe.setSize(500, 500);
+		JFrame jframe = new JFrame("robo");
+		jframe.setSize(700, 700);
 		jframe.setLocationRelativeTo(null); // center of screen
 		jframe.getContentPane().add(renderPanel.getCanvas());// put the canvas into a JFrame window
 

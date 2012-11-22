@@ -27,9 +27,21 @@ public class RoboAnimation extends TimerTask
 	}
 	public void run()
 	{
-		Matrix4f t = transformGroups[0].getTransformationMatrix();
-		Matrix4f rot = new Matrix4f();
-		rot.rotX(angle);
+		// robo matrices
+		Matrix4f leftShoulder = transformGroups[0].getTransformationMatrix();
+		Matrix4f leftElbow = transformGroups[1].getTransformationMatrix();
+		Matrix4f body = transformGroups[2].getTransformationMatrix();
+		Matrix4f world = transformGroups[3].getTransformationMatrix();
+		
+		// animation matrices
+		Matrix4f armRot = new Matrix4f();
+		armRot.rotX(angle);
+		
+		Matrix4f elbowRot = new Matrix4f();
+		elbowRot.rotZ(angle);
+		
+		Matrix4f bodyRot = new Matrix4f();
+		bodyRot.rotY(angle);
 		
 		count++;
 		if (count > 70){
@@ -37,7 +49,13 @@ public class RoboAnimation extends TimerTask
 			count = 0;
 		}
 	
-		t.mul(rot);
+		
+		leftShoulder.mul(armRot);
+		leftElbow.mul(armRot);
+		leftElbow.mul(elbowRot);
+		body.mul(bodyRot);
+		world.mul(bodyRot);
+		
 		
 		// Trigger redrawing of the render window
 		renderPanel.getCanvas().repaint(); 
