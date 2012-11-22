@@ -49,22 +49,38 @@ public class ShowRobot {
 						leftShoulder = new TransformGroup(),
 						rightShoulder = new TransformGroup(),
 						leftUpperArm = new TransformGroup(),
-						leftLowerArm = new TransformGroup(),
 						rightUpperArm = new TransformGroup(),
+						leftLowerArm = new TransformGroup(),
 						rightLowerArm = new TransformGroup(),
 						leftElbow = new TransformGroup(),
-						rightElbow = new TransformGroup();
+						rightElbow = new TransformGroup(),
+						leftHip = new TransformGroup(),
+						rightHip = new TransformGroup(),
+						leftUpperLeg = new TransformGroup(),
+						rightUpperLeg = new TransformGroup(),
+						leftKnee = new TransformGroup(),
+						rightKnee = new TransformGroup(),
+						leftLowerLeg = new TransformGroup(),
+						rightLowerLeg = new TransformGroup(),
+						head = new TransformGroup();
 		
-		float	armDiam = 0.2f,
-				bodyDiam = 0.5f,
-				upperArmLength = 1.5f,
-				lowerArmLength = 1.2f;
+		float	armDiam = 0.15f,
+				bodyDiam = 0.41f,
+				bodyHeight = 2,
+				upperArmLength = 1.2f,
+				lowerArmLength = 1,
+				upperLegLength = 1.2f,
+				lowerLegLength = 1.2f,
+				legDiam = 0.15f,
+				headHeight = 0.5f,
+				headDiam = 0.25f;
 		
-		ShapeNode	corpus = new ShapeNode(new Cylinder(50,2,bodyDiam).getShape()),
-					leftArmUp = new ShapeNode(new Cylinder(50, upperArmLength,armDiam).getShape()),
-					leftArmDown = new ShapeNode(new Cylinder(50,lowerArmLength,armDiam).getShape()),
-					rightArmUp = new ShapeNode(new Cylinder(50, upperArmLength,armDiam).getShape()),
-					rightArmDown = new ShapeNode(new Cylinder(50,lowerArmLength,armDiam).getShape());
+		ShapeNode	corpus = new ShapeNode(new Cylinder(50,bodyHeight,bodyDiam).getShape()),
+					upperArm = new ShapeNode(new Cylinder(50, upperArmLength, armDiam).getShape()),
+					lowerArm = new ShapeNode(new Cylinder(50, lowerArmLength, armDiam).getShape()),
+					upperLeg = new ShapeNode(new Cylinder(50, upperLegLength, legDiam).getShape()),
+					lowerLeg = new ShapeNode(new Cylinder(50, lowerLegLength, legDiam).getShape()),
+					headShape = new ShapeNode(new Cylinder(50,headHeight, headDiam).getShape());
 		
 		leftShoulder.setTranslation(new Vector3f(-(armDiam+bodyDiam),1.8f,0));
 		rightShoulder.setTranslation(new Vector3f(armDiam+bodyDiam,1.8f,0));
@@ -83,21 +99,47 @@ public class ShowRobot {
 	
 		rightElbow.setTranslation(new Vector3f(0,-0.2f,0));
 		rightLowerArm.setTranslation(new Vector3f(0,-lowerArmLength,0));		
+		
+		leftHip.setTranslation(new Vector3f(-(bodyDiam/2),0,0));
+		rightHip.setTranslation(new Vector3f(bodyDiam/2,0,0));
+		
+		leftUpperLeg.setTranslation(new Vector3f(0,-upperLegLength,0));
+		rightUpperLeg.setTranslation(new Vector3f(0,-upperLegLength,0));
+		
+		leftKnee.setTranslation(new Vector3f(0,-0.2f,0));
+		rightKnee.setTranslation(new Vector3f(0,-0.2f,0));
+		
+		leftLowerLeg.setTranslation(new Vector3f(0,-lowerLegLength,0));
+		rightLowerLeg.setTranslation(new Vector3f(0,-lowerLegLength,0));
+		
+		head.setTranslation(new Vector3f(0,bodyHeight,0));
 
-		body.addChild(leftShoulder,rightShoulder,corpus);
+		body.addChild(leftShoulder,rightShoulder,corpus, leftHip, rightHip, head);
 		
 		leftShoulder.addChild(leftUpperArm);
 		rightShoulder.addChild(rightUpperArm);
 		
-		leftUpperArm.addChild(leftElbow,leftArmUp);
+		leftUpperArm.addChild(leftElbow,upperArm);
 		leftElbow.addChild(leftLowerArm);
-		leftLowerArm.addChild(leftArmDown);
+		leftLowerArm.addChild(lowerArm);
 		
-		rightUpperArm.addChild(rightElbow,rightArmUp);
+		rightUpperArm.addChild(rightElbow,upperArm);
 		rightElbow.addChild(rightLowerArm);
-		rightLowerArm.addChild(rightArmDown);
+		rightLowerArm.addChild(lowerArm);
 		
+		rightHip.addChild(rightUpperLeg);
+		leftHip.addChild(leftUpperLeg);
 		
+		rightUpperLeg.addChild(rightKnee, upperLeg);
+		leftUpperLeg.addChild(leftKnee, upperLeg);
+		
+		rightKnee.addChild(rightLowerLeg);
+		leftKnee.addChild(leftLowerLeg);
+		
+		rightLowerLeg.addChild(lowerLeg);
+		leftLowerLeg.addChild(lowerLeg);
+		
+		head.addChild(headShape);
 		sceneManager = new GraphSceneManager(body,camera,frustum);
 		
 //		String tex2File = "../jrtr/textures/wood.jpg";
@@ -147,12 +189,12 @@ public class ShowRobot {
 //		sceneManager.addLightSource(new PointLight(80,new Point3f(0,5,10), new Color3f(0,0,1)));
 	}
 
-	private static void translateShape(Shape shape, Vector3f vec) {
-		Matrix4f t = shape.getTransformation();		
-		Matrix4f translation = new Matrix4f();
-		translation.setIdentity();
-		translation.setTranslation(vec);
-	
-		t.mul(translation);
-	}
+//	private static void translateShape(Shape shape, Vector3f vec) {
+//		Matrix4f t = shape.getTransformation();		
+//		Matrix4f translation = new Matrix4f();
+//		translation.setIdentity();
+//		translation.setTranslation(vec);
+//	
+//		t.mul(translation);
+//	}
 }
