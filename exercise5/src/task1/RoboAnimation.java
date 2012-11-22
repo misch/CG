@@ -33,6 +33,9 @@ public class RoboAnimation extends TimerTask
 		Matrix4f rot = new Matrix4f();
 		rot.rotX(angle);
 		t.mul(rot);
+		
+		Matrix4f f = transformGroups[1].getTransformationMatrix();
+		f.mul(rot);
 //		// Update transformation
 //		for (int i = 0; i<shapes.length; i++){
 //			Matrix4f t = shapes[i].getTransformation();

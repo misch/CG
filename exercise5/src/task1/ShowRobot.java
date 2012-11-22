@@ -41,50 +41,59 @@ public class ShowRobot {
 	public static void main(String[] args) throws IOException
 	{						
 		// Make a scene manager and add the object
-		Camera camera = new Camera(new Vector3f(0,0,10), new Vector3f(0,0,0), new Vector3f(0,1,0));
-		Frustum frustum = new Frustum(1,100,1,(float)(Math.PI/3));
+		Camera 	camera = new Camera(new Vector3f(0,0,10), new Vector3f(0,0,0), new Vector3f(0,1,0));
+		Frustum	frustum = new Frustum(1,100,1,(float)(Math.PI/3));
+	
+		TransformGroup 	body = new TransformGroup(),
+						leftShoulder = new TransformGroup(),
+						rightShoulder = new TransformGroup(),
+						leftUpperArm = new TransformGroup(),
+						leftLowerArm = new TransformGroup(),
+						rightUpperArm = new TransformGroup(),
+						rightLowerArm = new TransformGroup(),
+						leftElbow = new TransformGroup(),
+						rightElbow = new TransformGroup();
 		
-//		TransformGroup robo = new TransformGroup();
-		TransformGroup body = new TransformGroup();
-		TransformGroup leftShoulder = new TransformGroup();
-		TransformGroup leftUpperArm = new TransformGroup();
-		TransformGroup leftLowerArm = new TransformGroup();
+		float	armDiam = 0.2f,
+				bodyDiam = 0.5f,
+				upperArmLength = 1.5f,
+				lowerArmLength = 1.2f;
 		
-		leftShoulder.setTranslation(new Vector3f(-1.2f,1.8f,0));
-//		leftUpperArm.setTranslation(new Vector3f(-1.2f,-0.5f,0));
-		leftUpperArm.setTranslation(new Vector3f(0,-2,0));
-		leftLowerArm.setTranslation(new Vector3f(0,-2.2f,0));
+		ShapeNode	corpus = new ShapeNode(new Cylinder(50,2,bodyDiam).getShape()),
+					leftArmUp = new ShapeNode(new Cylinder(50, upperArmLength,armDiam).getShape()),
+					leftArmDown = new ShapeNode(new Cylinder(50,lowerArmLength,armDiam).getShape()),
+					rightArmUp = new ShapeNode(new Cylinder(50, upperArmLength,armDiam).getShape()),
+					rightArmDown = new ShapeNode(new Cylinder(50,lowerArmLength,armDiam).getShape());
 		
-		ShapeNode corpus = new ShapeNode(new Cylinder(50,2,1).getShape());
-		ShapeNode leftArmUp = new ShapeNode(new Cylinder(50, 2,0.2f).getShape());
-		ShapeNode leftArmDown = new ShapeNode(new Cylinder(50,2,0.2f).getShape());
+		leftShoulder.setTranslation(new Vector3f(-(armDiam+bodyDiam),1.8f,0));
+		rightShoulder.setTranslation(new Vector3f(armDiam+bodyDiam,1.8f,0));
 		
+		leftUpperArm.setTranslation(new Vector3f(0,-upperArmLength,0));
+		leftElbow.setTranslation(new Vector3f(0,-0.2f,0));
+		leftLowerArm.setTranslation(new Vector3f(0,-lowerArmLength,0));
+		
+		rightUpperArm.setTranslation(new Vector3f(0,-upperArmLength,0));
+		rightElbow.setTranslation(new Vector3f(0,-0.2f,0));
+		rightLowerArm.setTranslation(new Vector3f(0,-lowerArmLength,0));		
+
 		body.addChild(leftShoulder);
+		body.addChild(rightShoulder);
 		body.addChild(corpus);
 		
 		leftShoulder.addChild(leftUpperArm);
+		rightShoulder.addChild(rightUpperArm);
 		
-		leftUpperArm.addChild(leftLowerArm);
+		leftUpperArm.addChild(leftElbow);
 		leftUpperArm.addChild(leftArmUp);
-		leftUpperArm.addChild(leftArmDown);
-		
+		leftElbow.addChild(leftLowerArm);
 		leftLowerArm.addChild(leftArmDown);
-
 		
-//		ShapeNode rightArmUp = new ShapeNode(new Cylinder(50, 0.5f, 0.2f).getShape());
-//		TransformGroup rightLowerArm = new TransformGroup();
-//		leftUpperArm.addChild(leftLowerArm);
-//		rightUpperArm.addChild(rightArmUp);
-//		rightUpperArm.addChild(rightLowerArm);
+		rightUpperArm.addChild(rightElbow);
+		rightUpperArm.addChild(rightArmUp);
+		rightElbow.addChild(rightLowerArm);
+		rightLowerArm.addChild(rightArmDown);
 		
 		
-//		ShapeNode rightArmDown = new ShapeNode(new Cylinder(50,0.5f,0.2f).getShape());
-//		
-//		rightLowerArm.addChild(rightArmDown);
-//		leftLowerArm.addChild(leftArmDown);
-		
-		
-//		sceneManager = new GraphSceneManager(robo,camera,frustum);
 		sceneManager = new GraphSceneManager(body,camera,frustum);
 		
 //		String tex2File = "../jrtr/textures/wood.jpg";
@@ -105,7 +114,7 @@ public class ShowRobot {
 
 		// Make a render panel. The init function of the renderPanel
 		// will be called back for initialization.
-		TransformGroup[] transformGroups = {leftShoulder};
+		TransformGroup[] transformGroups = {leftShoulder,leftElbow};
 		Shape[] shapes= {};
 //		renderPanel = new RoboRenderPanel(sceneManager,shapes);
 		renderPanel = new RoboRenderPanel(sceneManager,shapes,transformGroups);
