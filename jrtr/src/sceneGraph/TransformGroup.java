@@ -18,12 +18,21 @@ public class TransformGroup extends Group {
 		return transformation;
 	}
 	
-	public void setTransformationMatrix(Matrix4f transformation){
-		this.transformation = transformation;
-	}
+//	public void setTransformationMatrix(Matrix4f transformation){
+//		this.transformation = transformation;
+//	}
 	
 	public void setTranslation(Vector3f translation){
-		this.transformation.setTranslation(translation);
+		Matrix4f transMat = new Matrix4f();
+		transMat.setIdentity();
+		transMat.setTranslation(translation);
+		
+		this.transformation.mul(transMat,this.transformation);
+		
+	}
+	
+	public void setTransformation(Matrix4f transformation){
+		this.transformation.mul(transformation, this.transformation);
 	}
 
 }

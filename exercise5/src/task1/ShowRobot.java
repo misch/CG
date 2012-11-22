@@ -1,6 +1,7 @@
 package task1;
 
 
+
 import java.io.IOException;
 
 import javax.swing.JFrame;
@@ -69,27 +70,30 @@ public class ShowRobot {
 		rightShoulder.setTranslation(new Vector3f(armDiam+bodyDiam,1.8f,0));
 		
 		leftUpperArm.setTranslation(new Vector3f(0,-upperArmLength,0));
+		
+		Matrix4f rot = new Matrix4f();
+		rot.rotX(1);
+		leftElbow.setTransformation(rot);
+		
 		leftElbow.setTranslation(new Vector3f(0,-0.2f,0));
 		leftLowerArm.setTranslation(new Vector3f(0,-lowerArmLength,0));
 		
 		rightUpperArm.setTranslation(new Vector3f(0,-upperArmLength,0));
+		
+	
 		rightElbow.setTranslation(new Vector3f(0,-0.2f,0));
 		rightLowerArm.setTranslation(new Vector3f(0,-lowerArmLength,0));		
 
-		body.addChild(leftShoulder);
-		body.addChild(rightShoulder);
-		body.addChild(corpus);
+		body.addChild(leftShoulder,rightShoulder,corpus);
 		
 		leftShoulder.addChild(leftUpperArm);
 		rightShoulder.addChild(rightUpperArm);
 		
-		leftUpperArm.addChild(leftElbow);
-		leftUpperArm.addChild(leftArmUp);
+		leftUpperArm.addChild(leftElbow,leftArmUp);
 		leftElbow.addChild(leftLowerArm);
 		leftLowerArm.addChild(leftArmDown);
 		
-		rightUpperArm.addChild(rightElbow);
-		rightUpperArm.addChild(rightArmUp);
+		rightUpperArm.addChild(rightElbow,rightArmUp);
 		rightElbow.addChild(rightLowerArm);
 		rightLowerArm.addChild(rightArmDown);
 		

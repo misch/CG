@@ -19,8 +19,9 @@ public abstract class Group implements Node {
 		return children;
 	}
 	
-	public void addChild(Node child){
-		children.add(child);
+	public void addChild(Node... children){
+		for(Node child: children)
+			this.children.add(child);
 	}
 	
 	public void removeChild(Node child){
