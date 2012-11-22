@@ -24,13 +24,12 @@ import jrtr.VertexData;
 import sceneGraph.GraphSceneManager;
 import sceneGraph.ShapeNode;
 import sceneGraph.TransformGroup;
-import task1.SimpleRenderPanelTexShad;
+import task1.RoboRenderPanel;
 import task3.LandscapeListener;
 
 public class ShowRobot {
 	static RenderPanel renderPanel;
 	static RenderContext renderContext;
-//	static SimpleSceneManager sceneManager;
 	static GraphSceneManager sceneManager;
 	static Shape shape;
 
@@ -45,20 +44,26 @@ public class ShowRobot {
 		Camera camera = new Camera(new Vector3f(0,0,10), new Vector3f(0,0,0), new Vector3f(0,1,0));
 		Frustum frustum = new Frustum(1,100,1,(float)(Math.PI/3));
 		
-		TransformGroup robo = new TransformGroup();
+//		TransformGroup robo = new TransformGroup();
 		TransformGroup body = new TransformGroup();
+		TransformGroup leftShoulder = new TransformGroup();
 		TransformGroup leftUpperArm = new TransformGroup();
-		leftUpperArm.setTranslation(new Vector3f(-1.2f,-0.5f,0));
 		TransformGroup leftLowerArm = new TransformGroup();
+		
+		leftShoulder.setTranslation(new Vector3f(-1.2f,1.8f,0));
+//		leftUpperArm.setTranslation(new Vector3f(-1.2f,-0.5f,0));
+		leftUpperArm.setTranslation(new Vector3f(0,-2,0));
 		leftLowerArm.setTranslation(new Vector3f(0,-2.2f,0));
 		
 		ShapeNode corpus = new ShapeNode(new Cylinder(50,2,1).getShape());
 		ShapeNode leftArmUp = new ShapeNode(new Cylinder(50, 2,0.2f).getShape());
 		ShapeNode leftArmDown = new ShapeNode(new Cylinder(50,2,0.2f).getShape());
 		
-		robo.addChild(body);
-		body.addChild(leftUpperArm);
+		body.addChild(leftShoulder);
 		body.addChild(corpus);
+		
+		leftShoulder.addChild(leftUpperArm);
+		
 		leftUpperArm.addChild(leftLowerArm);
 		leftUpperArm.addChild(leftArmUp);
 		leftUpperArm.addChild(leftArmDown);
@@ -79,7 +84,8 @@ public class ShowRobot {
 //		leftLowerArm.addChild(leftArmDown);
 		
 		
-		sceneManager = new GraphSceneManager(robo,camera,frustum);
+//		sceneManager = new GraphSceneManager(robo,camera,frustum);
+		sceneManager = new GraphSceneManager(body,camera,frustum);
 		
 //		String tex2File = "../jrtr/textures/wood.jpg";
 //		String vertShaderPath2 = "../jrtr/shaders/disco.vert";
@@ -99,8 +105,10 @@ public class ShowRobot {
 
 		// Make a render panel. The init function of the renderPanel
 		// will be called back for initialization.
+		TransformGroup[] transformGroups = {leftShoulder};
 		Shape[] shapes= {};
-		renderPanel = new SimpleRenderPanelTexShad(sceneManager,shapes);
+//		renderPanel = new RoboRenderPanel(sceneManager,shapes);
+		renderPanel = new RoboRenderPanel(sceneManager,shapes,transformGroups);
 		
 		// Make the main window of this application and add the renderer to it
 		JFrame jframe = new JFrame("simple");
