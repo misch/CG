@@ -45,7 +45,9 @@ public class ShowRobot {
 		Camera 	camera = new Camera(new Vector3f(0,0,10), new Vector3f(0,0,0), new Vector3f(0,1,0));
 		Frustum	frustum = new Frustum(1,100,1,(float)(Math.PI/3));
 	
-		TransformGroup 	world = new TransformGroup(),
+		TransformGroup 	
+						world = new TransformGroup(),
+						floor = new TransformGroup(),
 						body = new TransformGroup(),
 						leftShoulder = new TransformGroup(),
 						rightShoulder = new TransformGroup(),
@@ -81,9 +83,11 @@ public class ShowRobot {
 					lowerArm = new ShapeNode(new Cylinder(50, lowerArmLength, armDiam).getShape()),
 					upperLeg = new ShapeNode(new Cylinder(50, upperLegLength, legDiam).getShape()),
 					lowerLeg = new ShapeNode(new Cylinder(50, lowerLegLength, legDiam).getShape()),
-					headShape = new ShapeNode(new Cylinder(50,headHeight, headDiam).getShape());
+					headShape = new ShapeNode(new Cylinder(50,headHeight, headDiam).getShape()),
+					floorShape = new ShapeNode(new Cylinder(50,0.2f,10).getShape());
 		
 		body.setTranslation(new Vector3f(3,0,0));
+		floor.setTranslation(new Vector3f(0,-(upperLegLength+lowerLegLength+0.25f),0));
 		
 		leftShoulder.setTranslation(new Vector3f(-(armDiam+bodyDiam),1.8f,0));
 		rightShoulder.setTranslation(new Vector3f(armDiam+bodyDiam,1.8f,0));
@@ -119,7 +123,11 @@ public class ShowRobot {
 		
 		// build graph
 		
-		world.addChild(body);
+//		universe.addChild(world,floor);
+		
+		world.addChild(body,floor);
+		
+		floor.addChild(floorShape);
 		
 		body.addChild(leftShoulder,rightShoulder,corpus, leftHip, rightHip, head);
 		
@@ -167,7 +175,7 @@ public class ShowRobot {
 
 		// Make a render panel. The init function of the renderPanel
 		// will be called back for initialization.
-		TransformGroup[] transformGroups = {leftShoulder,leftElbow,body,world};
+		TransformGroup[] transformGroups = {leftShoulder,leftElbow,body,world,leftHip,rightHip,leftKnee,rightKnee,floor};
 		Shape[] shapes= {};
 //		renderPanel = new RoboRenderPanel(sceneManager,shapes);
 		renderPanel = new RoboRenderPanel(sceneManager,shapes,transformGroups);
