@@ -25,7 +25,7 @@ public class RoboAnimation extends TimerTask
 	
 	public RoboAnimation(float angle, TransformGroup[] transformGroups, RenderPanel renderPanel){
 		this.legAngle = 0.01f;
-		this.floorAngle = -legAngle + legAngle/3.5f;
+		this.floorAngle = -legAngle + legAngle/3.2f;
 		this.kneeAngle = -0.01f;
 		this.transformGroups = transformGroups;
 		this.renderPanel = renderPanel;
