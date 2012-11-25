@@ -1,5 +1,6 @@
 package sceneGraph;
 
+import javax.vecmath.AxisAngle4f;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 
@@ -18,10 +19,6 @@ public class TransformGroup extends Group {
 		return transformation;
 	}
 	
-//	public void setTransformationMatrix(Matrix4f transformation){
-//		this.transformation = transformation;
-//	}
-	
 	public void setTranslation(Vector3f translation){
 		Matrix4f transMat = new Matrix4f();
 		transMat.setIdentity();
@@ -31,8 +28,18 @@ public class TransformGroup extends Group {
 		
 	}
 	
+	public void setRotation(AxisAngle4f axisAngle){
+		Matrix4f rot = new Matrix4f();
+		rot.setIdentity();
+		rot.setRotation(axisAngle);
+		
+//		this.transformation.mul(rot,this.transformation);
+		this.transformation.mul(rot);
+	}
+	
 	public void setTransformation(Matrix4f transformation){
-		this.transformation.mul(transformation, this.transformation);
+//		this.transformation.mul(transformation, this.transformation);
+		this.transformation.mul(transformation);
 	}
 
 }

@@ -115,7 +115,7 @@ public class ShowPhongWithTexture
 		translateShape(shape3, new Vector3f(0,0,2));
 		
 		sceneManager.addShape(shape1);
-		sceneManager.addShape(shape2);
+//		sceneManager.addShape(shape2);
 //		sceneManager.addShape(shape3);
 		
 		addLights();

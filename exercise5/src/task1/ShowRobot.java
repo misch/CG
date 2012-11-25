@@ -65,7 +65,8 @@ public class ShowRobot {
 						rightKnee = new TransformGroup(),
 						leftLowerLeg = new TransformGroup(),
 						rightLowerLeg = new TransformGroup(),
-						head = new TransformGroup();
+						head = new TransformGroup(),
+						throat = new TransformGroup();
 		
 		float	armDiam = 0.15f,
 				bodyDiam = 0.41f,
@@ -87,10 +88,16 @@ public class ShowRobot {
 					floorShape = new ShapeNode(new Cylinder(50,0.2f,10).getShape());
 		
 		body.setTranslation(new Vector3f(3,0,0));
+		Matrix4f rotBody = new Matrix4f();
+		rotBody.rotX(-0.15f);
+		body.setTransformation(rotBody);
 		floor.setTranslation(new Vector3f(0,-(upperLegLength+lowerLegLength+0.25f),0));
 		
 		leftShoulder.setTranslation(new Vector3f(-(armDiam+bodyDiam),1.8f,0));
 		rightShoulder.setTranslation(new Vector3f(armDiam+bodyDiam,1.8f,0));
+		Matrix4f rightShoulderRot = new Matrix4f();
+		rightShoulderRot.rotX(2*(float)Math.PI/3);
+		rightShoulder.setTransformation(rightShoulderRot);
 		
 		leftUpperArm.setTranslation(new Vector3f(0,-upperArmLength,0));
 		
@@ -103,7 +110,18 @@ public class ShowRobot {
 		
 		rightUpperArm.setTranslation(new Vector3f(0,-upperArmLength,0));
 		
+		
 		rightElbow.setTranslation(new Vector3f(0,-0.2f,0));
+		
+		Matrix4f rightElbowRot = new Matrix4f();
+		rightElbowRot.rotX((float)Math.PI/3);
+		Matrix4f rightElbowRot2 = new Matrix4f();
+		rightElbowRot2.rotZ(-0.5f);
+			
+		rightElbow.setTransformation(rightElbowRot2);
+		rightElbow.setTransformation(rightElbowRot);		
+		
+		
 		rightLowerArm.setTranslation(new Vector3f(0,-lowerArmLength,0));		
 		
 		leftHip.setTranslation(new Vector3f(-(bodyDiam/2),0,0));
@@ -118,7 +136,13 @@ public class ShowRobot {
 		leftLowerLeg.setTranslation(new Vector3f(0,-lowerLegLength,0));
 		rightLowerLeg.setTranslation(new Vector3f(0,-lowerLegLength,0));
 		
-		head.setTranslation(new Vector3f(0,bodyHeight,0));
+		throat.setTranslation(new Vector3f(0,bodyHeight,0));
+		
+		throat.addChild(head);
+		
+		Matrix4f headRot = new Matrix4f();
+		headRot.rotX(0.15f);
+		head.setTransformation(headRot);
 
 		
 		// build graph
@@ -129,7 +153,7 @@ public class ShowRobot {
 		
 		floor.addChild(floorShape);
 		
-		body.addChild(leftShoulder,rightShoulder,corpus, leftHip, rightHip, head);
+		body.addChild(leftShoulder,rightShoulder,corpus, leftHip, rightHip, throat);
 		
 		leftShoulder.addChild(leftUpperArm);
 		rightShoulder.addChild(rightUpperArm);
@@ -175,7 +199,7 @@ public class ShowRobot {
 
 		// Make a render panel. The init function of the renderPanel
 		// will be called back for initialization.
-		TransformGroup[] transformGroups = {leftShoulder,leftElbow,body,world,leftHip,rightHip,leftKnee,rightKnee,floor};
+		TransformGroup[] transformGroups = {leftShoulder,leftElbow,body,world,leftHip,rightHip,leftKnee,rightKnee,floor,rightElbow,rightShoulder};
 		Shape[] shapes= {};
 //		renderPanel = new RoboRenderPanel(sceneManager,shapes);
 		renderPanel = new RoboRenderPanel(sceneManager,shapes,transformGroups);

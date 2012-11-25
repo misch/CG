@@ -2,12 +2,12 @@ package task1;
 
 import java.util.TimerTask;
 
-import javax.vecmath.Matrix4f;
+import javax.vecmath.AxisAngle4f;
+import javax.vecmath.Vector3f;
 
 import sceneGraph.TransformGroup;
-
 import jrtr.RenderPanel;
-import jrtr.Shape;
+
 
 /**
  * A timer task that generates an animation. This task triggers
@@ -15,6 +15,11 @@ import jrtr.Shape;
  */
 public class RoboAnimation extends TimerTask
 {
+	private final float MAX_LEG_ANGLE = 70;
+	private final float MIN_LEG_ANGLE = -70;
+	private final float MAX_KNEE_ANGLE = 70;
+	private final float MIN_KNEE_ANGLE = 0;
+	
 	private float legAngle;
 	private float kneeAngle;
 	private TransformGroup[] transformGroups;
@@ -32,71 +37,54 @@ public class RoboAnimation extends TimerTask
 	}
 	public void run()
 	{
-		// robo matrices
-		Matrix4f leftShoulder = transformGroups[0].getTransformationMatrix();
-		Matrix4f leftElbow = transformGroups[1].getTransformationMatrix();
-		Matrix4f body = transformGroups[2].getTransformationMatrix();
-		Matrix4f world = transformGroups[3].getTransformationMatrix();
-		Matrix4f leftHip = transformGroups[4].getTransformationMatrix();
-		Matrix4f rightHip = transformGroups[5].getTransformationMatrix();
-		Matrix4f leftKnee = transformGroups[6].getTransformationMatrix();
-		Matrix4f rightKnee = transformGroups[7].getTransformationMatrix();
-		Matrix4f floor = transformGroups[8].getTransformationMatrix();
+		TransformGroup 	leftShoulder = transformGroups[0],
+				leftElbow = transformGroups[1],
+				body = transformGroups[2],
+				world = transformGroups[3],
+				leftHip = transformGroups[4],
+				rightHip = transformGroups[5],
+				leftKnee = transformGroups[6],
+				rightKnee = transformGroups[7],
+				floor = transformGroups[8],
+				rightElbow = transformGroups[9],
+				rightShoulder = transformGroups[10];
+	
 		
 		// animation matrices
-		Matrix4f worldRot = new Matrix4f();
-		worldRot.rotY(Math.abs(legAngle));
-		
-		
-		Matrix4f armRot = new Matrix4f();
-		armRot.rotX(legAngle);
-		
-		Matrix4f elbowRot = new Matrix4f();
-		elbowRot.rotZ(legAngle);
-		
-		Matrix4f bodyRot = new Matrix4f();
-		bodyRot.rotY(legAngle);
-		
-		Matrix4f frontLegRot = new Matrix4f();
-		frontLegRot.rotX(legAngle);
-		
-		Matrix4f backLegRot = new Matrix4f();
-		backLegRot.rotX(-legAngle);
-		
-		Matrix4f kneeRot = new Matrix4f();
-		kneeRot.rotX(kneeAngle);
-		
-		Matrix4f floorRot = new Matrix4f();
-		floorRot.rotY(floorAngle);
-		
+		AxisAngle4f worldRot = new AxisAngle4f(new Vector3f(0,1,0),Math.abs(legAngle)),
+					armRot = new AxisAngle4f(new Vector3f(1,0,0),legAngle),
+					elbowRot = new AxisAngle4f(new Vector3f(0,0,1),legAngle),
+					frontLegRot = new AxisAngle4f(new Vector3f(1,0,0),legAngle),
+					backLegRot = new AxisAngle4f(new Vector3f(1,0,0),-legAngle),
+					kneeRot = new AxisAngle4f(new Vector3f(1,0,0),kneeAngle),		
+					floorRot = new AxisAngle4f(new Vector3f(0,1,0),floorAngle),
+					rightElbowRot = new AxisAngle4f(new Vector3f(0,0,1),legAngle/3),
+					rightShoulderRot = new AxisAngle4f(new Vector3f(0,0,1),legAngle/2);
 		
 		legCount++;
 		kneeCount++;
 		
-		if (legCount > 70){
+		if (legCount > MAX_LEG_ANGLE){
 			legAngle *= -1;
-			legCount = -70;
+			legCount = MIN_LEG_ANGLE;
 		}
-		if (kneeCount > 70){
+		if (kneeCount > MAX_KNEE_ANGLE){
 			kneeAngle *= -1;
-			kneeCount = 0;
+			kneeCount = MIN_KNEE_ANGLE;
 		}
 		
+		leftShoulder.setRotation(armRot);
+		leftElbow.setRotation(armRot);
+		leftElbow.setRotation(elbowRot);
+		floor.setRotation(floorRot);
+		world.setRotation(worldRot);
+		leftHip.setRotation(backLegRot);
+		rightHip.setRotation(frontLegRot);
 		
-	
-		
-		leftShoulder.mul(armRot);
-		leftElbow.mul(armRot);
-		leftElbow.mul(elbowRot);
-//		body.mul(bodyRot);
-		floor.mul(floorRot);
-		world.mul(worldRot);
-		leftHip.mul(frontLegRot);
-		rightHip.mul(backLegRot);
-		
-		rightKnee.mul(kneeRot);
-		leftKnee.mul(kneeRot);
-//		legRot.invert();
+		rightKnee.setRotation(kneeRot);
+		leftKnee.setRotation(kneeRot);
+		rightElbow.setRotation(rightElbowRot);
+		rightShoulder.setRotation(rightShoulderRot);
 		
 		
 		
