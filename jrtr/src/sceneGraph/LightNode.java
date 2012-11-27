@@ -1,6 +1,8 @@
 package sceneGraph;
 
 import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3f;
+
 import jrtr.PointLight;
 
 public class LightNode extends Leaf {
@@ -27,6 +29,14 @@ public class LightNode extends Leaf {
 
 	public PointLight getLight() {
 		return this.pointLight;
+	}
+	
+	public void setTranslation(Vector3f trans){
+		this.transformation.setTranslation(trans);
+	}
+	
+	public void setTransformation(Matrix4f transformation){
+		this.transformation.mul(transformation);
 	}
 
 }

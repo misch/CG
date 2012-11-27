@@ -42,7 +42,7 @@ public class Cylinder extends AbstractSimpleShape{
 		
 		int indexLowerCenter = addVertex(v, lowerCenter);
 		addTexel(t, 0.5f,0.01f);
-		addNormal(n,new Vector3f(0,1,0));
+		addNormal(n,new Vector3f(0,-1,0));
 		
 		for (float angle = 0; angle<2*PI; angle += (2*PI)/segments){
 			Point3f upperPoint = new Point3f(x(angle,radius),height,z(angle,radius));	
@@ -56,8 +56,8 @@ public class Cylinder extends AbstractSimpleShape{
 			
 			int indexNextUpperPoint = addVertex(v,nextUpperPoint);
 			addTexel(t, (angle + 2*PI/segments)/(2*PI), 1);
-//			addNormal(n, computeNormal(nextUpperPoint, upperCenter));
-			addNormal(n, computeNormal(nextUpperPoint,nextLowerPoint));
+//			addNormal(n, computeNormal(upperCenter,nextUpperPoint));
+			addNormal(n, computeNormal(nextUpperPoint, nextLowerPoint));
 			
 			int indexLowerPoint = addVertex(v,lowerPoint);
 			addTexel(t, angle/(2*PI), 0);
@@ -67,6 +67,7 @@ public class Cylinder extends AbstractSimpleShape{
 			addTexel(t, (angle+(2*PI/segments))/(2*PI), 0);
 //			addNormal(n, computeNormal(nextLowerPoint,lowerCenter));
 			addNormal(n, computeNormal(nextLowerPoint, nextUpperPoint));
+//			addNormal(n, new Vector3f(0,-1,0));
 			
 			addTriangle(indices, indexUpperPoint,indexNextUpperPoint,indexUpperCenter);
 			addTriangle(indices, indexLowerPoint,indexNextLowerPoint,indexLowerCenter);
@@ -93,7 +94,7 @@ public class Cylinder extends AbstractSimpleShape{
 	}
 	private Vector3f computeNormal(Point3f cylinderPoint, Point3f centerPoint){
 		Vector3f normal = new Vector3f(cylinderPoint);
-		normal.sub(centerPoint);
+		normal.sub(new Vector3f(centerPoint));
 		normal.normalize();
 		return new Vector3f(cylinderPoint);
 	}

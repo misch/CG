@@ -33,16 +33,17 @@ public class GraphSceneManager implements SceneManagerInterface {
 	@Override
 	public Iterator<PointLight> lightIterator()
 	{
-		List<PointLight> lightSources = new LinkedList<PointLight>(); 
-		LightIterator lightItr = new LightIterator(this);
-		PointLight light = new PointLight();
-		
-		while(lightItr.hasNext())
-			light = lightItr.next();
-			if (light != null){
-				lightSources.add(lightItr.next());
-			}
-		return lightSources.iterator();
+//		List<PointLight> lightSources = new LinkedList<PointLight>(); 
+//		LightIterator lightItr = new LightIterator(this);
+//		PointLight light = new PointLight();
+//		
+//		while(lightItr.hasNext())
+//			light = lightItr.next();
+//			if (light != null){
+//				lightSources.add(lightItr.next());
+//			}
+//		return lightSources.iterator();
+		return new LightIterator(this);
 	}
 
 	@Override
@@ -101,22 +102,32 @@ public class GraphSceneManager implements SceneManagerInterface {
 		}
 	}
 		
-	private class LightIterator{
+	private class LightIterator implements Iterator<PointLight>{
 		
 		private Stack<NodeWrapper> lightStack = new Stack<NodeWrapper>();
 		
 		public LightIterator(GraphSceneManager sceneManager)
 		{
 			lightStack.push(new NodeWrapper(root, root.getTransformationMatrix()));
+			updateStack();
 		}
 		
 		public boolean hasNext()
-		{
+		{			
 			return !lightStack.isEmpty();
 		}
 		
 		public PointLight next()
-		{
+		{					
+			NodeWrapper top = lightStack.pop();
+			updateStack();
+			PointLight light = ((LightNode)top.node).getLight();
+			light.setTransformation(top.transformation);
+			return light;
+		}
+
+		private void updateStack() {
+			
 			while (lightStack.peek().node.getChildren() != null){
 				NodeWrapper nodeWrap = lightStack.pop();
 				
@@ -128,24 +139,10 @@ public class GraphSceneManager implements SceneManagerInterface {
 						lightStack.push(new NodeWrapper(child,new_mat));
 					}
 				}
-				if (lightStack.isEmpty() && !LightNode.class.isInstance(nodeWrap.node)){
-//					System.out.println("here");
-					return null;
-				}
-				else{
-					if (lightStack.isEmpty()){
-//						System.out.println("there");
-						PointLight light = ((LightNode)nodeWrap.node).getLight();
-						light.setTransformation(nodeWrap.transformation);
-						return light;
-					}
+				if(lightStack.isEmpty()){
+					return;
 				}
 			}
-//			System.out.println("RIGHTRIGHTRIGHT");
-			NodeWrapper top = lightStack.pop();
-			PointLight light = ((LightNode)top.node).getLight();
-			light.setTransformation(top.transformation);
-			return light;
 		}
 		
 		private class NodeWrapper{
@@ -156,6 +153,11 @@ public class GraphSceneManager implements SceneManagerInterface {
 				this.node = node;
 				this.transformation = t;
 			}
+		}
+
+		@Override
+		public void remove() {
+			lightStack.remove(0);	
 		}
 	}
 }

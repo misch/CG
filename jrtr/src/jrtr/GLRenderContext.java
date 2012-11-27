@@ -37,10 +37,11 @@ public class GLRenderContext implements RenderContext {
 //        	defaultShader.load("../jrtr/shaders/default.vert","../jrtr/shaders/default.frag");
 //        	defaultShader.load("../jrtr/shaders/normal.vert","../jrtr/shaders/normal.frag");
 //        	defaultShader.load("../jrtr/shaders/diffuse.vert","../jrtr/shaders/diffuse.frag");
-        	defaultShader.load("../jrtr/shaders/diffusePointLights.vert","../jrtr/shaders/diffusePointLights.frag");
+//        	defaultShader.load("../jrtr/shaders/diffusePointLights.vert","../jrtr/shaders/diffusePointLights.frag");
 //        	defaultShader.load("../jrtr/shaders/specular.vert", "../jrtr/shaders/specular.frag");
 //        	defaultShader.load("../jrtr/shaders/phongWithTexture.vert", "../jrtr/shaders/phongWithTexture.frag");
 //        	defaultShader.load("../jrtr/shaders/glossMap.vert", "../jrtr/shaders/glossMap.frag");
+//        	defaultShader.load("../jrtr/shaders/glossMap.vert", "../jrtr/shaders/phongWithoutTexture.frag");
         } catch(Exception e) {
 	    	System.out.print("Problem with shader:\n");
 	    	System.out.print(e.getMessage());
@@ -264,7 +265,6 @@ public class GLRenderContext implements RenderContext {
 		Color3f[] color = new Color3f[MAX_LIGHTS];
 		
 		for (int i = 0; i<MAX_LIGHTS && lights.hasNext(); i++){
-			System.out.println(i);
 			PointLight light = lights.next();
 			
 			sourceRadiance[i] = light.getRadiance();

@@ -1,7 +1,5 @@
 package task1;
 
-
-
 import java.io.IOException;
 
 import javax.swing.JFrame;
@@ -15,13 +13,10 @@ import ex1.Cylinder;
 import jrtr.Camera;
 import jrtr.Frustum;
 import jrtr.Material;
-import jrtr.ObjReader;
 import jrtr.PointLight;
 import jrtr.RenderContext;
 import jrtr.RenderPanel;
 import jrtr.Shape;
-import jrtr.SimpleSceneManager;
-import jrtr.VertexData;
 import sceneGraph.GraphSceneManager;
 import sceneGraph.LightNode;
 import sceneGraph.ShapeNode;
@@ -80,15 +75,35 @@ public class ShowRobot {
 				headHeight = 0.5f,
 				headDiam = 0.25f;
 		
-		ShapeNode	corpus = new ShapeNode(new Cylinder(50,bodyHeight,bodyDiam).getShape()),
-					upperArm = new ShapeNode(new Cylinder(50, upperArmLength, armDiam).getShape()),
-					lowerArm = new ShapeNode(new Cylinder(50, lowerArmLength, armDiam).getShape()),
-					upperLeg = new ShapeNode(new Cylinder(50, upperLegLength, legDiam).getShape()),
-					lowerLeg = new ShapeNode(new Cylinder(50, lowerLegLength, legDiam).getShape()),
-					headShape = new ShapeNode(new Cylinder(50,headHeight, headDiam).getShape()),
-					floorShape = new ShapeNode(new Cylinder(50,0.2f,10).getShape());
+		Shape 	corpusCyl = new Cylinder(50,bodyHeight,bodyDiam).getShape(),
+				upperArmCyl = new Cylinder(50,upperArmLength,armDiam).getShape(),
+				lowerArmCyl = new Cylinder(50,lowerArmLength,armDiam).getShape(),
+				upperLegCyl = new Cylinder(50, upperLegLength, legDiam).getShape(),
+				lowerLegCyl = new Cylinder(50, lowerLegLength, legDiam).getShape(),
+				headCyl = new Cylinder(50, headHeight, headDiam).getShape(),
+				floorCyl = new Cylinder(50,0.2f,10).getShape();
 		
-		LightNode light = new LightNode(new PointLight(100,new Point3f(-2,0,0), new Color3f(1,0,0)));
+		ShapeNode	corpus = new ShapeNode(corpusCyl),
+					upperArm = new ShapeNode(upperArmCyl),
+					lowerArm = new ShapeNode(lowerArmCyl),
+					upperLeg = new ShapeNode(upperLegCyl),
+					lowerLeg = new ShapeNode(lowerLegCyl),
+					headShape = new ShapeNode(headCyl),
+					floorShape = new ShapeNode(floorCyl);
+		
+		Shape[] shapes = {
+				corpus.getShape(),
+				upperArm.getShape(),
+				lowerArm.getShape(),
+				upperLeg.getShape(),
+				lowerLeg.getShape(),
+				headShape.getShape(),
+				floorShape.getShape()};
+		
+		LightNode light1 = new LightNode(new PointLight(5,new Point3f(0,0,0), new Color3f(1,1,1)));
+		light1.setTranslation(new Vector3f(0,-0.3f,0));
+		LightNode light2 = new LightNode(new PointLight(20, new Point3f(0,0,0), new Color3f(1,1,1)));
+		light2.setTranslation(new Vector3f(0,5,0));
 		
 		body.setTranslation(new Vector3f(3,0,0));
 		Matrix4f rotBody = new Matrix4f();
@@ -149,7 +164,7 @@ public class ShowRobot {
 
 		
 		// build graph	
-		world.addChild(body,floor);
+		world.addChild(body,floor,light2);
 		
 		floor.addChild(floorShape);
 		
@@ -164,7 +179,7 @@ public class ShowRobot {
 		
 		rightUpperArm.addChild(rightElbow,upperArm);
 		rightElbow.addChild(rightLowerArm);
-		rightLowerArm.addChild(lowerArm,light);
+		rightLowerArm.addChild(lowerArm,light1);
 		
 		rightHip.addChild(rightUpperLeg);
 		leftHip.addChild(leftUpperLeg);
@@ -180,19 +195,7 @@ public class ShowRobot {
 		
 		head.addChild(headShape);
 		sceneManager = new GraphSceneManager(world,camera,frustum);
-		
-//		String tex2File = "../jrtr/textures/wood.jpg";
-//		String vertShaderPath2 = "../jrtr/shaders/disco.vert";
-//		String fragShaderPath2 = "../jrtr/shaders/disco.frag";
-//		shape.setMaterial(new Material(tex2File,1));
-//		shape.getMaterial().setFragmentShaderPath(fragShaderPath2);
-//		shape.getMaterial().setVertexShaderPath(vertShaderPath2);
-//		shape.getMaterial().setSpecularReflection(20);
-//		shape.getMaterial().setPhongExponent(100);
-		
-//		translateShape(shape, new Vector3f(0,0,0));
 
-//		sceneManager.addShape(shape);
 		
 		addLights();
 		
@@ -200,8 +203,6 @@ public class ShowRobot {
 		// Make a render panel. The init function of the renderPanel
 		// will be called back for initialization.
 		TransformGroup[] transformGroups = {leftShoulder,leftElbow,body,world,leftHip,rightHip,leftKnee,rightKnee,floor,rightElbow,rightShoulder};
-		Shape[] shapes= {};
-//		renderPanel = new RoboRenderPanel(sceneManager,shapes);
 		renderPanel = new RoboRenderPanel(sceneManager,shapes,transformGroups);
 		
 		// Make the main window of this application and add the renderer to it
