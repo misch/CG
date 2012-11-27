@@ -56,11 +56,6 @@ public class SimpleSceneManager implements SceneManagerInterface {
 		return lightSources.iterator();
 	}
 	
-//	public Iterator<Light> lightIterator()
-//	{
-//		return null;
-//	}
-	
 	public void addLightSource(PointLight source){
 		lightSources.add(source);
 	}

@@ -13,7 +13,6 @@ public class ShapeNode extends Leaf {
 		this.shape = shape;
 	}
 	
-	@Override
 	public Shape getShape() {
 		return shape;
 	}

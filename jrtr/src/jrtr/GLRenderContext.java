@@ -34,10 +34,10 @@ public class GLRenderContext implements RenderContext {
         // Load and use default shader
         GLShader defaultShader = new GLShader(gl);
         try {
-        	defaultShader.load("../jrtr/shaders/default.vert","../jrtr/shaders/default.frag");
+//        	defaultShader.load("../jrtr/shaders/default.vert","../jrtr/shaders/default.frag");
 //        	defaultShader.load("../jrtr/shaders/normal.vert","../jrtr/shaders/normal.frag");
 //        	defaultShader.load("../jrtr/shaders/diffuse.vert","../jrtr/shaders/diffuse.frag");
-//        	defaultShader.load("../jrtr/shaders/diffusePointLights.vert","../jrtr/shaders/diffusePointLights.frag");
+        	defaultShader.load("../jrtr/shaders/diffusePointLights.vert","../jrtr/shaders/diffusePointLights.frag");
 //        	defaultShader.load("../jrtr/shaders/specular.vert", "../jrtr/shaders/specular.frag");
 //        	defaultShader.load("../jrtr/shaders/phongWithTexture.vert", "../jrtr/shaders/phongWithTexture.frag");
 //        	defaultShader.load("../jrtr/shaders/glossMap.vert", "../jrtr/shaders/glossMap.frag");
@@ -262,8 +262,9 @@ public class GLRenderContext implements RenderContext {
 		float[] sourceRadiance = new float[MAX_LIGHTS];
 		Point3f[] position = new Point3f[MAX_LIGHTS];
 		Color3f[] color = new Color3f[MAX_LIGHTS];
-	
+		
 		for (int i = 0; i<MAX_LIGHTS && lights.hasNext(); i++){
+			System.out.println(i);
 			PointLight light = lights.next();
 			
 			sourceRadiance[i] = light.getRadiance();

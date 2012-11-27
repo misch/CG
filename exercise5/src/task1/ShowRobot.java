@@ -23,6 +23,7 @@ import jrtr.Shape;
 import jrtr.SimpleSceneManager;
 import jrtr.VertexData;
 import sceneGraph.GraphSceneManager;
+import sceneGraph.LightNode;
 import sceneGraph.ShapeNode;
 import sceneGraph.TransformGroup;
 import task1.RoboRenderPanel;
@@ -87,6 +88,8 @@ public class ShowRobot {
 					headShape = new ShapeNode(new Cylinder(50,headHeight, headDiam).getShape()),
 					floorShape = new ShapeNode(new Cylinder(50,0.2f,10).getShape());
 		
+		LightNode light = new LightNode(new PointLight(100,new Point3f(-2,0,0), new Color3f(1,0,0)));
+		
 		body.setTranslation(new Vector3f(3,0,0));
 		Matrix4f rotBody = new Matrix4f();
 		rotBody.rotX(-0.15f);
@@ -145,10 +148,7 @@ public class ShowRobot {
 		head.setTransformation(headRot);
 
 		
-		// build graph
-		
-//		universe.addChild(world,floor);
-		
+		// build graph	
 		world.addChild(body,floor);
 		
 		floor.addChild(floorShape);
@@ -164,7 +164,7 @@ public class ShowRobot {
 		
 		rightUpperArm.addChild(rightElbow,upperArm);
 		rightElbow.addChild(rightLowerArm);
-		rightLowerArm.addChild(lowerArm);
+		rightLowerArm.addChild(lowerArm,light);
 		
 		rightHip.addChild(rightUpperLeg);
 		leftHip.addChild(leftUpperLeg);
@@ -227,13 +227,4 @@ public class ShowRobot {
 //		sceneManager.addLightSource(new PointLight(80, new Point3f(10,3,0), new Color3f(1,1,0)));
 //		sceneManager.addLightSource(new PointLight(80,new Point3f(0,5,10), new Color3f(0,0,1)));
 	}
-
-//	private static void translateShape(Shape shape, Vector3f vec) {
-//		Matrix4f t = shape.getTransformation();		
-//		Matrix4f translation = new Matrix4f();
-//		translation.setIdentity();
-//		translation.setTranslation(vec);
-//	
-//		t.mul(translation);
-//	}
 }

@@ -1,10 +1,8 @@
 package sceneGraph;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Stack;
 
 import javax.vecmath.Matrix4f;
@@ -15,8 +13,6 @@ import jrtr.PointLight;
 import jrtr.RenderItem;
 import jrtr.SceneManagerInterface;
 import jrtr.SceneManagerIterator;
-import jrtr.Shape;
-import jrtr.SimpleSceneManager;
 
 public class GraphSceneManager implements SceneManagerInterface {
 
@@ -33,11 +29,20 @@ public class GraphSceneManager implements SceneManagerInterface {
 	public SceneManagerIterator iterator() {
 		return new GraphSceneManagerItr(this);
 	}
-
+	
 	@Override
-	public Iterator<PointLight> lightIterator() {
-		List<PointLight> empty = new ArrayList<PointLight>();
-		return empty.iterator();
+	public Iterator<PointLight> lightIterator()
+	{
+		List<PointLight> lightSources = new LinkedList<PointLight>(); 
+		LightIterator lightItr = new LightIterator(this);
+		PointLight light = new PointLight();
+		
+		while(lightItr.hasNext())
+			light = lightItr.next();
+			if (light != null){
+				lightSources.add(lightItr.next());
+			}
+		return lightSources.iterator();
 	}
 
 	@Override
@@ -71,16 +76,76 @@ public class GraphSceneManager implements SceneManagerInterface {
 				for (Node child : nodeWrap.node.getChildren()){
 					Matrix4f new_mat = new Matrix4f();
 					new_mat.mul(nodeWrap.transformation, child.getTransformationMatrix());
-					sceneGraphStack.push(new NodeWrapper(child,new_mat));
+					if(!LightNode.class.isInstance(child)){
+						sceneGraphStack.push(new NodeWrapper(child,new_mat));
+					}
 				}
 				
 				if (sceneGraphStack.isEmpty()){
-					return new RenderItem(nodeWrap.node.getShape(),  nodeWrap.transformation);
+					return new RenderItem(((ShapeNode)nodeWrap.node).getShape(), nodeWrap.transformation);
 				}
 			}
 			
 			NodeWrapper top = sceneGraphStack.pop();
-			return new RenderItem(top.node.getShape(), top.transformation);
+			return new RenderItem(((ShapeNode)top.node).getShape(), top.transformation);
+		}
+		
+		private class NodeWrapper{
+			private Node node;
+			private Matrix4f transformation;
+			
+			public NodeWrapper(Node node, Matrix4f t){
+				this.node = node;
+				this.transformation = t;
+			}
+		}
+	}
+		
+	private class LightIterator{
+		
+		private Stack<NodeWrapper> lightStack = new Stack<NodeWrapper>();
+		
+		public LightIterator(GraphSceneManager sceneManager)
+		{
+			lightStack.push(new NodeWrapper(root, root.getTransformationMatrix()));
+		}
+		
+		public boolean hasNext()
+		{
+			return !lightStack.isEmpty();
+		}
+		
+		public PointLight next()
+		{
+			while (lightStack.peek().node.getChildren() != null){
+				NodeWrapper nodeWrap = lightStack.pop();
+				
+				for (Node child : nodeWrap.node.getChildren()){
+					Matrix4f new_mat = new Matrix4f();
+					new_mat.mul(nodeWrap.transformation, child.getTransformationMatrix());
+					
+					if(!ShapeNode.class.isInstance(child)){
+						lightStack.push(new NodeWrapper(child,new_mat));
+					}
+				}
+				if (lightStack.isEmpty() && !LightNode.class.isInstance(nodeWrap.node)){
+//					System.out.println("here");
+					return null;
+				}
+				else{
+					if (lightStack.isEmpty()){
+//						System.out.println("there");
+						PointLight light = ((LightNode)nodeWrap.node).getLight();
+						light.setTransformation(nodeWrap.transformation);
+						return light;
+					}
+				}
+			}
+//			System.out.println("RIGHTRIGHTRIGHT");
+			NodeWrapper top = lightStack.pop();
+			PointLight light = ((LightNode)top.node).getLight();
+			light.setTransformation(top.transformation);
+			return light;
 		}
 		
 		private class NodeWrapper{
