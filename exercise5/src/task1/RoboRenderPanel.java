@@ -50,6 +50,8 @@ public class RoboRenderPanel extends GLRenderPanel {
 			texture.load(texturePath);
 			for (int i = 0; i< shapes.length; i++){
 				shapes[i].setMaterial(new Material("",1));
+//				shapes[i].getMaterial().setSpecularReflection(5);
+//				shapes[i].getMaterial().setPhongExponent(500);
 				shapes[i].getMaterial().setTexture(texture);
 			}
 		}

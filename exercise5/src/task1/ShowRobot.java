@@ -1,10 +1,10 @@
 package task1;
 
+import java.awt.Component;
 import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.vecmath.Color3f;
-import javax.vecmath.Matrix4f;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
 
@@ -12,7 +12,6 @@ import ex1.Cylinder;
 
 import jrtr.Camera;
 import jrtr.Frustum;
-import jrtr.Material;
 import jrtr.PointLight;
 import jrtr.RenderContext;
 import jrtr.RenderPanel;
@@ -29,6 +28,8 @@ public class ShowRobot {
 	static RenderContext renderContext;
 	static GraphSceneManager sceneManager;
 	static Shape shape;
+	private static final Vector3f xAx = new Vector3f(1,0,0);
+	private static final Vector3f zAx = new Vector3f(0,0,1);
 
 	/**
 	 * The main function opens a 3D rendering window, constructs a simple 3D
@@ -75,70 +76,40 @@ public class ShowRobot {
 				headHeight = 0.5f,
 				headDiam = 0.25f;
 		
-		Shape 	corpusCyl = new Cylinder(50,bodyHeight,bodyDiam).getShape(),
-				upperArmCyl = new Cylinder(50,upperArmLength,armDiam).getShape(),
-				lowerArmCyl = new Cylinder(50,lowerArmLength,armDiam).getShape(),
-				upperLegCyl = new Cylinder(50, upperLegLength, legDiam).getShape(),
-				lowerLegCyl = new Cylinder(50, lowerLegLength, legDiam).getShape(),
-				headCyl = new Cylinder(50, headHeight, headDiam).getShape(),
-				floorCyl = new Cylinder(50,0.2f,10).getShape();
-		
-		ShapeNode	corpus = new ShapeNode(corpusCyl),
-					upperArm = new ShapeNode(upperArmCyl),
-					lowerArm = new ShapeNode(lowerArmCyl),
-					upperLeg = new ShapeNode(upperLegCyl),
-					lowerLeg = new ShapeNode(lowerLegCyl),
-					headShape = new ShapeNode(headCyl),
-					floorShape = new ShapeNode(floorCyl);
-		
-		Shape[] shapes = {
-				corpus.getShape(),
-				upperArm.getShape(),
-				lowerArm.getShape(),
-				upperLeg.getShape(),
-				lowerLeg.getShape(),
-				headShape.getShape(),
-				floorShape.getShape()};
-		
-		LightNode light1 = new LightNode(new PointLight(5,new Point3f(0,0,0), new Color3f(1,1,1)));
-		light1.setTranslation(new Vector3f(0,-0.3f,0));
-		LightNode light2 = new LightNode(new PointLight(20, new Point3f(0,0,0), new Color3f(1,1,1)));
-		light2.setTranslation(new Vector3f(0,5,0));
+		ShapeNode	corpus = new ShapeNode(new Cylinder(50,bodyHeight,bodyDiam).getShape()),
+					upperArm = new ShapeNode(new Cylinder(50,upperArmLength,armDiam).getShape()),
+					lowerArm = new ShapeNode(new Cylinder(50,lowerArmLength,armDiam).getShape()),
+					upperLeg = new ShapeNode(new Cylinder(50, upperLegLength, legDiam).getShape()),
+					lowerLeg = new ShapeNode(new Cylinder(50, lowerLegLength, legDiam).getShape()),
+					headShape = new ShapeNode(new Cylinder(50, headHeight, headDiam).getShape()),
+					floorShape = new ShapeNode(new Cylinder(50,0.2f,50).getShape());
+				
+		LightNode handLight = new LightNode(new PointLight(5,new Point3f(0,0,0), new Color3f(1,1,1)));
+		handLight.setTranslation(new Vector3f(0,-0.3f,0));
 		
 		body.setTranslation(new Vector3f(3,0,0));
-		Matrix4f rotBody = new Matrix4f();
-		rotBody.rotX(-0.15f);
-		body.setTransformation(rotBody);
+		body.setRotation(xAx, -0.15f);
+		
 		floor.setTranslation(new Vector3f(0,-(upperLegLength+lowerLegLength+0.25f),0));
 		
 		leftShoulder.setTranslation(new Vector3f(-(armDiam+bodyDiam),1.8f,0));
+		
 		rightShoulder.setTranslation(new Vector3f(armDiam+bodyDiam,1.8f,0));
-		Matrix4f rightShoulderRot = new Matrix4f();
-		rightShoulderRot.rotX(2*(float)Math.PI/3);
-		rightShoulder.setTransformation(rightShoulderRot);
+		rightShoulder.setRotation(xAx,2*(float)Math.PI/3);
 		
 		leftUpperArm.setTranslation(new Vector3f(0,-upperArmLength,0));
 		
-		Matrix4f rot = new Matrix4f();
-		rot.rotX(1);
-		leftElbow.setTransformation(rot);
+		leftElbow.setRotation(xAx, 1);
 		
 		leftElbow.setTranslation(new Vector3f(0,-0.2f,0));
 		leftLowerArm.setTranslation(new Vector3f(0,-lowerArmLength,0));
 		
 		rightUpperArm.setTranslation(new Vector3f(0,-upperArmLength,0));
 		
-		
 		rightElbow.setTranslation(new Vector3f(0,-0.2f,0));
-		
-		Matrix4f rightElbowRot = new Matrix4f();
-		rightElbowRot.rotX((float)Math.PI/3);
-		Matrix4f rightElbowRot2 = new Matrix4f();
-		rightElbowRot2.rotZ(-0.5f);
-			
-		rightElbow.setTransformation(rightElbowRot2);
-		rightElbow.setTransformation(rightElbowRot);		
-		
+				
+		rightElbow.setRotation(xAx, (float)Math.PI/3);
+		rightElbow.setRotation(zAx, -0.5f);
 		
 		rightLowerArm.setTranslation(new Vector3f(0,-lowerArmLength,0));		
 		
@@ -157,14 +128,11 @@ public class ShowRobot {
 		throat.setTranslation(new Vector3f(0,bodyHeight,0));
 		
 		throat.addChild(head);
-		
-		Matrix4f headRot = new Matrix4f();
-		headRot.rotX(0.15f);
-		head.setTransformation(headRot);
 
-		
+		head.setRotation(xAx,0.15f);
+
 		// build graph	
-		world.addChild(body,floor,light2);
+		world.addChild(body,floor);
 		
 		floor.addChild(floorShape);
 		
@@ -179,7 +147,7 @@ public class ShowRobot {
 		
 		rightUpperArm.addChild(rightElbow,upperArm);
 		rightElbow.addChild(rightLowerArm);
-		rightLowerArm.addChild(lowerArm,light1);
+		rightLowerArm.addChild(lowerArm,handLight);
 		
 		rightHip.addChild(rightUpperLeg);
 		leftHip.addChild(leftUpperLeg);
@@ -196,36 +164,33 @@ public class ShowRobot {
 		head.addChild(headShape);
 		sceneManager = new GraphSceneManager(world,camera,frustum);
 
-		
-		addLights();
-		
-
 		// Make a render panel. The init function of the renderPanel
 		// will be called back for initialization.
 		TransformGroup[] transformGroups = {leftShoulder,leftElbow,body,world,leftHip,rightHip,leftKnee,rightKnee,floor,rightElbow,rightShoulder};
+		Shape[] shapes = {	corpus.getShape(),
+							upperArm.getShape(), lowerArm.getShape(),
+							upperLeg.getShape(), lowerLeg.getShape(),
+							headShape.getShape(),
+							floorShape.getShape()};
 		renderPanel = new RoboRenderPanel(sceneManager,shapes,transformGroups);
 		
-		// Make the main window of this application and add the renderer to it
+		setupMainWindow(camera);
+	}
+	
+	private static void setupMainWindow(Camera camera) {
 		JFrame jframe = new JFrame("robo");
 		jframe.setSize(700, 700);
 		jframe.setLocationRelativeTo(null); // center of screen
 		jframe.getContentPane().add(renderPanel.getCanvas());// put the canvas into a JFrame window
-
-		// Add a mouse listener
 		
 		LandscapeListener listener = new LandscapeListener(camera, renderPanel);
 		
-		renderPanel.getCanvas().addMouseListener(listener);
-		renderPanel.getCanvas().addMouseMotionListener(listener);
-		renderPanel.getCanvas().addKeyListener(listener);
-		jframe.addKeyListener(listener);
+		Component canvas = renderPanel.getCanvas();
+		canvas.addMouseListener(listener);
+		canvas.addMouseMotionListener(listener);
+		canvas.addKeyListener(listener);
 		   	    	    
 	    jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    jframe.setVisible(true); // show window
-	}
-	
-	private static void addLights() {
-//		sceneManager.addLightSource(new PointLight(80, new Point3f(10,3,0), new Color3f(1,1,0)));
-//		sceneManager.addLightSource(new PointLight(80,new Point3f(0,5,10), new Color3f(0,0,1)));
+	    jframe.setVisible(true);	
 	}
 }

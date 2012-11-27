@@ -33,16 +33,6 @@ public class GraphSceneManager implements SceneManagerInterface {
 	@Override
 	public Iterator<PointLight> lightIterator()
 	{
-//		List<PointLight> lightSources = new LinkedList<PointLight>(); 
-//		LightIterator lightItr = new LightIterator(this);
-//		PointLight light = new PointLight();
-//		
-//		while(lightItr.hasNext())
-//			light = lightItr.next();
-//			if (light != null){
-//				lightSources.add(lightItr.next());
-//			}
-//		return lightSources.iterator();
 		return new LightIterator(this);
 	}
 

@@ -45,5 +45,5 @@ void main()
 	
 	// The built-in GLSL function "texture" performs the texture lookup
 	//frag_shaded = (diffuse_light + specular_light) * (texture(myTexture, frag_texcoord) + 0.5);
-	frag_shaded = diffuse_light + specular_light;		
+	frag_shaded = diffuse_light + specular_light+0.05;		
 }

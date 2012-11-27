@@ -3,6 +3,7 @@ package task1;
 import java.util.TimerTask;
 
 import javax.vecmath.AxisAngle4f;
+import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 
 import sceneGraph.TransformGroup;
@@ -19,6 +20,9 @@ public class RoboAnimation extends TimerTask
 	private final float MIN_LEG_ANGLE = -70;
 	private final float MAX_KNEE_ANGLE = 70;
 	private final float MIN_KNEE_ANGLE = 0;
+	private final Vector3f xAx = new Vector3f(1,0,0);
+	private final Vector3f yAx = new Vector3f(0,1,0);
+	private final Vector3f zAx = new Vector3f(0,0,1);
 	
 	private float legAngle;
 	private float kneeAngle;
@@ -48,18 +52,6 @@ public class RoboAnimation extends TimerTask
 				floor = transformGroups[8],
 				rightElbow = transformGroups[9],
 				rightShoulder = transformGroups[10];
-	
-		
-		// animation matrices
-		AxisAngle4f worldRot = new AxisAngle4f(new Vector3f(0,1,0),Math.abs(legAngle)),
-					armRot = new AxisAngle4f(new Vector3f(1,0,0),legAngle),
-					elbowRot = new AxisAngle4f(new Vector3f(0,0,1),legAngle),
-					frontLegRot = new AxisAngle4f(new Vector3f(1,0,0),legAngle),
-					backLegRot = new AxisAngle4f(new Vector3f(1,0,0),-legAngle),
-					kneeRot = new AxisAngle4f(new Vector3f(1,0,0),kneeAngle),		
-					floorRot = new AxisAngle4f(new Vector3f(0,1,0),floorAngle),
-					rightElbowRot = new AxisAngle4f(new Vector3f(0,0,1),legAngle/3),
-					rightShoulderRot = new AxisAngle4f(new Vector3f(0,0,1),legAngle/2);
 		
 		legCount++;
 		kneeCount++;
@@ -73,22 +65,30 @@ public class RoboAnimation extends TimerTask
 			kneeCount = MIN_KNEE_ANGLE;
 		}
 		
-		leftShoulder.setRotation(armRot);
-		leftElbow.setRotation(armRot);
-		leftElbow.setRotation(elbowRot);
-		floor.setRotation(floorRot);
-		world.setRotation(worldRot);
-		leftHip.setRotation(backLegRot);
-		rightHip.setRotation(frontLegRot);
+		leftShoulder.setTransformation(createRot(xAx,legAngle));
+		leftElbow.setTransformation(createRot(xAx,legAngle));
+		leftElbow.setTransformation(createRot(zAx,legAngle));
+		floor.setTransformation(createRot(yAx,floorAngle));
+		world.setTransformation(createRot(yAx,Math.abs(legAngle)));
+		leftHip.setTransformation(createRot(xAx,-legAngle));
+		rightHip.setTransformation(createRot(xAx,legAngle));
 		
-		rightKnee.setRotation(kneeRot);
-		leftKnee.setRotation(kneeRot);
-		rightElbow.setRotation(rightElbowRot);
-		rightShoulder.setRotation(rightShoulderRot);
+		rightKnee.setTransformation(createRot(xAx,kneeAngle));
+		leftKnee.setTransformation(createRot(xAx,kneeAngle));
+		rightElbow.setTransformation(createRot(zAx,legAngle/3));
+		rightShoulder.setTransformation(createRot(zAx,legAngle/2));
 		
 		
 		
 		// Trigger redrawing of the render window
 		renderPanel.getCanvas().repaint(); 
+	}
+	
+	private Matrix4f createRot(Vector3f axis, float angle){
+		AxisAngle4f axisAngle= new AxisAngle4f(axis,angle);
+		Matrix4f rot = new Matrix4f();
+		rot.setIdentity();
+		rot.setRotation(axisAngle);
+		return rot;
 	}
 }
