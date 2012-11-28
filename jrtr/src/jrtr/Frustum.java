@@ -45,7 +45,7 @@ public class Frustum {
 		computeProjMatrix();
 	}
 	
-	private Vector3f[] computeNormals(){
+	private void computeNormals(){
 		Vector3f[] normals = new Vector3f[6];
 		
 		normals[0] = new Vector3f(0,0,1);
@@ -71,10 +71,10 @@ public class Frustum {
 		
 		normals[5] = new Vector3f(0,0,-1);
 
-		return normals;
+		this.normals = normals;
 	}
 	
-	private Point3f[] pointsOnPlane(){
+	private void pointsOnPlane(){
 		Point3f[] pointsOnPlane = new Point3f[6];
 		
 		pointsOnPlane[0] = new Point3f(0,0,-nearPlane);
@@ -84,7 +84,7 @@ public class Frustum {
 		pointsOnPlane[4] = new Point3f(0,0,0);
 		pointsOnPlane[5] = new Point3f(0,0,0);
 		
-		return pointsOnPlane;
+		this.pointsOnPlane = pointsOnPlane;
 	}
 	
 	
@@ -158,5 +158,31 @@ public class Frustum {
 	public Matrix4f getProjectionMatrix()
 	{
 		return projectionMatrix;
+	}
+	
+	public boolean isCompletelyOutside(BoundingSphere boundingSphere){
+		
+		// TODO: "Unreachable Code???" Maybe it's to late in the night... o.O
+		
+		for(int i = 0; 0 < 6; i++){
+			float d = distanceFromPlane(normals[i], pointsOnPlane[i], boundingSphere.getCenter());
+			
+			if (d >= boundingSphere.getRadius()){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private float distanceFromPlane(Vector3f normal, Point3f pointOnPlane, Point3f centerOfSphere){
+		float distance = 0;
+		
+		Vector3f x = new Vector3f(centerOfSphere);
+		Vector3f p = new Vector3f(pointOnPlane);
+		Vector3f n = new Vector3f(normal);
+		
+		x.sub(p);
+		distance = x.dot(n);
+		return distance;	
 	}
 }

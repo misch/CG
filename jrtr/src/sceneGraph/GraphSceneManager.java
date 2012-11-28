@@ -67,6 +67,13 @@ public class GraphSceneManager implements SceneManagerInterface {
 				for (Node child : nodeWrap.node.getChildren()){
 					Matrix4f new_mat = new Matrix4f();
 					new_mat.mul(nodeWrap.transformation, child.getTransformationMatrix());
+					
+					// TODO: 	if (child is TransformGroup) ==> push to stack
+					//			if (child is LightNode) ==> don't push
+					//			if (child is ShapeNode and BoundingSphere is not completely outside the frustum) ==> push to stack
+					// WATCH OUT: 	Transform coordinates into right coord-system (==> cam-coord, since the frustum
+					//				will assume being in cam-coord). ==> center of BoundingBox has to be transformed!
+					
 					if(!LightNode.class.isInstance(child)){
 						sceneGraphStack.push(new NodeWrapper(child,new_mat));
 					}
