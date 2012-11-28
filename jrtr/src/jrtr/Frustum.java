@@ -1,6 +1,10 @@
 package jrtr;
 
 import javax.vecmath.Matrix4f;
+import javax.vecmath.Point3f;
+import javax.vecmath.Vector3f;
+
+import jogamp.graph.math.MathFloat;
 
 /**
  * Stores the specification of a viewing frustum, or a viewing
@@ -15,6 +19,9 @@ public class Frustum {
 
 	private Matrix4f projectionMatrix;
 	private float nearPlane, farPlane, aspectRatio, verticalFieldOfView;
+	private Vector3f[] normals = new Vector3f[6];
+	private Point3f[] pointsOnPlane = new Point3f[6];
+	
 	/**
 	 * Construct a default viewing frustum. The frustum is given by a 
 	 * default 4x4 projection matrix.
@@ -38,6 +45,60 @@ public class Frustum {
 		computeProjMatrix();
 	}
 	
+	private Vector3f[] computeNormals(){
+		Vector3f[] normals = new Vector3f[6];
+		
+		normals[0] = new Vector3f(0,0,1);
+	
+		normals[1] = new Vector3f(0,1,0); // rotiere um -verticalFieldOfView/2 um die x-achse
+		Matrix4f rot = new Matrix4f();
+		rot.rotX(verticalFieldOfView/2);
+		rot.transform(normals[1]);
+		
+		normals[2] = new Vector3f(0,-1,0); // rotiere um -verticalFieldOfView/2 um die x-achse 
+		rot.rotX(-verticalFieldOfView/2);
+		rot.transform(normals[2]);
+		
+		float horizontalFieldOfView = computeHFieldOfView(verticalFieldOfView, nearPlane, aspectRatio);
+		
+		normals[3] = new Vector3f(1,0,0); // rotiere um hFieldOfView/2 um die y-achse
+		rot.rotY(horizontalFieldOfView/2);
+		rot.transform(normals[3]);
+		
+		normals[4] = new Vector3f(-1,0,0); // rotiere um -hFieldOfView/2 um die y-achse
+		rot.rotY(-horizontalFieldOfView/2);
+		rot.transform(normals[4]);
+		
+		normals[5] = new Vector3f(0,0,-1);
+
+		return normals;
+	}
+	
+	private Point3f[] pointsOnPlane(){
+		Point3f[] pointsOnPlane = new Point3f[6];
+		
+		pointsOnPlane[0] = new Point3f(0,0,-nearPlane);
+		pointsOnPlane[1] = new Point3f(0,0,-farPlane);
+		pointsOnPlane[2] = new Point3f(0,0,0);
+		pointsOnPlane[3] = new Point3f(0,0,0);
+		pointsOnPlane[4] = new Point3f(0,0,0);
+		pointsOnPlane[5] = new Point3f(0,0,0);
+		
+		return pointsOnPlane;
+	}
+	
+	
+	private float computeHFieldOfView(float verticalFieldOfView,
+			float nearPlane, float aspectRatio) {
+		
+		float nearHalfHeight = (float)Math.tan(verticalFieldOfView/2) * nearPlane;
+		float nearHalfWidth = aspectRatio * nearHalfHeight;
+		
+		float horizontalHalfFieldOfView = (float)Math.atan(nearHalfWidth/nearPlane);
+		
+		return horizontalHalfFieldOfView*2;
+	}
+
 	private void computeProjMatrix() {
 		
 		Matrix4f newProjMatrix = new Matrix4f();
