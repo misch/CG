@@ -8,7 +8,11 @@ import javax.vecmath.*;
  */
 public class Shape {
 
+	private VertexData vertexData;
+	private Matrix4f t;
 	private Material material = new Material();
+	private BoundingSphere boundingSphere;
+	
 	/**
 	 * Make a shape from {@link VertexData}.
 	 *  
@@ -20,6 +24,7 @@ public class Shape {
 		t = new Matrix4f();
 		t.setIdentity();
 		this.material = new Material();
+		this.boundingSphere = new BoundingSphere(this);
 	}
 	
 	public VertexData getVertexData()
@@ -37,22 +42,18 @@ public class Shape {
 		return t;
 	}
 	
-	/**
-	 * To be implemented in the "Textures and Shading" project.
-	 */
 	public void setMaterial(Material material)
 	{
 		this.material = material;
 	}
 
-	/**
-	 * To be implemented in the "Textures and Shading" project.
-	 */
 	public Material getMaterial()
 	{
 		return this.material;
 	}
+	
+	public BoundingSphere getBoundingSphere(){
+		return this.boundingSphere;
+	}
 
-	private VertexData vertexData;
-	private Matrix4f t;
 }
