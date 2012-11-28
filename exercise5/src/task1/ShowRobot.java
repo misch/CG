@@ -12,6 +12,7 @@ import ex1.Cylinder;
 
 import jrtr.Camera;
 import jrtr.Frustum;
+import jrtr.ObjReader;
 import jrtr.PointLight;
 import jrtr.RenderContext;
 import jrtr.RenderPanel;
@@ -76,7 +77,8 @@ public class ShowRobot {
 				headHeight = 0.5f,
 				headDiam = 0.25f;
 		
-		ShapeNode	corpus = new ShapeNode(new Cylinder(50,bodyHeight,bodyDiam).getShape()),
+		ShapeNode	
+					corpus = new ShapeNode(new Cylinder(50,bodyHeight,bodyDiam).getShape()),
 					upperArm = new ShapeNode(new Cylinder(50,upperArmLength,armDiam).getShape()),
 					lowerArm = new ShapeNode(new Cylinder(50,lowerArmLength,armDiam).getShape()),
 					upperLeg = new ShapeNode(new Cylinder(50, upperLegLength, legDiam).getShape()),
@@ -84,7 +86,7 @@ public class ShowRobot {
 					headShape = new ShapeNode(new Cylinder(50, headHeight, headDiam).getShape()),
 					floorShape = new ShapeNode(new Cylinder(50,0.2f,50).getShape());
 				
-		LightNode handLight = new LightNode(new PointLight(5,new Point3f(0,0,0), new Color3f(1,1,1)));
+		LightNode handLight = new LightNode(new PointLight(20,new Point3f(0,0,0), new Color3f(1,1,1)));
 		handLight.setTranslation(new Vector3f(0,-0.3f,0));
 		
 		body.setTranslation(new Vector3f(3,0,0));

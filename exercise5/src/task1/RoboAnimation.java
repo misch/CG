@@ -16,26 +16,27 @@ import jrtr.RenderPanel;
  */
 public class RoboAnimation extends TimerTask
 {
-	private final float MAX_LEG_ANGLE = 70;
-	private final float MIN_LEG_ANGLE = -70;
-	private final float MAX_KNEE_ANGLE = 70;
+	private final float MAX_LEG_ANGLE = (float)Math.PI/6;
+	private final float MIN_LEG_ANGLE = -(float)Math.PI/6;
+	private final float MAX_KNEE_ANGLE = (float)Math.PI/6;
 	private final float MIN_KNEE_ANGLE = 0;
+	
 	private final Vector3f xAx = new Vector3f(1,0,0);
 	private final Vector3f yAx = new Vector3f(0,1,0);
 	private final Vector3f zAx = new Vector3f(0,0,1);
 	
-	private float legAngle;
-	private float kneeAngle;
+	private float legAngleStep;
+	private float kneeAngleStep;
 	private TransformGroup[] transformGroups;
 	private RenderPanel renderPanel;
-	private float legCount = 0;
-	private float kneeCount = 0;
 	private float floorAngle = 0;
+	private float legAngleSum = 0;
+	private float kneeAngleSum = 0;
 	
 	public RoboAnimation(float angle, TransformGroup[] transformGroups, RenderPanel renderPanel){
-		this.legAngle = 0.01f;
-		this.floorAngle = -legAngle + legAngle/3.2f;
-		this.kneeAngle = -0.01f;
+		this.legAngleStep = 0.01f;
+		this.floorAngle = -legAngleStep + legAngleStep/3.2f;
+		this.kneeAngleStep = -0.01f;
 		this.transformGroups = transformGroups;
 		this.renderPanel = renderPanel;
 	}
@@ -53,30 +54,31 @@ public class RoboAnimation extends TimerTask
 				rightElbow = transformGroups[9],
 				rightShoulder = transformGroups[10];
 		
-		legCount++;
-		kneeCount++;
-		
-		if (legCount > MAX_LEG_ANGLE){
-			legAngle *= -1;
-			legCount = MIN_LEG_ANGLE;
-		}
-		if (kneeCount > MAX_KNEE_ANGLE){
-			kneeAngle *= -1;
-			kneeCount = MIN_KNEE_ANGLE;
+		legAngleSum += Math.abs(legAngleStep);
+		kneeAngleSum += Math.abs(kneeAngleStep);
+
+		if (legAngleSum > MAX_LEG_ANGLE){
+			legAngleStep *= -1;
+			legAngleSum = MIN_LEG_ANGLE;
 		}
 		
-		leftShoulder.setTransformation(createRot(xAx,legAngle));
-		leftElbow.setTransformation(createRot(xAx,legAngle));
-		leftElbow.setTransformation(createRot(zAx,legAngle));
+		if (kneeAngleSum > MAX_KNEE_ANGLE){
+			kneeAngleStep *= -1;
+			kneeAngleSum = MIN_KNEE_ANGLE;
+		}
+		
+		leftShoulder.setTransformation(createRot(xAx,legAngleStep));
+		leftElbow.setTransformation(createRot(xAx,legAngleStep));
+		leftElbow.setTransformation(createRot(zAx,legAngleStep));
 		floor.setTransformation(createRot(yAx,floorAngle));
-		world.setTransformation(createRot(yAx,Math.abs(legAngle)));
-		leftHip.setTransformation(createRot(xAx,-legAngle));
-		rightHip.setTransformation(createRot(xAx,legAngle));
+		world.setTransformation(createRot(yAx,Math.abs(legAngleStep)));
+		leftHip.setTransformation(createRot(xAx,-legAngleStep));
+		rightHip.setTransformation(createRot(xAx,legAngleStep));
 		
-		rightKnee.setTransformation(createRot(xAx,kneeAngle));
-		leftKnee.setTransformation(createRot(xAx,kneeAngle));
-		rightElbow.setTransformation(createRot(zAx,legAngle/3));
-		rightShoulder.setTransformation(createRot(zAx,legAngle/2));
+		rightKnee.setTransformation(createRot(xAx,kneeAngleStep));
+		leftKnee.setTransformation(createRot(xAx,kneeAngleStep));
+		rightElbow.setTransformation(createRot(zAx,legAngleStep/3));
+		rightShoulder.setTransformation(createRot(zAx,legAngleStep/2));
 		
 		
 		

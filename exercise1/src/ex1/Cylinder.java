@@ -57,7 +57,7 @@ public class Cylinder extends AbstractSimpleShape{
 			int indexNextUpperPoint = addVertex(v,nextUpperPoint);
 			addTexel(t, (angle + 2*PI/segments)/(2*PI), 1);
 //			addNormal(n, computeNormal(upperCenter,nextUpperPoint));
-			addNormal(n, computeNormal(nextUpperPoint, nextLowerPoint));
+			addNormal(n, computeNormal(nextUpperPoint, upperCenter));
 			
 			int indexLowerPoint = addVertex(v,lowerPoint);
 			addTexel(t, angle/(2*PI), 0);
@@ -66,7 +66,7 @@ public class Cylinder extends AbstractSimpleShape{
 			int indexNextLowerPoint = addVertex(v,nextLowerPoint);
 			addTexel(t, (angle+(2*PI/segments))/(2*PI), 0);
 //			addNormal(n, computeNormal(nextLowerPoint,lowerCenter));
-			addNormal(n, computeNormal(nextLowerPoint, nextUpperPoint));
+			addNormal(n, computeNormal(nextLowerPoint, lowerCenter));
 //			addNormal(n, new Vector3f(0,-1,0));
 			
 			addTriangle(indices, indexUpperPoint,indexNextUpperPoint,indexUpperCenter);
