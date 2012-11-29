@@ -160,14 +160,11 @@ public class Frustum {
 		return projectionMatrix;
 	}
 	
-	public boolean isCompletelyOutside(BoundingSphere boundingSphere){
-		
-		// TODO: "Unreachable Code???" Maybe it's to late in the night... o.O
-		
-		for(int i = 0; 0 < 6; i++){
-			float d = distanceFromPlane(normals[i], pointsOnPlane[i], boundingSphere.getCenter());
+	public boolean isCompletelyOutside(BoundingSphere sphere){
+		for (int planeNr = 0; planeNr < 6; planeNr++){
+			float d = distanceFromPlane(normals[planeNr], pointsOnPlane[planeNr], sphere.getCenter());
 			
-			if (d >= boundingSphere.getRadius()){
+			if (d > sphere.getRadius()){
 				return true;
 			}
 		}
