@@ -19,6 +19,7 @@ import sceneGraph.GraphSceneManager;
 import sceneGraph.LightNode;
 import sceneGraph.ShapeNode;
 import sceneGraph.TransformGroup;
+import task1.NormalCube;
 import task1.RoboRenderPanel;
 import task3.LandscapeListener;
 import ex1.Cylinder;
@@ -43,17 +44,21 @@ public class ShowObjectCulling {
 		TransformGroup world = new TransformGroup();
 		
 		Shape teapot = new Shape(ObjReader.read("teapot_tex.obj", 0.5f));
+//		Shape teapot = new NormalCube().getShape();
 		
 		LightNode light = new LightNode(new PointLight(5,new Point3f(0,0,0), new Color3f(1,1,1)));
 		light.setTranslation(new Vector3f(0,2,0));
 	
 		world.addChild(light);
 		
-		for (int i = 0; i<10; i++){
-			for (int j = 0; j < 10; j++){
-				ShapeNode pot = new ShapeNode(teapot);
-				pot.setTranslation(new Vector3f(i*2,0,j*2));
-				world.addChild(pot);
+		for (int i = 0; i<20; i++){
+			for (int j = 0; j < 20; j++){
+				TransformGroup potTransform = new TransformGroup();
+				potTransform.setTranslation(new Vector3f(i*2,0,j*2));
+				potTransform.addChild(new ShapeNode(teapot));
+//				ShapeNode pot = new ShapeNode(teapot);
+				
+				world.addChild(potTransform);
 			}
 		}
 
@@ -61,9 +66,8 @@ public class ShowObjectCulling {
 
 		// Make a render panel. The init function of the renderPanel
 		// will be called back for initialization.
-		TransformGroup[] transformGroups = {};
 		Shape[] shapes = {teapot};
-		renderPanel = new RoboRenderPanel(sceneManager,shapes,transformGroups);
+		renderPanel = new SimpleRenderPanel(sceneManager,shapes);
 		
 		setupMainWindow(camera);
 	}

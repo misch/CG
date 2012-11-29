@@ -24,5 +24,6 @@ public class ShapeNode extends Leaf {
 	
 	public void setTranslation(Vector3f trans){
 		this.shape.getTransformation().setTranslation(trans);
+		System.out.println(this.shape.getTransformation().toString());
 	}
 }

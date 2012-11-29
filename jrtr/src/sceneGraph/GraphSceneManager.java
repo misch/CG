@@ -117,9 +117,14 @@ public class GraphSceneManager implements SceneManagerInterface {
 		public PointLight next()
 		{					
 			NodeWrapper top = lightStack.pop();
-			updateStack();
 			PointLight light = ((LightNode)top.node).getLight();
+			
 			light.setTransformation(top.transformation);
+			
+			if (this.hasNext()){
+				updateStack();
+			}
+			
 			return light;
 		}
 
