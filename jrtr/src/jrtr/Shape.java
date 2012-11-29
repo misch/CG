@@ -24,7 +24,7 @@ public class Shape {
 		t = new Matrix4f();
 		t.setIdentity();
 		this.material = new Material();
-		this.boundingSphere = new BoundingSphere(this);
+		this.boundingSphere = new BoundingSphere(vertexData);
 	}
 	
 	public VertexData getVertexData()

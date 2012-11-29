@@ -16,8 +16,8 @@ public class BoundingSphere {
 		this.radius = radius;
 	}
 	
-	public BoundingSphere(Shape shape){
-		VertexElement positions = getPositions(shape.getVertexData());
+	public BoundingSphere(VertexData vd){
+		VertexElement positions = getPositions(vd);
 		this.center = computeCenter(positions.getData());
 		this.radius = computeRadius(center,positions.getData());
 		
@@ -27,10 +27,10 @@ public class BoundingSphere {
 		Point3f point = new Point3f();
 		float radius = 0;
 		
-		for (int i = 0; i < positions.length; i++){
-			point.x = positions[i*3];
-			point.y = positions[i*3+1];
-			point.z = positions[i*3+2];
+		for (int i = 0; i < positions.length; i+=3){
+			point.x = positions[i];
+			point.y = positions[i+1];
+			point.z = positions[i+2];
 			
 			float distance = point.distance(center);
 			if (distance > radius){
@@ -43,11 +43,11 @@ public class BoundingSphere {
 	private Point3f computeCenter(float[] data) {
 		Point3f center = new Point3f();
 		
-		int dataLength = data.length; 
-		for (int i = 0; i < dataLength; i++){
-			center.x = data[i*3];
-			center.y = data[i*3+1];
-			center.z = data[i*3+2];
+		int dataLength = data.length;
+		for (int i = 0; i < data.length; i+=3){
+			center.x = data[i];
+			center.y = data[i+1];
+			center.z = data[i+2];
 		}
 		center.x/=(dataLength/3);
 		center.y/=(dataLength/3);
