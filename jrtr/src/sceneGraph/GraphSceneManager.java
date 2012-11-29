@@ -6,13 +6,17 @@ import java.util.List;
 import java.util.Stack;
 
 import javax.vecmath.Matrix4f;
+import javax.vecmath.Point3f;
 
+import jrtr.BoundingSphere;
 import jrtr.Camera;
 import jrtr.Frustum;
 import jrtr.PointLight;
 import jrtr.RenderItem;
 import jrtr.SceneManagerInterface;
 import jrtr.SceneManagerIterator;
+import jrtr.Shape;
+import jrtr.VertexData;
 
 public class GraphSceneManager implements SceneManagerInterface {
 
@@ -67,20 +71,24 @@ public class GraphSceneManager implements SceneManagerInterface {
 				for (Node child : nodeWrap.node.getChildren()){
 					Matrix4f new_mat = new Matrix4f();
 					new_mat.mul(nodeWrap.transformation, child.getTransformationMatrix());
-					
-					// TODO: 	if (child is TransformGroup) ==> push to stack
-					//			if (child is LightNode) ==> don't push
-					//			if (child is ShapeNode and BoundingSphere is not completely outside the frustum) ==> push to stack
-					// WATCH OUT: 	Transform coordinates into right coord-system (==> cam-coord, since the frustum
-					//				will assume being in cam-coord). ==> center of BoundingBox has to be transformed!
-					
-					if(!LightNode.class.isInstance(child)){
-						sceneGraphStack.push(new NodeWrapper(child,new_mat));
-					}
-				}
 				
-				if (sceneGraphStack.isEmpty()){
-					return new RenderItem(((ShapeNode)nodeWrap.node).getShape(), nodeWrap.transformation);
+					if (ShapeNode.class.isInstance(child)){
+						Shape shape = ((ShapeNode)child).getShape();
+						Point3f c = new Point3f(shape.getBoundingSphere().getCenter());
+						
+						child.getTransformationMatrix().transform(c);
+						new_mat.transform(c);
+						camera.getCameraMatrix().transform(c);
+						
+						if (!frustum.isCompletelyOutside(new BoundingSphere(c,shape.getBoundingSphere().getRadius()))){
+							sceneGraphStack.push(new NodeWrapper(child,new_mat));
+						}
+					}
+					else{
+						if(!LightNode.class.isInstance(child)){
+							sceneGraphStack.push(new NodeWrapper(child,new_mat));
+						}
+					}
 				}
 			}
 			

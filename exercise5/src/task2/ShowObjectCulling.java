@@ -29,6 +29,8 @@ public class ShowObjectCulling {
 	static RenderContext renderContext;
 	static GraphSceneManager sceneManager;
 	static Shape shape;
+	static final int MAX_X = 20;
+	static final int MAX_Z = 20;
 
 	/**
 	 * The main function opens a 3D rendering window, constructs a simple 3D
@@ -44,11 +46,10 @@ public class ShowObjectCulling {
 		TransformGroup world = new TransformGroup();
 		
 		Shape teapot = new Shape(ObjReader.read("teapot_tex.obj", 0.5f));
-//		Shape teapot = new NormalCube().getShape();
+				
+		LightNode light = new LightNode(new PointLight(500,new Point3f(0,0,0), new Color3f((float)Math.random(),(float)Math.random(),(float)Math.random())));
+		light.setTranslation(new Vector3f(10,10,10));
 		
-		LightNode light = new LightNode(new PointLight(5,new Point3f(0,0,0), new Color3f(1,1,1)));
-		light.setTranslation(new Vector3f(0,2,0));
-	
 		world.addChild(light);
 		
 		for (int i = 0; i<20; i++){
@@ -56,7 +57,6 @@ public class ShowObjectCulling {
 				TransformGroup potTransform = new TransformGroup();
 				potTransform.setTranslation(new Vector3f(i*2,0,j*2));
 				potTransform.addChild(new ShapeNode(teapot));
-//				ShapeNode pot = new ShapeNode(teapot);
 				
 				world.addChild(potTransform);
 			}

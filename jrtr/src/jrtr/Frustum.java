@@ -43,58 +43,65 @@ public class Frustum {
 		this.verticalFieldOfView = verticalFieldOfView;
 		
 		computeProjMatrix();
+		computeNormals();
 	}
 	
 	private void computeNormals(){
 		Vector3f[] normals = new Vector3f[6];
+		Point3f[] pointsOnPlane = new Point3f[6];
 		
+		// near plane 
 		normals[0] = new Vector3f(0,0,1);
+		pointsOnPlane[0] = new Point3f(0,0,-nearPlane);
 	
+		// upper plane
 		normals[1] = new Vector3f(0,1,0); // rotiere um -verticalFieldOfView/2 um die x-achse
 		Matrix4f rot = new Matrix4f();
 		rot.rotX(verticalFieldOfView/2);
 		rot.transform(normals[1]);
+		pointsOnPlane[1] = new Point3f(0,0,0);
 		
+		// lower plane
 		normals[2] = new Vector3f(0,-1,0); // rotiere um -verticalFieldOfView/2 um die x-achse 
+		rot.setIdentity();
 		rot.rotX(-verticalFieldOfView/2);
 		rot.transform(normals[2]);
+		pointsOnPlane[2] = new Point3f(0,0,0);
 		
+		// right plane
 		float horizontalFieldOfView = computeHFieldOfView(verticalFieldOfView, nearPlane, aspectRatio);
 		
 		normals[3] = new Vector3f(1,0,0); // rotiere um hFieldOfView/2 um die y-achse
-		rot.rotY(horizontalFieldOfView/2);
-		rot.transform(normals[3]);
-		
-		normals[4] = new Vector3f(-1,0,0); // rotiere um -hFieldOfView/2 um die y-achse
+		rot.setIdentity();
 		rot.rotY(-horizontalFieldOfView/2);
-		rot.transform(normals[4]);
+		rot.transform(normals[3]);
+		pointsOnPlane[3] = new Point3f(0,0,0);
 		
+		
+		// left plane
+		normals[4] = new Vector3f(-1,0,0); // rotiere um -hFieldOfView/2 um die y-achse
+		rot.setIdentity();
+		rot.rotY(horizontalFieldOfView/2);
+		rot.transform(normals[4]);
+		pointsOnPlane[4] = new Point3f(0,0,0);
+		
+		// far plane
 		normals[5] = new Vector3f(0,0,-1);
+		pointsOnPlane[5] = new Point3f(0,0,-farPlane);
+		
+	
 
 		this.normals = normals;
-	}
-	
-	private void pointsOnPlane(){
-		Point3f[] pointsOnPlane = new Point3f[6];
-		
-		pointsOnPlane[0] = new Point3f(0,0,-nearPlane);
-		pointsOnPlane[1] = new Point3f(0,0,-farPlane);
-		pointsOnPlane[2] = new Point3f(0,0,0);
-		pointsOnPlane[3] = new Point3f(0,0,0);
-		pointsOnPlane[4] = new Point3f(0,0,0);
-		pointsOnPlane[5] = new Point3f(0,0,0);
-		
 		this.pointsOnPlane = pointsOnPlane;
 	}
-	
 	
 	private float computeHFieldOfView(float verticalFieldOfView,
 			float nearPlane, float aspectRatio) {
 		
-		float nearHalfHeight = (float)Math.tan(verticalFieldOfView/2) * nearPlane;
+		float nearHalfHeight = (float)Math.tan(verticalFieldOfView/2);
 		float nearHalfWidth = aspectRatio * nearHalfHeight;
 		
-		float horizontalHalfFieldOfView = (float)Math.atan(nearHalfWidth/nearPlane);
+		float horizontalHalfFieldOfView = (float)Math.atan(nearHalfWidth);
 		
 		return horizontalHalfFieldOfView*2;
 	}
@@ -115,24 +122,28 @@ public class Frustum {
 
 	public void setFarPlane(float farPlane) {
 		this.farPlane = farPlane;
-		computeProjMatrix();
+		update();
 	}
 
 	public void setVerticalFieldOfView(float verticalFieldOfView) {
 		this.verticalFieldOfView = verticalFieldOfView;
-		computeProjMatrix();
+		update();
 	}
 
 	public void setAspectRatio(float aspectRatio) {
 		this.aspectRatio = aspectRatio;
-		computeProjMatrix();
+		update();
 	}
 
 	public void setNearPlane(float nearPlane) {
 		this.nearPlane = nearPlane;
-		computeProjMatrix();
+		update();
 	}
 
+	private void update(){
+		computeProjMatrix();
+		computeNormals();
+	}
 	public float getVerticalFieldOfView() {
 		return verticalFieldOfView;
 	}
@@ -163,7 +174,6 @@ public class Frustum {
 	public boolean isCompletelyOutside(BoundingSphere sphere){
 		for (int planeNr = 0; planeNr < 6; planeNr++){
 			float d = distanceFromPlane(normals[planeNr], pointsOnPlane[planeNr], sphere.getCenter());
-			
 			if (d > sphere.getRadius()){
 				return true;
 			}
@@ -172,14 +182,9 @@ public class Frustum {
 	}
 	
 	private float distanceFromPlane(Vector3f normal, Point3f pointOnPlane, Point3f centerOfSphere){
-		float distance = 0;
-		
-		Vector3f x = new Vector3f(centerOfSphere);
-		Vector3f p = new Vector3f(pointOnPlane);
-		Vector3f n = new Vector3f(normal);
-		
-		x.sub(p);
-		distance = x.dot(n);
+		Vector3f dist = new Vector3f();
+		dist.sub(centerOfSphere,pointOnPlane);
+		float distance = normal.dot(dist);
 		return distance;	
 	}
 }

@@ -145,11 +145,11 @@ public class ShowRobot {
 		
 		leftUpperArm.addChild(leftElbow,upperArm);
 		leftElbow.addChild(leftLowerArm);
-		leftLowerArm.addChild(lowerArm);
+		leftLowerArm.addChild(lowerArm,handLight);
 		
 		rightUpperArm.addChild(rightElbow,upperArm);
 		rightElbow.addChild(rightLowerArm);
-		rightLowerArm.addChild(lowerArm,handLight);
+		rightLowerArm.addChild(lowerArm);
 		
 		rightHip.addChild(rightUpperLeg);
 		leftHip.addChild(leftUpperLeg);
