@@ -10,9 +10,9 @@ import javax.vecmath.Vector3f;
 
 /**
  * This class represents a geometric object that is stored in a mesh structure.
- * Each vertix knows its adjacent vertices, edges and faces
+ * Each vertex knows its adjacent vertices, edges and faces
  * 
- * @author CGG\indermÃ¼hle
+ * @author CGG\indermühle
  * 
  */
 public class MeshData {
