@@ -21,10 +21,24 @@ public class BezierCurve {
 														 // (start and end point not included)
 	}
 	
-	private Point2f[] approximateCurve(){
+	private Point2f[] approximateCurve(){ 
+		Point2f[] interpolatedPoints = new Point2f[roughness+segments+1]; 	// points on the curve
+																			// + the end point of each segment (which is the start point of the next one)
+																			// + the start point of the first segment
+		
+		interpolatedPoints[0] = controlPoints[0];																	
 		float interpolationStep = 1/(roughness+1);
-		deCasteljau(interpolationStep);
-		return null;
+		int counter = 1;
+		for (float i = interpolationStep; i<=1; i+=interpolationStep){
+			if (counter < interpolatedPoints.length){
+				interpolatedPoints[counter] = deCasteljau(i);
+				counter++;
+			}
+			else{
+				System.out.println("... This is not good! N-O-T  G-O-O-D-!-!-!");
+			}
+		}
+		return interpolatedPoints;
 	}
 
 	private Point2f deCasteljau(float interpolationStep) {
