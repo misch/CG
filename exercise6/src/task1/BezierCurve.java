@@ -3,6 +3,8 @@ package task1;
 import javax.vecmath.Point2f;
 import javax.vecmath.Vector2f;
 
+import jogamp.graph.math.MathFloat;
+
 public class BezierCurve {
 	private Point2f[] controlPoints;
 	private int segments;
@@ -25,31 +27,32 @@ public class BezierCurve {
 		return null;
 	}
 
-	private void deCasteljau(float interpolationStep) {
+	private Point2f deCasteljau(float interpolationStep) {
 		// first curve
-		Point2f q0 = lerp(interpolationStep,controlPoints[0],controlPoints[1]);
-		Point2f q1 = lerp(interpolationStep,controlPoints[1],controlPoints[2]);
-		Point2f q2 = lerp(interpolationStep,controlPoints[2],controlPoints[3]);
+		float[] bernstein = cubicBernstein(interpolationStep);
 		
-		// second curve
-		Point2f p0 = lerp(interpolationStep,controlPoints[3],controlPoints[4]);
-		Point2f p1 = lerp(interpolationStep,controlPoints[4],controlPoints[5]);
-		Point2f p2 = lerp(interpolationStep,controlPoints[5],controlPoints[6]);
-	
-		//...
+		Point2f interpolated = new Point2f();
 		
+		for (int i = 0; i<4; i++){
+			Point2f controlPoint = new Point2f(controlPoints[i]);
+			controlPoint.scale(bernstein[i]);
+			interpolated.add(controlPoint);
+		}
 		
+		return interpolated;
 	}
-
-	private Point2f lerp(float interpolationStep, Point2f point, Point2f nextPoint) {
+	
+	private float[] cubicBernstein(float t){
+		float[] cubicBernsteinPolynomials = new float[4];
+		cubicBernsteinPolynomials[0] = pow(t,3) + 3*pow(t,2) - 3*t + 1;
+		cubicBernsteinPolynomials[1] = 3*pow(t,3)-6*pow(t,2)+3*t;
+		cubicBernsteinPolynomials[2] = -3*pow(t,3) + 3*pow(t,2);
+		cubicBernsteinPolynomials[3] = pow(t,3);
 		
-		Vector2f direction = new Vector2f(nextPoint);
-		direction.sub(point);
-		float distance = interpolationStep * direction.length();
-		Point2f finalPoint = new Point2f(point);
-		direction.normalize();
-		direction.scale(distance);
-		finalPoint.add(direction);
-		return finalPoint;
+		return cubicBernsteinPolynomials;
+	}
+	
+	private float pow(float x, float y){
+		return MathFloat.pow(x,y);
 	}
 }
