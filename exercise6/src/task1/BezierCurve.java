@@ -28,17 +28,17 @@ public class BezierCurve {
 	}
 
 	private Point2f deCasteljau(float interpolationStep) {
-		// first curve
 		float[] bernstein = cubicBernstein(interpolationStep);
 		
 		Point2f interpolated = new Point2f();
 		
-		for (int i = 0; i<4; i++){
-			Point2f controlPoint = new Point2f(controlPoints[i]);
-			controlPoint.scale(bernstein[i]);
-			interpolated.add(controlPoint);
+		for (int j = 0; j < this.segments; j++){			
+			for (int i = 0; i < 4; i++){
+				Point2f controlPoint = new Point2f(controlPoints[j*3+i]);
+				controlPoint.scale(bernstein[i]);
+				interpolated.add(controlPoint);
+			}
 		}
-		
 		return interpolated;
 	}
 	
