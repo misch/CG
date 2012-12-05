@@ -26,7 +26,16 @@ public class BezierCurve {
 	}
 
 	private void deCasteljau(float interpolationStep) {
+		// first curve
 		Point2f q0 = lerp(interpolationStep,controlPoints[0],controlPoints[1]);
+		Point2f q1 = lerp(interpolationStep,controlPoints[1],controlPoints[2]);
+		Point2f q2 = lerp(interpolationStep,controlPoints[2],controlPoints[3]);
+		
+		// second curve
+		Point2f p0 = lerp(interpolationStep,controlPoints[3],controlPoints[4]);
+		Point2f p1 = lerp(interpolationStep,controlPoints[4],controlPoints[5]);
+		Point2f p2 = lerp(interpolationStep,controlPoints[5],controlPoints[6]);
+	
 		//...
 		
 		
