@@ -1,7 +1,6 @@
 package task1;
 
 import javax.vecmath.Point2f;
-import javax.vecmath.Vector2f;
 
 import jogamp.graph.math.MathFloat;
 
@@ -9,6 +8,7 @@ public class BezierCurve {
 	private Point2f[] controlPoints;
 	private int segments;
 	private int roughness;
+	private Point2f[] interpolatedPoints;
 	
 	public BezierCurve(
 	int numberOfBezierSegments, 
@@ -19,6 +19,16 @@ public class BezierCurve {
 		this.controlPoints = controlPointsInXYPlane;
 		this.roughness = numberOfEvaluatedPointsOnCurve; // number of evaluated points on the curve
 														 // (start and end point not included)
+		this.setInterpolatedPoints(approximateCurve());
+	}
+	
+	public BezierCurve(){
+		this(1,defaultControlPoints(),1);
+	}
+	
+	private static Point2f[] defaultControlPoints(){
+		Point2f[] controlPoints = {new Point2f(1,0), new Point2f(1,0.25f), new Point2f(1,0.75f), new Point2f(1,1)};
+		return controlPoints;
 	}
 	
 	private Point2f[] approximateCurve(){ 
@@ -27,10 +37,12 @@ public class BezierCurve {
 																			// + the start point of the first segment
 		
 		interpolatedPoints[0] = controlPoints[0];																	
-		float interpolationStep = 1/(roughness+1);
+		float interpolationStep = 1f/(roughness+1);
+		
 		int counter = 1;
 		for (float i = interpolationStep; i<=1; i+=interpolationStep){
-			if (counter < interpolatedPoints.length){
+
+		if (counter < interpolatedPoints.length){
 				interpolatedPoints[counter] = deCasteljau(i);
 				counter++;
 			}
@@ -68,5 +80,13 @@ public class BezierCurve {
 	
 	private float pow(float x, float y){
 		return MathFloat.pow(x,y);
+	}
+
+	public Point2f[] getInterpolatedPoints() {
+		return interpolatedPoints;
+	}
+
+	public void setInterpolatedPoints(Point2f[] interpolatedPoints) {
+		this.interpolatedPoints = interpolatedPoints;
 	}
 }

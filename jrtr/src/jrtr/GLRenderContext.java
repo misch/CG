@@ -34,7 +34,7 @@ public class GLRenderContext implements RenderContext {
         // Load and use default shader
         GLShader defaultShader = new GLShader(gl);
         try {
-//        	defaultShader.load("../jrtr/shaders/default.vert","../jrtr/shaders/default.frag");
+        	defaultShader.load("../jrtr/shaders/default.vert","../jrtr/shaders/default.frag");
 //        	defaultShader.load("../jrtr/shaders/normal.vert","../jrtr/shaders/normal.frag");
 //        	defaultShader.load("../jrtr/shaders/diffuse.vert","../jrtr/shaders/diffuse.frag");
 //        	defaultShader.load("../jrtr/shaders/diffusePointLights.vert","../jrtr/shaders/diffusePointLights.frag");

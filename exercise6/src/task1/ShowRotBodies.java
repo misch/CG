@@ -20,7 +20,6 @@ import sceneGraph.ShapeNode;
 import sceneGraph.TransformGroup;
 import task2.SimpleRenderPanel;
 import task3.LandscapeListener;
-//import ex1.Cylinder;
 
 public class ShowRotBodies {
 		static RenderPanel renderPanel;
@@ -42,31 +41,27 @@ public class ShowRotBodies {
 			Frustum	frustum = new Frustum(1,100,1,(float)(Math.PI/3));
 		
 			TransformGroup world = new TransformGroup();
-	
-//			ShapeNode	
-//						corpus = new ShapeNode(new Cylinder(50,bodyHeight,bodyDiam).getShape()),
-//						upperArm = new ShapeNode(new Cylinder(50,upperArmLength,armDiam).getShape()),
-//						lowerArm = new ShapeNode(new Cylinder(50,lowerArmLength,armDiam).getShape()),
-//						upperLeg = new ShapeNode(new Cylinder(50, upperLegLength, legDiam).getShape()),
-//						lowerLeg = new ShapeNode(new Cylinder(50, lowerLegLength, legDiam).getShape()),
-//						headShape = new ShapeNode(new Cylinder(50, headHeight, headDiam).getShape()),
-//						floorShape = new ShapeNode(new Cylinder(50,0.2f,50).getShape());
+			
+			RotationalBody rotBody = new RotationalBody(new BezierCurve(),4);
+			Shape rotShape = rotBody.getShape();
+			
+			ShapeNode cyl = new ShapeNode(rotShape);
 					
 			LightNode handLight = new LightNode(new PointLight(20,new Point3f(0,0,0), new Color3f(1,1,1)));
 			handLight.setTranslation(new Vector3f(0,-0.3f,0));
-			
-		
 
 			// build graph	
+			world.addChild(cyl);
 			
 			
-			Shape[] shapes = {};
+			sceneManager = new GraphSceneManager(world,camera,frustum);
+			Shape[] shapes = {rotShape};
 			renderPanel = new SimpleRenderPanel(sceneManager,shapes);
-			setupMainWindow(camera);
+			setupMainWindow(camera,"Rotational Body");
 		}
 		
-		private static void setupMainWindow(Camera camera) {
-			JFrame jframe = new JFrame("robo");
+		private static void setupMainWindow(Camera camera, String name) {
+			JFrame jframe = new JFrame(name);
 			jframe.setSize(700, 700);
 			jframe.setLocationRelativeTo(null); // center of screen
 			jframe.getContentPane().add(renderPanel.getCanvas());// put the canvas into a JFrame window
