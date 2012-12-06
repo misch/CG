@@ -47,7 +47,7 @@ public class ShowRotBodies {
 			
 			ShapeNode cyl = new ShapeNode(rotShape);
 					
-			LightNode handLight = new LightNode(new PointLight(20,new Point3f(0,0,0), new Color3f(1,1,1)));
+			LightNode handLight = new LightNode(new PointLight(80,new Point3f(0,5,0), new Color3f(1,1,1)));
 			handLight.setTranslation(new Vector3f(0,-0.3f,0));
 
 			// build graph	

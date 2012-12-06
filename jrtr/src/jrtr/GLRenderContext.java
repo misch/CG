@@ -166,11 +166,10 @@ public class GLRenderContext implements RenderContext {
 			// Copy vertex data into float buffer
 			VertexData.VertexElement e = itr.next();
 			int dim = e.getNumberOfComponents();
-
 	        FloatBuffer varr = FloatBuffer.allocate(indices.length * dim);
 	        for (int i = 0; i < indices.length; i++) {
-	            for (int j = 0; j < dim; j++) {
-	                varr.put(e.getData()[dim * indices[i] + j]);
+	        	for (int j = 0; j < dim; j++) {
+	        		varr.put(e.getData()[dim * indices[i] + j]);
 	            }
 	        }
 	        	        
