@@ -30,7 +30,6 @@ public class RotationalBody extends AbstractSimpleShape{
 		ArrayList<Float> colors = new ArrayList<Float>();
 		
 		Point4f[] pointsToRotate = this.curve.getInterpolatedPoints();
-		
 		for (float angle = 0; angle<2*PI; angle+=this.step){
 			for(int i = 0; i<pointsToRotate.length; i++){
 				rot.rotY(angle);
@@ -38,7 +37,7 @@ public class RotationalBody extends AbstractSimpleShape{
 				rot.transform(point);
 
 				addVertex(vertices, point);
-				addColor(colors, new Color3f(1,0,0));
+				addColor(colors, new Color3f((float)Math.random(),(float)Math.random(),(float)Math.random()));
 			}
 		}
 		this.vertices = vertices;
@@ -51,9 +50,10 @@ public class RotationalBody extends AbstractSimpleShape{
 		int vertN = this.vertices.size()/3;
 		int heightVertN = vertN/numberOfAngleSteps; // Anzahl Vertices übereinander
 		
+
 		for (int i = 0; i < numberOfAngleSteps;i++){
 			for (int j = 0; j < heightVertN-1; j++){
-				int botLeft = i*(numberOfAngleSteps-1)+j;
+				int botLeft = i*(numberOfAngleSteps-(numberOfAngleSteps-3))+j;
 				int topLeft = (botLeft+1)%vertN;
 				int botRight = (botLeft + heightVertN)%vertN;
 				int topRight = (botRight + 1)%vertN;
@@ -67,9 +67,4 @@ public class RotationalBody extends AbstractSimpleShape{
 		addTriangle(ind,topLeft,botLeft,topRight);
 		addTriangle(ind,topRight,botLeft,botRight);
 	}
-	
-	@Override
-	protected float x(float u, float v) {return 0;}
-	protected float y(float u, float v) {return 0;}
-	protected float z(float u, float v) {return 0;}
 }

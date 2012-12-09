@@ -124,7 +124,7 @@ public abstract class AbstractSimpleShape implements IForm {
 	}
 	
 	
-	protected abstract float x(float u, float v);
-	protected abstract float y(float u, float v);
-	protected abstract float z(float u, float v);
+	protected float x(float u, float v){return 0;}
+	protected float y(float u, float v){return 0;}
+	protected float z(float u, float v){return 0;}
 }
