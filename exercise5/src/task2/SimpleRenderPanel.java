@@ -40,8 +40,8 @@ public class SimpleRenderPanel extends GLRenderPanel {
 		Texture texture = renderContext.makeTexture();
 		Shader shader = renderContext.makeShader();
 		
-		String vertShaderPath = "../jrtr/shaders/phongWithoutTexture.vert";
-		String fragShaderPath = "../jrtr/shaders/phongWithoutTexture.frag";
+		String vertShaderPath = "../jrtr/shaders/default.vert";
+		String fragShaderPath = "../jrtr/shaders/default.frag";
 		String texturePath = "../jrtr/textures/metall.jpg";
 		
 		try{

@@ -1,6 +1,8 @@
 package task1;
 
+import javax.vecmath.Matrix4f;
 import javax.vecmath.Point2f;
+import javax.vecmath.Point4f;
 
 import jogamp.graph.math.MathFloat;
 
@@ -8,7 +10,12 @@ public class BezierCurve {
 	private Point2f[] controlPoints;
 	private int segments;
 	private int roughness;
-	private Point2f[] interpolatedPoints;
+	private Point4f[] interpolatedPoints;
+	private Matrix4f bernstein = new Matrix4f(-1, 3,-3, 1,
+											   3,-6, 3, 0,
+											  -3, 3, 0, 0,
+											   1, 0, 0, 0);
+	private Matrix4f[] preComputed;
 	
 	public BezierCurve(
 	int numberOfBezierSegments, 
@@ -19,7 +26,8 @@ public class BezierCurve {
 		this.controlPoints = controlPointsInXYPlane;
 		this.roughness = numberOfEvaluatedPointsOnCurve; // number of evaluated points on the curve
 														 // (start and end point not included)
-		this.setInterpolatedPoints(approximateCurve());
+		this.preComputed = preComputeC();
+		this.interpolatedPoints = approximateCurve();
 	}
 	
 	public BezierCurve(){
@@ -31,62 +39,43 @@ public class BezierCurve {
 		return controlPoints;
 	}
 	
-	private Point2f[] approximateCurve(){ 
-		Point2f[] interpolatedPoints = new Point2f[roughness+segments+1]; 	// points on the curve
-																			// + the end point of each segment (which is the start point of the next one)
-																			// + the start point of the first segment
+	private Point4f[] approximateCurve(){
+		Point4f[] interpolatedPoints = new Point4f[roughness * segments + segments + 1];
 		
-		interpolatedPoints[0] = controlPoints[0];																	
 		float interpolationStep = 1f/(roughness+1);
-		
-		int counter = 1;
-		for (float i = interpolationStep; i<=1; i+=interpolationStep){
-
-		if (counter < interpolatedPoints.length){
-				interpolatedPoints[counter] = deCasteljau(i);
-				counter++;
-			}
-			else{
-				System.out.println("... This is not good! N-O-T  G-O-O-D-!-!-!");
+		for (int segment = 0; segment < this.segments; segment++){
+			interpolatedPoints[0] = new Point4f(controlPoints[segment*3].x, controlPoints[segment*3].y,0,0);
+			int counter = 1;
+			for (float i = interpolationStep; i<=1; i+=interpolationStep){
+				Point4f interpolated = new Point4f(pow(i,3),pow(i,2),i,1);
+				this.preComputed[segment].transform(interpolated);
+				interpolatedPoints[segment+counter] = new Point4f(interpolated);
+				counter ++;
 			}
 		}
+		
 		return interpolatedPoints;
 	}
 
-	private Point2f deCasteljau(float interpolationStep) {
-		float[] bernstein = cubicBernstein(interpolationStep);
-		
-		Point2f interpolated = new Point2f();
-		
+	private Matrix4f[] preComputeC() {
+		Matrix4f[] controlPointMatrices = new Matrix4f[this.segments];
 		for (int j = 0; j < this.segments; j++){			
-			for (int i = 0; i < 4; i++){
-				Point2f controlPoint = new Point2f(controlPoints[j*3+i]);
-				controlPoint.scale(bernstein[i]);
-				interpolated.add(controlPoint);
+			Matrix4f controlMatrix = new Matrix4f();
+			for (int i = 0; i<4; i++){
+				controlMatrix.setColumn(i, controlPoints[j*3+i].x, controlPoints[j*3+i].y, 0,0);
 			}
+			
+			controlMatrix.mul(this.bernstein);
+			controlPointMatrices[j] = controlMatrix;
 		}
-		return interpolated;
-	}
-	
-	private float[] cubicBernstein(float t){
-		float[] cubicBernsteinPolynomials = new float[4];
-		cubicBernsteinPolynomials[0] = pow(t,3) + 3*pow(t,2) - 3*t + 1;
-		cubicBernsteinPolynomials[1] = 3*pow(t,3)-6*pow(t,2)+3*t;
-		cubicBernsteinPolynomials[2] = -3*pow(t,3) + 3*pow(t,2);
-		cubicBernsteinPolynomials[3] = pow(t,3);
-		
-		return cubicBernsteinPolynomials;
+		return controlPointMatrices;
 	}
 	
 	private float pow(float x, float y){
 		return MathFloat.pow(x,y);
 	}
 
-	public Point2f[] getInterpolatedPoints() {
+	public Point4f[] getInterpolatedPoints() {
 		return interpolatedPoints;
-	}
-
-	public void setInterpolatedPoints(Point2f[] interpolatedPoints) {
-		this.interpolatedPoints = interpolatedPoints;
 	}
 }

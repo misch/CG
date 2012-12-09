@@ -4,11 +4,8 @@ import java.util.ArrayList;
 
 import javax.vecmath.Color3f;
 import javax.vecmath.Matrix4f;
-import javax.vecmath.Point2f;
 import javax.vecmath.Point3f;
-
-import jogamp.graph.math.MathFloat;
-
+import javax.vecmath.Point4f;
 import ex1.AbstractSimpleShape;
 
 public class RotationalBody extends AbstractSimpleShape{
@@ -29,49 +26,44 @@ public class RotationalBody extends AbstractSimpleShape{
 
 	private void setVertices(){
 		Matrix4f rot = new Matrix4f();
-		rot.setIdentity();
-		rot.rotY(this.step);
 		ArrayList<Float> vertices = new ArrayList<Float>();
 		ArrayList<Float> colors = new ArrayList<Float>();
 		
-		Point2f[] pointsToRotate = this.curve.getInterpolatedPoints();
+		Point4f[] pointsToRotate = this.curve.getInterpolatedPoints();
 		
 		for (float angle = 0; angle<2*PI; angle+=this.step){
 			for(int i = 0; i<pointsToRotate.length; i++){
+				rot.rotY(angle);
 				Point3f point = new Point3f(pointsToRotate[i].x, pointsToRotate[i].y,0);
 				rot.transform(point);
 
 				addVertex(vertices, point);
-				addColor(colors, new Color3f(1,1,1));
+				addColor(colors, new Color3f(1,0,0));
 			}
 		}
-		
 		this.vertices = vertices;
 		this.colors = colors;
 	}
 	
 	private void createTriangleMesh(){
 		ArrayList<Integer> ind = new ArrayList<Integer>();
+	
+		int vertN = this.vertices.size()/3;
+		int heightVertN = vertN/numberOfAngleSteps; // Anzahl Vertices übereinander
 		
-		addRectangle(ind, 0,1,3,4);
-		addRectangle(ind, 3,4,6,7);
-		addRectangle(ind, 6,7,9,10);
-		addRectangle(ind, 9,10,0,1);
-		
-		addRectangle(ind, 1,2,4,5);
-		addRectangle(ind, 4,5,7,8);
-		addRectangle(ind, 7,8,10,11);
-		addRectangle(ind, 10,11,1,2);
-		
-//		addRectangle(ind, 2,3,6,7);
-//		addRectangle(ind, 6,7,10,11);
-//		addRectangle(ind, 10,11,14,15);
-//		addRectangle(ind, 14,15,2,3);
-		
+		for (int i = 0; i < numberOfAngleSteps;i++){
+			for (int j = 0; j < heightVertN-1; j++){
+				int botLeft = i*(numberOfAngleSteps-1)+j;
+				int topLeft = (botLeft+1)%vertN;
+				int botRight = (botLeft + heightVertN)%vertN;
+				int topRight = (botRight + 1)%vertN;
+				addRectangle(ind, botLeft, topLeft, botRight, topRight);
+			}			
+		}
 		this.indices = ind;
 	}
 	
-	private void addRectangle(ArrayList<Integer> ind, int topRight, int botRight, int topLeft, int botLeft){
+	private void addRectangle(ArrayList<Integer> ind, int botLeft, int topLeft, int botRight, int topRight){
 		addTriangle(ind,topLeft,botLeft,topRight);
 		addTriangle(ind,topRight,botLeft,botRight);
 	}
