@@ -37,17 +37,23 @@ public class ShowRotBodies {
 		
 			TransformGroup world = new TransformGroup();
 			
-//			Point2f[] controlPoints = {	new Point2f(1,-1), new Point2f(1,-0.75f), 
-//										new Point2f(1,-0.25f), new Point2f(1,0),
-//										new Point2f(1,0.25f), new Point2f(1,0.75f),
-//										new Point2f(1,1)};
-			Point2f[] controlPoints = {new Point2f(1,0),
-					new Point2f(1,0.25f), new Point2f(1,0.75f),
-					new Point2f(1,1)};
+			Point2f[] tablePoints = {
+					p(3,0),p(1.5,0.5),p(0.5,1.5),
+					p(0.2,2),p(0.2,3),p(0.2,4),
+					p(0.2,5),p(2,5),p(2.5,5),
+					p(3,5)};
+			Point2f[] controlPoints = {	new Point2f(1,-1), new Point2f(1,-0.75f), 
+										new Point2f(1,-0.25f), new Point2f(1,0),
+										new Point2f(1,0.25f), new Point2f(1,0.75f),
+										new Point2f(1,1)};
+//			Point2f[] controlPoints = {new Point2f(1,0),
+//					new Point2f(1,0.25f), new Point2f(1,0.75f),
+//					new Point2f(1,1)};
 
 			
-//			RotationalBody rotBody = new RotationalBody(new BezierCurve(2,controlPoints,1),5);
-			RotationalBody rotBody = new RotationalBody(new BezierCurve(1,controlPoints,1),10);
+//			RotationalBody rotBody = new RotationalBody(new BezierCurve(2,controlPoints,3),5);
+//			RotationalBody rotBody = new RotationalBody(new BezierCurve(1,controlPoints,4),10);
+			RotationalBody rotBody = new RotationalBody(new BezierCurve(3,tablePoints,50),50);
 			Shape rotShape = rotBody.getShape();
 			
 			ShapeNode cyl = new ShapeNode(rotShape);
@@ -59,6 +65,11 @@ public class ShowRotBodies {
 			Shape[] shapes = {};
 			renderPanel = new SimpleRenderPanel(sceneManager,shapes);
 			setupMainWindow(camera,"Rotational Body");
+		}
+		
+		private static Point2f p(double x, double y){
+			Point2f point = new Point2f((float)x,(float)y);
+			return point;
 		}
 		
 		private static void setupMainWindow(Camera camera, String name) {
