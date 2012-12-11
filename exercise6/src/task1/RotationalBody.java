@@ -38,6 +38,7 @@ public class RotationalBody extends AbstractSimpleShape{
 				rot.rotY(angle);
 				Point3f point = new Point3f(pointsToRotate[i].x, pointsToRotate[i].y,0);
 				Vector3f normal = new Vector3f(-tangents[i].y,tangents[i].x,0);
+				normal.normalize();
 				
 				
 				rot.transform(point);

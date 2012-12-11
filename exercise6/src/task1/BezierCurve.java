@@ -40,7 +40,6 @@ public class BezierCurve {
 		for (int i = 0; i<tangents.length; i++){
 			Vector4f tangent = new Vector4f(interpolatedPoints[(i+1)% tangents.length]);
 			tangent.sub(interpolatedPoints[i]);
-			tangent.normalize();
 			tangents[i]=tangent;
 		}		
 		return tangents;
