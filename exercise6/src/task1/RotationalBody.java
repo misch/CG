@@ -26,22 +26,19 @@ public class RotationalBody extends AbstractSimpleShape{
 
 	private void setVertices(){
 		Matrix4f rot = new Matrix4f();
-		ArrayList<Float> vertices = new ArrayList<Float>();
-		ArrayList<Float> colors = new ArrayList<Float>();
 		
 		Point4f[] pointsToRotate = this.curve.getInterpolatedPoints();
 		for (float angle = 0; angle<2*PI; angle+=this.step){
+			Color3f col = new Color3f((float)Math.random(),(float)Math.random(),(float)Math.random());
 			for(int i = 0; i<pointsToRotate.length; i++){
 				rot.rotY(angle);
 				Point3f point = new Point3f(pointsToRotate[i].x, pointsToRotate[i].y,0);
 				rot.transform(point);
 
-				addVertex(vertices, point);
-				addColor(colors, new Color3f((float)Math.random(),(float)Math.random(),(float)Math.random()));
+				addVertex(this.vertices, point);
+				addColor(this.colors, col);
 			}
 		}
-		this.vertices = vertices;
-		this.colors = colors;
 	}
 	
 	private void createTriangleMesh(){

@@ -12,10 +12,10 @@ import jrtr.VertexData;
 
 
 public abstract class AbstractSimpleShape implements IForm {
-	protected ArrayList<Float> vertices;
+	protected ArrayList<Float> vertices = new ArrayList<Float>();
 	protected ArrayList<Float> colors = new ArrayList<Float>(); 
 	protected ArrayList<Float> normals = new ArrayList<Float>(); 
-	protected ArrayList<Integer> indices;
+	protected ArrayList<Integer> indices = new ArrayList<Integer>();
 	protected ArrayList<Float> texels = new ArrayList<Float>();
 	
 	protected float u,v;

@@ -3,6 +3,7 @@ package task1;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Point2f;
 import javax.vecmath.Point4f;
+import javax.vecmath.Vector4f;
 
 import jogamp.graph.math.MathFloat;
 
@@ -11,6 +12,7 @@ public class BezierCurve {
 	private int segments;
 	private int roughness;
 	private Point4f[] interpolatedPoints;
+	private Vector4f[] tangents;
 	private Matrix4f bernstein = new Matrix4f(-1, 3,-3, 1,
 											   3,-6, 3, 0,
 											  -3, 3, 0, 0,
@@ -28,8 +30,22 @@ public class BezierCurve {
 														 // (start and end point not included)
 		this.preComputed = preComputeC();
 		this.interpolatedPoints = approximateCurve();
+		this.tangents = computeTangents();
+
 	}
 	
+	private Vector4f[] computeTangents() {
+		Vector4f[] tangents = new Vector4f[this.interpolatedPoints.length];
+		
+		for (int i = 0; i<tangents.length; i++){
+			Vector4f tangent = new Vector4f(interpolatedPoints[(i+1)% tangents.length]);
+			tangent.sub(interpolatedPoints[i]);
+			tangent.normalize();
+			tangents[i]=tangent;
+		}		
+		return tangents;
+	}
+
 	public BezierCurve(){
 		this(1,defaultControlPoints(),1);
 	}
@@ -49,12 +65,9 @@ public class BezierCurve {
 				Point4f interpolated = new Point4f(pow(t,3),pow(t,2),t,1);
 				this.preComputed[segment].transform(interpolated);
 				interpolatedPoints[segment*(roughness+1) + counter] = new Point4f(interpolated);
-				int test = segment*(roughness+1) + counter;
-				System.out.println(test);
 				counter++;
 			}
 		}
-		
 		return interpolatedPoints;
 	}
 
@@ -78,5 +91,9 @@ public class BezierCurve {
 
 	public Point4f[] getInterpolatedPoints() {
 		return interpolatedPoints;
+	}
+	
+	public Vector4f[] getTangents(){
+		return tangents;
 	}
 }

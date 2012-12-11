@@ -56,10 +56,18 @@ public class ShowRotBodies {
 			RotationalBody rotBody = new RotationalBody(new BezierCurve(3,tablePoints,50),50);
 			Shape rotShape = rotBody.getShape();
 			
-			ShapeNode cyl = new ShapeNode(rotShape);
+			TransformGroup table1Pos = new TransformGroup();
+			table1Pos.setTranslation(new Vector3f(10,0,0));
+			
+			ShapeNode table1 = new ShapeNode(rotShape);
+			table1Pos.addChild(table1);
+			ShapeNode table2 = new ShapeNode(rotShape);
+			
+			
+			
 
 			// build graph	
-			world.addChild(cyl);
+			world.addChild(table1Pos,table2);
 			
 			sceneManager = new GraphSceneManager(world,camera,frustum);
 			Shape[] shapes = {};
