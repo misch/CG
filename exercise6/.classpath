@@ -8,5 +8,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/exercise2"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/exercise5"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/exercise1"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/exercise4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -4,15 +4,22 @@ import java.awt.Component;
 import java.io.IOException;
 
 import javax.swing.JFrame;
+import javax.vecmath.Color3f;
 import javax.vecmath.Point2f;
+import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
+
+import ex1.Cylinder;
 
 import jrtr.Camera;
 import jrtr.Frustum;
+import jrtr.Material;
+import jrtr.PointLight;
 import jrtr.RenderContext;
 import jrtr.RenderPanel;
 import jrtr.Shape;
 import sceneGraph.GraphSceneManager;
+import sceneGraph.LightNode;
 import sceneGraph.ShapeNode;
 import sceneGraph.TransformGroup;
 import task2.SimpleRenderPanel;
@@ -32,46 +39,59 @@ public class ShowRotBodies {
 		public static void main(String[] args) throws IOException
 		{						
 			// Make a scene manager and add the object
-			Camera 	camera = new Camera(new Vector3f(0,0,10), new Vector3f(0,0,0), new Vector3f(0,1,0));
+			Camera 	camera = new Camera(new Vector3f(0,0,20), new Vector3f(0,0,0), new Vector3f(0,1,0));
 			Frustum	frustum = new Frustum(1,100,1,(float)(Math.PI/3));
 		
 			TransformGroup world = new TransformGroup();
+			TransformGroup sphereGroup = new TransformGroup();
 			
 			Point2f[] tablePoints = {
-					p(3,0),p(1.5,0.5),p(0.5,1.5),
-					p(0.2,2),p(0.2,3),p(0.2,4),
-					p(0.2,5),p(2,5),p(2.5,5),
+					p(1,0),p(0.6,0.5),p(0.1,0.7),
+					p(0.1,1),p(0.1,3),p(0.1,4),
+					p(0.1,5),p(2,5),p(2.5,5),
 					p(3,5)};
-			Point2f[] controlPoints = {	new Point2f(1,-1), new Point2f(1,-0.75f), 
-										new Point2f(1,-0.25f), new Point2f(1,0),
-										new Point2f(1,0.25f), new Point2f(1,0.75f),
-										new Point2f(1,1)};
-//			Point2f[] controlPoints = {new Point2f(1,0),
-//					new Point2f(1,0.25f), new Point2f(1,0.75f),
-//					new Point2f(1,1)};
+			
+			Point2f[] sphere = {p(0,0),p(0.35,0.0),p(0.35,0.5),p(0,0.5)};
 
-			
-//			RotationalBody rotBody = new RotationalBody(new BezierCurve(2,controlPoints,3),5);
-//			RotationalBody rotBody = new RotationalBody(new BezierCurve(1,controlPoints,4),10);
-			RotationalBody rotBody = new RotationalBody(new BezierCurve(3,tablePoints,50),50);
+			RotationalBody rotBody = new RotationalBody(new BezierCurve(3,tablePoints,50),20);
 			Shape rotShape = rotBody.getShape();
+			rotShape.setMaterial(new Material("../jrtr/textures/wood.jpg",1));
+			rotShape.getMaterial().setFragmentShaderPath("../jrtr/shaders/phongWithTexture.frag");
+			rotShape.getMaterial().setVertexShaderPath("../jrtr/shaders/phongWithTexture.vert");
 			
-			TransformGroup table1Pos = new TransformGroup();
-			table1Pos.setTranslation(new Vector3f(10,0,0));
+			RotationalBody sphereBody = new RotationalBody(new BezierCurve(1,sphere,100),50);
+			Shape sphereShape = sphereBody.getShape();
+			sphereShape.setMaterial(new Material("../jrtr/textures/fussball.jpg",1));
+			sphereShape.getMaterial().setFragmentShaderPath("../jrtr/shaders/phongWithTexture.frag");
+			sphereShape.getMaterial().setVertexShaderPath("../jrtr/shaders/phongWithTexture.vert");
+			
+			TransformGroup lightPos = new TransformGroup();
+			lightPos.setTranslation(new Vector3f(0,0,3));
+			PointLight light = new PointLight(20, new Point3f(0,0,0));
+			
+			LightNode light1 = new LightNode(light);
+			light1.setTranslation(new Vector3f(0,10,0));
+			LightNode light2 = new LightNode(light);
+			light2.setTranslation(new Vector3f(0,2,-10));
+			LightNode light3 = new LightNode(light);
+			light3.setTranslation(new Vector3f(-10,2,0));
+			
+			lightPos.addChild(light1,light2,light3);
 			
 			ShapeNode table1 = new ShapeNode(rotShape);
-			table1Pos.addChild(table1);
-			ShapeNode table2 = new ShapeNode(rotShape);
+			ShapeNode sphereNode = new ShapeNode(sphereShape);
+			sphereGroup.setTranslation(new Vector3f(0,7,0));
+			sphereGroup.addChild(sphereNode);
 			
 			
 			
 
 			// build graph	
-			world.addChild(table1Pos,table2);
+			world.addChild(lightPos,table1,sphereGroup);
 			
 			sceneManager = new GraphSceneManager(world,camera,frustum);
-			Shape[] shapes = {};
-			renderPanel = new SimpleRenderPanel(sceneManager,shapes);
+			Shape[] shapes = {rotShape,sphereShape};
+			renderPanel = new SimpleRenderPanelTexShad(sceneManager,shapes);
 			setupMainWindow(camera,"Rotational Body");
 		}
 		

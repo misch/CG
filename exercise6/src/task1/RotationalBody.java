@@ -6,6 +6,9 @@ import javax.vecmath.Color3f;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Point3f;
 import javax.vecmath.Point4f;
+import javax.vecmath.Vector3f;
+import javax.vecmath.Vector4f;
+
 import ex1.AbstractSimpleShape;
 
 public class RotationalBody extends AbstractSimpleShape{
@@ -28,15 +31,21 @@ public class RotationalBody extends AbstractSimpleShape{
 		Matrix4f rot = new Matrix4f();
 		
 		Point4f[] pointsToRotate = this.curve.getInterpolatedPoints();
+		Vector4f[] tangents = this.curve.getTangents();
 		for (float angle = 0; angle<2*PI; angle+=this.step){
 			Color3f col = new Color3f((float)Math.random(),(float)Math.random(),(float)Math.random());
 			for(int i = 0; i<pointsToRotate.length; i++){
 				rot.rotY(angle);
 				Point3f point = new Point3f(pointsToRotate[i].x, pointsToRotate[i].y,0);
+				Vector3f normal = new Vector3f(-tangents[i].y,tangents[i].x,0);
+				
+				
 				rot.transform(point);
-
+				rot.transform(normal);
+				addTexel(this.texels, 2*PI/angle, (float)i/pointsToRotate.length);
 				addVertex(this.vertices, point);
 				addColor(this.colors, col);
+				addNormal(this.normals, normal);
 			}
 		}
 	}

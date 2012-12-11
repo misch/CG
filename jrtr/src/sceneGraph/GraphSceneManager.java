@@ -90,6 +90,9 @@ public class GraphSceneManager implements SceneManagerInterface {
 						}
 					}
 				}
+				if (sceneGraphStack.isEmpty()){
+					return null;
+				}
 			}
 			
 			NodeWrapper top = sceneGraphStack.pop();

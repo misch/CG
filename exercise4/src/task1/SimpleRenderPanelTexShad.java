@@ -63,9 +63,9 @@ public class SimpleRenderPanelTexShad extends GLRenderPanel {
 			}
 		}	
 		// Register a timer task
-	    Timer timer = new Timer();
-	    float angle = 0.005f;
-	    timer.scheduleAtFixedRate(new AnimationTask(angle, shapes,this), 0, 10);
+//	    Timer timer = new Timer();
+//	    float angle = 0.005f;
+//	    timer.scheduleAtFixedRate(new AnimationTask(angle, shapes,this), 0, 10);
 	}
 
 }
