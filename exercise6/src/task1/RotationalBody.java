@@ -50,13 +50,12 @@ public class RotationalBody extends AbstractSimpleShape{
 		int vertN = this.vertices.size()/3;
 		int heightVertN = vertN/numberOfAngleSteps; // Anzahl Vertices übereinander
 		
-
-		for (int i = 0; i < numberOfAngleSteps;i++){
-			for (int j = 0; j < heightVertN-1; j++){
-				int botLeft = i*(numberOfAngleSteps-(numberOfAngleSteps-3))+j;
-				int topLeft = (botLeft+1)%vertN;
-				int botRight = (botLeft + heightVertN)%vertN;
-				int topRight = (botRight + 1)%vertN;
+		for (int i = 0; i<numberOfAngleSteps; i++){
+			for (int j = i*heightVertN; j < (i+1)*heightVertN-1;j++){
+				int botLeft = j;
+				int topLeft = botLeft+1;
+				int botRight = (botLeft+heightVertN)%vertN;
+				int topRight = botRight+1;
 				addRectangle(ind, botLeft, topLeft, botRight, topRight);
 			}			
 		}

@@ -43,9 +43,10 @@ public class BezierCurve {
 		Point4f[] interpolatedPoints = new Point4f[roughness * segments + segments + 1];
 		
 		float interpolationStep = 1f/(roughness+1);
+		interpolatedPoints[0] = new Point4f(controlPoints[0].x, controlPoints[0].y,0,0);
 		for (int segment = 0; segment < this.segments; segment++){
-			interpolatedPoints[0] = new Point4f(controlPoints[segment*3].x, controlPoints[segment*3].y,0,0);
-			int counter = 1;
+//			interpolatedPoints[segment] = new Point4f(controlPoints[segment*3].x, controlPoints[segment*3].y,0,0);
+			int counter = segment+1;
 			for (float i = interpolationStep; i<=1; i+=interpolationStep){
 				Point4f interpolated = new Point4f(pow(i,3),pow(i,2),i,1);
 				this.preComputed[segment].transform(interpolated);

@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.io.IOException;
 
 import javax.swing.JFrame;
+import javax.vecmath.Point2f;
 import javax.vecmath.Vector3f;
 
 import jrtr.Camera;
@@ -36,7 +37,17 @@ public class ShowRotBodies {
 		
 			TransformGroup world = new TransformGroup();
 			
-			RotationalBody rotBody = new RotationalBody(new BezierCurve(),4);
+//			Point2f[] controlPoints = {	new Point2f(1,-1), new Point2f(1,-0.75f), 
+//										new Point2f(1,-0.25f), new Point2f(1,0),
+//										new Point2f(1,0.25f), new Point2f(1,0.75f),
+//										new Point2f(1,1)};
+			Point2f[] controlPoints = {new Point2f(1,0),
+					new Point2f(1,0.25f), new Point2f(1,0.75f),
+					new Point2f(1,1)};
+
+			
+//			RotationalBody rotBody = new RotationalBody(new BezierCurve(2,controlPoints,1),5);
+			RotationalBody rotBody = new RotationalBody(new BezierCurve(1,controlPoints,1),10);
 			Shape rotShape = rotBody.getShape();
 			
 			ShapeNode cyl = new ShapeNode(rotShape);
