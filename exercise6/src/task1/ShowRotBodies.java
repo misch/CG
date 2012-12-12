@@ -51,9 +51,9 @@ public class ShowRotBodies {
 					p(0.1,5),p(2,5),p(2.5,5),
 					p(3,5)};
 			
-			Point2f[] sphere = {p(0,0),p(0.35,0.0),p(0.35,0.5),p(0,0.5)};
+			Point2f[] sphere = {p(0,0),p(0.7,0.0),p(0.7,1),p(0,1)};
 
-			RotationalBody rotBody = new RotationalBody(new BezierCurve(3,tablePoints,50),20);
+			RotationalBody rotBody = new RotationalBody(new BezierCurve(3,tablePoints,50),4);
 			Shape rotShape = rotBody.getShape();
 			rotShape.setMaterial(new Material("../jrtr/textures/wood.jpg",1));
 			rotShape.getMaterial().setFragmentShaderPath("../jrtr/shaders/phongWithTexture.frag");
@@ -61,7 +61,7 @@ public class ShowRotBodies {
 			
 			RotationalBody sphereBody = new RotationalBody(new BezierCurve(1,sphere,100),50);
 			Shape sphereShape = sphereBody.getShape();
-			sphereShape.setMaterial(new Material("../jrtr/textures/fussball.jpg",1));
+			sphereShape.setMaterial(new Material("../jrtr/textures/fussball2.jpg",1));
 			sphereShape.getMaterial().setFragmentShaderPath("../jrtr/shaders/phongWithTexture.frag");
 			sphereShape.getMaterial().setVertexShaderPath("../jrtr/shaders/phongWithTexture.vert");
 			
@@ -80,7 +80,7 @@ public class ShowRotBodies {
 			
 			ShapeNode table1 = new ShapeNode(rotShape);
 			ShapeNode sphereNode = new ShapeNode(sphereShape);
-			sphereGroup.setTranslation(new Vector3f(0,7,0));
+			sphereGroup.setTranslation(new Vector3f(4,0,0));
 			sphereGroup.addChild(sphereNode);
 			
 			

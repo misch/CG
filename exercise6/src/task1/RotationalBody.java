@@ -40,10 +40,11 @@ public class RotationalBody extends AbstractSimpleShape{
 				Vector3f normal = new Vector3f(-tangents[i].y,tangents[i].x,0);
 				normal.normalize();
 				
-				
 				rot.transform(point);
 				rot.transform(normal);
-				addTexel(this.texels, 2*PI/angle, (float)i/pointsToRotate.length);
+				
+				float texelX = (angle<PI)? angle/PI : (2*PI - angle)/PI; // to avoid interruptions in the texture
+				addTexel(this.texels, texelX, (float)i/pointsToRotate.length);
 				addVertex(this.vertices, point);
 				addColor(this.colors, col);
 				addNormal(this.normals, normal);
