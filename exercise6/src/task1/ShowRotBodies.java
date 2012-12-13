@@ -58,6 +58,8 @@ public class ShowRotBodies {
 			rotShape.setMaterial(new Material("../jrtr/textures/wood.jpg",1));
 			rotShape.getMaterial().setFragmentShaderPath("../jrtr/shaders/phongWithTexture.frag");
 			rotShape.getMaterial().setVertexShaderPath("../jrtr/shaders/phongWithTexture.vert");
+			rotShape.getMaterial().setSpecularReflection(200);
+			rotShape.getMaterial().setPhongExponent(1000);
 			
 			RotationalBody sphereBody = new RotationalBody(new BezierCurve(1,sphere,100),50);
 			Shape sphereShape = sphereBody.getShape();

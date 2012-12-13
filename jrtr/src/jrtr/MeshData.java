@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
+import javax.vecmath.Point3f;
 import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 
@@ -90,7 +91,7 @@ public class MeshData {
 		this.createMeshStructure(data.getIndices(), nfaces);
 	}
 
-	private void createMeshStructure(int[] i, int p) {
+	private void createMeshStructure(int[] i, int p) { // p = Anzahl faces
 		int offset = 0;
 		// loop for each face
 		for (int k = 0; k < p; k++) {
@@ -348,10 +349,34 @@ public class MeshData {
 	 * consists of triangles
 	 */
 	public void loop() {
-		//TODO: this is the part you should implement :-)
+		// TODO
+		
+		List<Vertex> newVerts = new ArrayList<Vertex>(vertexTable.size()+edgeTable.size());
+		int[] newIndices = new int[faceTable.size()*4];
+		
+		// Do subdivision
+		for (Face face : faceTable){
+			// add triangle vertices and mid-points to newVerts
+			// add the correspondent indices to newIndices
+		}
+		// Do smoothing
+		
+		// create a List<Vertex> with all the new vertices
+		// create an int[]-Array that indicates how the new vertices are connected to triangles
+		// create a new MeshData (createMesh(vertices,indices[]))
 	}
 	
 	
+
+
+	private Vertex middleVert(Vertex vert1, Vertex vert2) {
+		Vector3f position = new Vector3f(vert2.position);
+		position.sub(vert1.position);
+		Vertex middle = new Vertex(position);
+		return middle;
+	}
+
+
 	// -------------- Classes for Edges, Vertices and Faces --------------
 	protected class Edge {
 		protected int v1, v2;
