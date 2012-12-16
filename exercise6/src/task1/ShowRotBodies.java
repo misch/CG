@@ -49,50 +49,64 @@ public class ShowRotBodies {
 					p(1,0),p(0.6,0.5),p(0.1,0.7),
 					p(0.1,1),p(0.1,3),p(0.1,4),
 					p(0.1,5),p(2,5),p(2.5,5),
-					p(3,5)};
+					p(3,5),p(3.1,5),p(3.1,5.1),p(3,5.1),
+					p(2.5,5.1),p(1.5,5.1),p(0.1,5.1)};
 			
-			Point2f[] sphere = {p(0,0),p(0.7,0.0),p(0.7,1),p(0,1)};
+			Point2f[] sphere = {p(0,1),p(4d/6,1),p(4d/6,0),p(0,0)};
+			
+			Point2f[] bowl = {p(0,0),p(0.5,0),p(1,0.5),p(1,1)};
 
-			RotationalBody rotBody = new RotationalBody(new BezierCurve(3,tablePoints,50),4);
+			RotationalBody rotBody = new RotationalBody(new BezierCurve(5,tablePoints,50),4);
 			Shape rotShape = rotBody.getShape();
 			rotShape.setMaterial(new Material("../jrtr/textures/wood.jpg",1));
 			rotShape.getMaterial().setFragmentShaderPath("../jrtr/shaders/phongWithTexture.frag");
 			rotShape.getMaterial().setVertexShaderPath("../jrtr/shaders/phongWithTexture.vert");
-			rotShape.getMaterial().setSpecularReflection(200);
-			rotShape.getMaterial().setPhongExponent(1000);
+			
 			
 			RotationalBody sphereBody = new RotationalBody(new BezierCurve(1,sphere,100),50);
 			Shape sphereShape = sphereBody.getShape();
 			sphereShape.setMaterial(new Material("../jrtr/textures/fussball2.jpg",1));
 			sphereShape.getMaterial().setFragmentShaderPath("../jrtr/shaders/phongWithTexture.frag");
 			sphereShape.getMaterial().setVertexShaderPath("../jrtr/shaders/phongWithTexture.vert");
+			sphereShape.getMaterial().setSpecularReflection(200);
+			sphereShape.getMaterial().setPhongExponent(1000);
+			
+			Shape bowlBody = new RotationalBody(new BezierCurve(1,bowl,100),50).getShape();
+			bowlBody.setMaterial(new Material("../jrtr/textures/wood.jpg",2));
+			bowlBody.getMaterial().setFragmentShaderPath("..jrtr/shaders/phongWithTexture.frag");
+			bowlBody.getMaterial().setVertexShaderPath("../jrtr/shaders/phongWithTexture.vert");
+			bowlBody.getMaterial().setSpecularReflection(20);
+			bowlBody.getMaterial().setPhongExponent(2000);
 			
 			TransformGroup lightPos = new TransformGroup();
 			lightPos.setTranslation(new Vector3f(0,0,3));
-			PointLight light = new PointLight(20, new Point3f(0,0,0));
+			PointLight light = new PointLight(30, new Point3f(0,0,0));
 			
 			LightNode light1 = new LightNode(light);
-			light1.setTranslation(new Vector3f(0,10,0));
+			light1.setTranslation(new Vector3f(3,15,2));
 			LightNode light2 = new LightNode(light);
-			light2.setTranslation(new Vector3f(0,2,-10));
+			light2.setTranslation(new Vector3f(0,2,-5));
 			LightNode light3 = new LightNode(light);
-			light3.setTranslation(new Vector3f(-10,2,0));
+			light3.setTranslation(new Vector3f(-5,2,0));
 			
 			lightPos.addChild(light1,light2,light3);
 			
 			ShapeNode table1 = new ShapeNode(rotShape);
 			ShapeNode sphereNode = new ShapeNode(sphereShape);
+			ShapeNode bowlNode = new ShapeNode(bowlBody);
 			sphereGroup.setTranslation(new Vector3f(4,0,0));
 			sphereGroup.addChild(sphereNode);
 			
-			
+			TransformGroup tableTop = new TransformGroup();
+			tableTop.setTranslation(new Vector3f(0,5.1f,0));
+			tableTop.addChild(bowlNode);
 			
 
 			// build graph	
-			world.addChild(lightPos,table1,sphereGroup);
+			world.addChild(lightPos,table1,sphereGroup,tableTop);
 			
 			sceneManager = new GraphSceneManager(world,camera,frustum);
-			Shape[] shapes = {rotShape,sphereShape};
+			Shape[] shapes = {rotShape,sphereShape,bowlBody};
 			renderPanel = new SimpleRenderPanelTexShad(sceneManager,shapes);
 			setupMainWindow(camera,"Rotational Body");
 		}
