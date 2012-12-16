@@ -379,10 +379,10 @@ public class MeshData {
 
 	// -------------- Classes for Edges, Vertices and Faces --------------
 	protected class Edge {
-		protected int v1, v2;
+		protected int v1, v2, middle;
 		protected Face f1, f2;
 		//e0 shares v1 and f1, e1 shares v2 and f1, e2 shares v1 and f2 and e3 shares v2 and f2 with this edge
-		protected Edge[] edges; 
+		protected Edge[] edges;
 
 		/**
 		 * Creates a new edge that connects the two given vertices. This defines
@@ -484,6 +484,15 @@ public class MeshData {
 				return v2;
 			} else
 				return v1;
+		}
+		
+		public void setMiddle(int middle){
+			this.middle = middle;
+		}
+		
+		public int[] getUnorderedVertices(){
+			int[] vertices = {v1,v2};
+			return vertices;
 		}
 	}
 
