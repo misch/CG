@@ -354,10 +354,29 @@ public class MeshData {
 		List<Vertex> newVerts = new ArrayList<Vertex>(vertexTable.size()+edgeTable.size());
 		int[] newIndices = new int[faceTable.size()*4];
 		
-		// Do subdivision
+		for (Edge edge : edgeTable){
+			int[] v = edge.getUnorderedVertices();
+			Vertex v1 = vertexTable.get(v[0]);
+			Vertex v2 = vertexTable.get(v[1]);
+			
+			Vector3f middle = new Vector3f(v1.position);
+			middle.sub(v2.position);
+			middle.scale(0.5f);
+			
+			Vertex newVert = new Vertex(middle);
+			newVerts.add(newVert);
+			
+			// TODO: check if the index is correctly computed
+			int indexOfNewVert = vertexTable.size() + newVerts.indexOf(newVert);
+			
+			edge.setMiddle(indexOfNewVert);	
+		}
+		
+		// Set the new indices to create new triangle mesh
 		for (Face face : faceTable){
-			// add triangle vertices and mid-points to newVerts
-			// add the correspondent indices to newIndices
+			// get all the edges
+			// connect the outer and the middle points to 4 new triangles
+			// always add the indices to the new indices-array
 		}
 		// Do smoothing
 		
