@@ -1,5 +1,6 @@
 package sceneGraph;
 
+import javax.vecmath.AxisAngle4f;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 
@@ -24,6 +25,5 @@ public class ShapeNode extends Leaf {
 	
 	public void setTranslation(Vector3f trans){
 		this.shape.getTransformation().setTranslation(trans);
-		System.out.println(this.shape.getTransformation().toString());
 	}
 }

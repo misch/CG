@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javax.vecmath.Color3f;
 import javax.vecmath.Matrix4f;
+import javax.vecmath.Point2f;
 import javax.vecmath.Point3f;
 import javax.vecmath.Point4f;
 import javax.vecmath.Vector3f;
@@ -73,5 +74,10 @@ public class RotationalBody extends AbstractSimpleShape{
 	private void addRectangle(ArrayList<Integer> ind, int botLeft, int topLeft, int botRight, int topRight){
 		addTriangle(ind,topLeft,botLeft,topRight);
 		addTriangle(ind,topRight,botLeft,botRight);
+	}
+	
+	protected static Point2f p(double x, double y){
+		Point2f point = new Point2f((float)x,(float)y);
+		return point;
 	}
 }
