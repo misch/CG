@@ -36,7 +36,7 @@ public class GLRenderContext implements RenderContext {
         try {
         	defaultShader.load("../jrtr/shaders/default.vert","../jrtr/shaders/default.frag");
         } catch(Exception e) {
-	    	System.out.print("Problem with shader:\n");
+	    	System.out.print("Problem with default shader:\n");
 	    	System.out.print(e.getMessage());
 	    }
         defaultShader.use();	  

@@ -58,9 +58,9 @@ public class ShowRotBodies {
 
 			RotationalBody rotBody = new RotationalBody(new BezierCurve(5,tablePoints,50),4);
 			Shape rotShape = rotBody.getShape();
-			rotShape.setMaterial(new Material("../jrtr/textures/wood.jpg",1));
-			rotShape.getMaterial().setFragmentShaderPath("../jrtr/shaders/phongWithTexture.frag");
-			rotShape.getMaterial().setVertexShaderPath("../jrtr/shaders/phongWithTexture.vert");
+			rotShape.setMaterial(new Material("../jrtr/textures/metall2.jpg",1));
+			rotShape.getMaterial().setFragmentShaderPath("../jrtr/shaders/bumpShader.frag");
+			rotShape.getMaterial().setVertexShaderPath("../jrtr/shaders/bumpShader.vert");
 			
 			
 			RotationalBody sphereBody = new RotationalBody(new BezierCurve(1,sphere,100),50);
@@ -73,7 +73,7 @@ public class ShowRotBodies {
 			
 			Shape bowlBody = new RotationalBody(new BezierCurve(1,bowl,100),50).getShape();
 			bowlBody.setMaterial(new Material("../jrtr/textures/wood.jpg",2));
-			bowlBody.getMaterial().setFragmentShaderPath("..jrtr/shaders/phongWithTexture.frag");
+			bowlBody.getMaterial().setFragmentShaderPath("../jrtr/shaders/phongWithTexture.frag");
 			bowlBody.getMaterial().setVertexShaderPath("../jrtr/shaders/phongWithTexture.vert");
 			bowlBody.getMaterial().setSpecularReflection(20);
 			bowlBody.getMaterial().setPhongExponent(2000);

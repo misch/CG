@@ -19,23 +19,25 @@ in vec2 texcoord;
 out vec2 frag_texcoord;
 out vec3 frag_normal;
 out vec4 frag_position;
-out vec3 frag_tangent;
-out vec3 frag_bi_tangent;
+//out vec3 frag_tangent;
+//out vec3 frag_bi_tangent;
 
 void main()
 {		
 	// Pass texture coordinates, normals and vertex positions to fragment shader, OpenGL automatically
 	// interpolates them to each pixel (in a perpectively correct manner)
-	vec3 tangent = vec3(1,0,0);
-	vec3 bi_tangent = vec3(0,1,0);
 	
-	frag_tangent = (modelview * vec4(tangent)).xyz;
-	frag_bi_tangent = (modelview * vec4(bi_tangent)).xyz;
+	// TODO: Dealing with tangents
+	//vec3 tangent = vec3(1,0,0);
+	//vec3 bi_tangent = vec3(0,1,0);
+	
+	//frag_tangent = (modelview * vec4(tangent)).xyz;
+	//frag_bi_tangent = (modelview * vec4(bi_tangent)).xyz;
 	
 	frag_normal = normal;
 	frag_texcoord = texcoord;
 	frag_position = position;
-	frag_bump = vec4(0.3,0.3,0.3)*texture(myTexture, texcoord);
+	//frag_bump = texture(myTexture, texcoord).xyz;
 
 	// Transform position, including projection matrix
 	// Note: gl_Position is a default output variable containing

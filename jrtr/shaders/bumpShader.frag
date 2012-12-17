@@ -22,30 +22,37 @@ uniform vec3 cam_position;
 in vec2 frag_texcoord;
 in vec3 frag_normal;
 in vec4 frag_position;
-in vec3 frag_bump;
+//in vec3 frag_bump;
 
 // Output variable, will be written to framebuffer automatically
 out vec4 frag_shaded;
 
 void main()
 {		
-	frag_normal = frag_normal + frag_bump;
+	//frag_normal = frag_normal;
+	vec3 bump_normal = (normalize(texture(myTexture, frag_texcoord))).xyz;
+	
+	
+	vec3 normal = frag_normal + bump_normal;
+	
 	float ambient_light = 0.2;
 	vec3 look_from_direction = - normalize((modelview*frag_position).xyz);
 	
 	vec4 diffuse_light = vec4(0,0,0,0);
 	vec4 specular_light = vec4(0,0,0,0);
 	
-	vec4 reflection_coeff = texture(myTexture, frag_texcoord);
-	vec4 ambient = ambient_light * texture(myTexture, frag_texcoord);
+	//vec4 reflection_coeff = texture(myTexture, frag_texcoord);
+	vec4 reflection_coeff = vec4(0.5,0.5,0.5,0);
 	
+	//vec4 ambient = ambient_light * texture(myTexture, frag_texcoord);
+	vec4 ambient = ambient_light * vec4(0.5,0.5,0.5,0);
 	
 	for (int i = 0; i<MAX_LIGHTS; i++){
 		vec3 light_direction = (camera*vec4(light_position[i],1)-modelview*frag_position).xyz;
 		float radiance = source_radiance[i]/dot(light_direction,light_direction);
-		diffuse_light += radiance * reflection_coeff * max(0.0,dot(normalize((modelview*vec4(frag_normal,0)).xyz), normalize(light_direction)))  * vec4(light_color[i],0);
+		diffuse_light += radiance * reflection_coeff * max(0.0,dot(normalize((modelview*vec4(normal,0)).xyz), normalize(light_direction)))  * vec4(light_color[i],0);
 		
-		vec3 reflection_direction = reflect(-normalize(light_direction), normalize(modelview * vec4(frag_normal,0)).xyz);
+		vec3 reflection_direction = reflect(-normalize(light_direction), normalize(modelview * vec4(normal,0)).xyz);
 		specular_light += radiance * specular_coeff * pow(max(dot(reflection_direction,look_from_direction),0.0),phong_exponent)* vec4(light_color[i],0);
 		specular_light += specular_light;
 	}

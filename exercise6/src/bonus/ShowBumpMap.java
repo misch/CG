@@ -8,6 +8,8 @@ import javax.vecmath.Point2f;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
 
+import ex1.Cylinder;
+
 import jrtr.Camera;
 import jrtr.Frustum;
 import jrtr.Material;
@@ -37,23 +39,24 @@ public class ShowBumpMap {
 	 */
 	public static void main(String[] args) throws IOException
 	{						
-		Camera 	camera = new Camera(new Vector3f(0,0,20), new Vector3f(0,0,0), new Vector3f(0,1,0));
+		Camera 	camera = new Camera(new Vector3f(0,3,-5), new Vector3f(0,0,0), new Vector3f(0,1,0));
 		Frustum	frustum = new Frustum(1,100,1,(float)(Math.PI/3));
 	
 		
 		TransformGroup world = new TransformGroup();
 	
 		Shape cubeShape = new Shape(makePlane());
+//		Shape cubeShape = new Cylinder(50,1,1).getShape();
 		cubeShape.setMaterial(new Material("../jrtr/textures/test.png",1));
-		cubeShape.getMaterial().setFragmentShaderPath("../jrtr/shaders/phongWithTexture.frag");
-		cubeShape.getMaterial().setVertexShaderPath("../jrtr/shaders/phongWithTexture.vert");
+		cubeShape.getMaterial().setFragmentShaderPath("../jrtr/shaders/bumpShader.frag");
+		cubeShape.getMaterial().setVertexShaderPath("../jrtr/shaders/bumpShader.vert");
 //		cubeShape.getMaterial().setSpecularReflection(200);
 //		cubeShape.getMaterial().setPhongExponent(1000);
 		
 		ShapeNode cubeNode = new ShapeNode(cubeShape);
 		
 		TransformGroup lightPos = new TransformGroup();
-		lightPos.setTranslation(new Vector3f(0,0,3));
+		lightPos.setTranslation(new Vector3f(0,0,-3));
 		PointLight light = new PointLight(20, new Point3f(0,0,0));
 		
 		LightNode lightNode = new LightNode(light);
