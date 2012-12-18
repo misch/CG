@@ -44,35 +44,38 @@ public class ShowRotBodies {
 		
 			TransformGroup world = new TransformGroup();
 			TransformGroup sphereGroup = new TransformGroup();
-			
-			Point2f[] bowl = {p(0,0),p(0.5,0),p(1,0.5),p(1,1)};
-
+		
 			Shape table = new Table(5,4).getShape();
-			table.setMaterial(new Material("../jrtr/textures/wood.jpg",1));
-			table.getMaterial().setFragmentShaderPath("../jrtr/shaders/phongWithTexture.frag");
-			table.getMaterial().setVertexShaderPath("../jrtr/shaders/phongWithTexture.vert");
+			setTexAndShade(table,"wood.jpg","phongWithTexture");
 			
 			Shape sphere = new Sphere(100,50,1,new Point2f(0,1)).getShape();
-			sphere.setMaterial(new Material("../jrtr/textures/fussball2.jpg",1));
-			sphere.getMaterial().setFragmentShaderPath("../jrtr/shaders/phongWithTexture.frag");
-			sphere.getMaterial().setVertexShaderPath("../jrtr/shaders/phongWithTexture.vert");
+			setTexAndShade(sphere,"fussball2.jpg","phongWithTexture");
 			sphere.getMaterial().setSpecularReflection(200);
 			sphere.getMaterial().setPhongExponent(1000);
+		
+			Shape snare = new RotCylinder(50,50,1,0.6f).getShape();
+			setTexAndShade(snare, "sand.png","phongWithTexture");
+			float snareHeight = 2.5f;
+			Shape snareSupp = new RotCylinder(50,50,0.05f,snareHeight).getShape();
+			setTexAndShade(snareSupp, "silber.png", "phongWithTexture");
+			snareSupp.getMaterial().setSpecularReflection(200);
+			snareSupp.getMaterial().setPhongExponent(1000);
 			
-			Shape bowlBody = new RotCylinder(1,50,1,0.5f).getShape();
-//			Shape bowlBody = new RotationalBody(new BezierCurve(1,bowl,100),50).getShape();
-			bowlBody.setMaterial(new Material("../jrtr/textures/wood.jpg",2));
-			bowlBody.getMaterial().setFragmentShaderPath("../jrtr/shaders/phongWithTexture.frag");
-			bowlBody.getMaterial().setVertexShaderPath("../jrtr/shaders/phongWithTexture.vert");
-			bowlBody.getMaterial().setSpecularReflection(20);
-			bowlBody.getMaterial().setPhongExponent(2000);
+			float baseDrumRad = 1.5f;
+			Shape baseDrum = new RotCylinder(50,50,baseDrumRad,2.5f).getShape();
+			setTexAndShade(baseDrum, "sand.png","phongWithTexture");
+			
+			Shape ride = new Pan(50,50,2,0.3f).getShape();
+			setTexAndShade(ride, "messing.jpg","phongWithTexture");
+			
+			
 			
 			TransformGroup lightPos = new TransformGroup();
 			lightPos.setTranslation(new Vector3f(0,0,3));
 			PointLight light = new PointLight(30, new Point3f(0,0,0));
 			
 			LightNode light1 = new LightNode(light);
-			light1.setTranslation(new Vector3f(3,15,2));
+			light1.setTranslation(new Vector3f(10,10,2));
 			LightNode light2 = new LightNode(light);
 			light2.setTranslation(new Vector3f(0,2,-5));
 			LightNode light3 = new LightNode(light);
@@ -82,33 +85,36 @@ public class ShowRotBodies {
 			
 			ShapeNode table1 = new ShapeNode(table);
 			ShapeNode sphereNode = new ShapeNode(sphere);
-			ShapeNode bowlNode = new ShapeNode(bowlBody);
 			sphereGroup.setTranslation(new Vector3f(4,0,0));
 			sphereGroup.addChild(sphereNode);
 			
 			TransformGroup tableTop = new TransformGroup();
 			tableTop.setTranslation(new Vector3f(0,5.1f,0));
-			tableTop.addChild(bowlNode);
 			
 			TransformGroup drumPos = new TransformGroup();
-			ShapeNode snare = new ShapeNode(bowlBody);
-			drumPos.setTranslation(new Vector3f(10,0,0));
+			drumPos.setTranslation(new Vector3f(10,1,0));
+			
 			TransformGroup snarePos = new TransformGroup();
-			snarePos.setTranslation(new Vector3f(0,1,0));
-			snarePos.setRotation(new Vector3f(0,0,1), 0.5f);
-			snarePos.addChild(snare);
-			drumPos.addChild(snarePos);
+			snarePos.setTranslation(new Vector3f(0,snareHeight,0));
+			snarePos.setRotation(new Vector3f(0.5f,0,1), 0.5f);
 			
+			TransformGroup snareSuppPos = new TransformGroup();
+			snareSuppPos.setTranslation(new Vector3f(-0.5f,-baseDrumRad,-2.5f));
+			snareSuppPos.addChild(new ShapeNode(snareSupp),snarePos);
+//			snarePos.addChild(new ShapeNode(snare), new ShapeNode(ride));
+			snarePos.addChild(new ShapeNode(snare));
+				
 			TransformGroup basePos = new TransformGroup();
-			basePos.addChild(new ShapeNode(bowlBody));
+			basePos.addChild(new ShapeNode(baseDrum));
 			basePos.setRotation(new Vector3f(0,0,1), (float)(Math.PI/2));
-			drumPos.addChild(basePos);
+			basePos.setTranslation(new Vector3f(2,0,0));
 			
+			drumPos.addChild(snareSuppPos,basePos);
 			// build graph	
 			world.addChild(lightPos,table1,sphereGroup,tableTop,drumPos);
 			
 			sceneManager = new GraphSceneManager(world,camera,frustum);
-			Shape[] shapes = {table,sphere,bowlBody};
+			Shape[] shapes = {table,sphere,snare,baseDrum,ride,snareSupp};
 			renderPanel = new SimpleRenderPanelTexShad(sceneManager,shapes);
 			setupMainWindow(camera,"Rotational Body");
 		}
@@ -133,5 +139,11 @@ public class ShowRotBodies {
 			   	    	    
 		    jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		    jframe.setVisible(true);	
+		}
+		
+		private static void setTexAndShade(Shape shape, String tex, String shader){
+			shape.setMaterial(new Material("../jrtr/textures/"+tex,1));
+			shape.getMaterial().setFragmentShaderPath("../jrtr/shaders/"+shader+".frag");
+			shape.getMaterial().setVertexShaderPath("../jrtr/shaders/"+shader+".vert");
 		}
 	}
