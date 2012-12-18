@@ -2,6 +2,8 @@ package task1;
 
 import java.util.Timer;
 
+import sceneGraph.TransformGroup;
+
 import jrtr.GLRenderPanel;
 import jrtr.RenderContext;
 import jrtr.SceneManagerInterface;
@@ -19,11 +21,13 @@ public class SimpleRenderPanelTexShad extends GLRenderPanel {
 //	private SimpleSceneManager sceneManager;
 	private SceneManagerInterface sceneManager;
 	private Shape[] shapes;
+	private TransformGroup[] transformGroups;
 	
 //	public SimpleRenderPanelTexShad(SimpleSceneManager sceneManager, Shape[] shapes){
-	public SimpleRenderPanelTexShad(SceneManagerInterface sceneManager, Shape[] shapes){
+	public SimpleRenderPanelTexShad(SceneManagerInterface sceneManager, Shape[] shapes, TransformGroup[] transformGroups){
 		this.sceneManager = sceneManager;	
 		this.shapes = shapes;
+		this.transformGroups = transformGroups;
 	}
 	
 	/**
@@ -63,9 +67,9 @@ public class SimpleRenderPanelTexShad extends GLRenderPanel {
 			}
 		}	
 		// Register a timer task
-//	    Timer timer = new Timer();
-//	    float angle = 0.005f;
-//	    timer.scheduleAtFixedRate(new AnimationTask(angle, shapes,this), 0, 10);
+	    Timer timer = new Timer();
+	    float angle = 0.005f;
+	    timer.scheduleAtFixedRate(new AnimationTask(angle, shapes,this, transformGroups), 0, 10);
 	}
 
 }

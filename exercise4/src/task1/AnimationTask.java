@@ -3,6 +3,9 @@ package task1;
 import java.util.TimerTask;
 
 import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3f;
+
+import sceneGraph.TransformGroup;
 
 import jrtr.RenderPanel;
 import jrtr.Shape;
@@ -14,29 +17,34 @@ import jrtr.Shape;
 public class AnimationTask extends TimerTask
 {
 	private float angle;
+	private float translationStep = 0.01f;
 	private Shape[] shapes;
+	private TransformGroup[] transformGroups;
 	private RenderPanel renderPanel;
+	private float angleSum = 0;
 	
-	public AnimationTask(float angle, Shape[] shapes, RenderPanel renderPanel){
+	public AnimationTask(float angle, Shape[] shapes, RenderPanel renderPanel, TransformGroup[] transformGroups){
 		this.angle = 0.005f;
+		
 		this.shapes = shapes;
 		this.renderPanel = renderPanel;
+		this.transformGroups = transformGroups;
 	}
+	
 	public void run()
 	{
 		// Update transformation
-		for (int i = 0; i<shapes.length; i++){
-			Matrix4f t = shapes[i].getTransformation();
-			Matrix4f rotX = new Matrix4f();
-			rotX.rotX(angle);
-			Matrix4f rotY = new Matrix4f();
-			rotY.rotY(angle);
-			t.mul(rotX);
-			t.mul(rotY);
-			shapes[i].setTransformation(t);
-		}
+		TransformGroup light = transformGroups[0];
+		angleSum += 0.01;
 		
-		// Trigger redrawing of the render window
+		if (angleSum > 3){
+			angleSum = 0;
+			this.translationStep *= -1;
+		}
+	
+		light.setTranslation(new Vector3f(2*translationStep,0,0));
+		
+	// Trigger redrawing of the render window
 		renderPanel.getCanvas().repaint(); 
 	}
 }

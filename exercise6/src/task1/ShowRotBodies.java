@@ -4,12 +4,9 @@ import java.awt.Component;
 import java.io.IOException;
 
 import javax.swing.JFrame;
-import javax.vecmath.Color3f;
 import javax.vecmath.Point2f;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
-
-import ex1.Cylinder;
 
 import jrtr.Camera;
 import jrtr.Frustum;
@@ -22,7 +19,6 @@ import sceneGraph.GraphSceneManager;
 import sceneGraph.LightNode;
 import sceneGraph.ShapeNode;
 import sceneGraph.TransformGroup;
-import task2.SimpleRenderPanel;
 import task3.LandscapeListener;
 
 public class ShowRotBodies {
@@ -115,7 +111,9 @@ public class ShowRotBodies {
 			
 			sceneManager = new GraphSceneManager(world,camera,frustum);
 			Shape[] shapes = {table,sphere,snare,baseDrum,ride,snareSupp};
-			renderPanel = new SimpleRenderPanelTexShad(sceneManager,shapes);
+			TransformGroup[] transformGroups = {};
+			
+			renderPanel = new SimpleRenderPanelTexShad(sceneManager,shapes,transformGroups);
 			setupMainWindow(camera,"Rotational Body");
 		}
 		

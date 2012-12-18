@@ -39,21 +39,21 @@ public class ShowBumpMap {
 	 */
 	public static void main(String[] args) throws IOException
 	{						
-		Camera 	camera = new Camera(new Vector3f(0,3,-5), new Vector3f(0,0,0), new Vector3f(0,1,0));
+		Camera 	camera = new Camera(new Vector3f(0,3,-3), new Vector3f(0,0,0), new Vector3f(0,1,0));
 		Frustum	frustum = new Frustum(1,100,1,(float)(Math.PI/3));
 	
 		
 		TransformGroup world = new TransformGroup();
 	
 		Shape cubeShape = new Shape(makePlane());
-		cubeShape.setMaterial(new Material("../jrtr/textures/bump_test_2.jpg",1));
+		cubeShape.setMaterial(new Material("../jrtr/textures/bump_test_3.jpg",1));
 		cubeShape.getMaterial().setFragmentShaderPath("../jrtr/shaders/bumpShader.frag");
 		cubeShape.getMaterial().setVertexShaderPath("../jrtr/shaders/bumpShader.vert");
 		
 		ShapeNode cubeNode = new ShapeNode(cubeShape);
 		
 		TransformGroup lightPos = new TransformGroup();
-		lightPos.setTranslation(new Vector3f(0,0,3));
+		lightPos.setTranslation(new Vector3f(0,0,-3));
 		PointLight light = new PointLight(20, new Point3f(0,0,0));
 		
 		LightNode lightNode = new LightNode(light);
@@ -63,8 +63,11 @@ public class ShowBumpMap {
 		world.addChild(lightPos,cubeNode);
 		
 		sceneManager = new GraphSceneManager(world,camera,frustum);
+		
 		Shape[] shapes = {cubeShape};
-		renderPanel = new SimpleRenderPanelTexShad(sceneManager,shapes);
+		TransformGroup[] transformGroups = {lightPos};
+		
+		renderPanel = new SimpleRenderPanelTexShad(sceneManager,shapes,transformGroups);
 		setupMainWindow(camera,"Rotational Body");
 	}
 
