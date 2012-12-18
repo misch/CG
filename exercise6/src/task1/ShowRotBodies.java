@@ -50,7 +50,7 @@ public class ShowRotBodies {
 			sphere.getMaterial().setPhongExponent(1000);
 		
 			Shape snare = new RotCylinder(50,50,1,0.6f).getShape();
-			setTexAndShade(snare, "sand.png","phongWithTexture");
+			setTexAndShade(snare, "drums.png","phongWithTexture");
 			float snareHeight = 2.5f;
 			Shape snareSupp = new RotCylinder(50,50,0.05f,snareHeight).getShape();
 			setTexAndShade(snareSupp, "silber.png", "phongWithTexture");
@@ -59,7 +59,7 @@ public class ShowRotBodies {
 			
 			float baseDrumRad = 1.5f;
 			Shape baseDrum = new RotCylinder(50,50,baseDrumRad,2.5f).getShape();
-			setTexAndShade(baseDrum, "sand.png","phongWithTexture");
+			setTexAndShade(baseDrum, "drums.png","phongWithTexture");
 			
 			Shape ride = new Pan(50,50,2,0.3f).getShape();
 			setTexAndShade(ride, "messing.jpg","phongWithTexture");
@@ -80,9 +80,8 @@ public class ShowRotBodies {
 			lightPos.addChild(light1,light2,light3);
 			
 			ShapeNode table1 = new ShapeNode(table);
-			ShapeNode sphereNode = new ShapeNode(sphere);
 			sphereGroup.setTranslation(new Vector3f(4,0,0));
-			sphereGroup.addChild(sphereNode);
+			sphereGroup.addChild(new ShapeNode(sphere));
 			
 			TransformGroup tableTop = new TransformGroup();
 			tableTop.setTranslation(new Vector3f(0,5.1f,0));
@@ -113,7 +112,7 @@ public class ShowRotBodies {
 			Shape[] shapes = {table,sphere,snare,baseDrum,ride,snareSupp};
 			TransformGroup[] transformGroups = {};
 			
-			renderPanel = new SimpleRenderPanelTexShad(sceneManager,shapes,transformGroups);
+			renderPanel = new SimpleRenderPanelTexShad(sceneManager,shapes,null);
 			setupMainWindow(camera,"Rotational Body");
 		}
 		

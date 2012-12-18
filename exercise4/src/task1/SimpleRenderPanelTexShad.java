@@ -27,7 +27,10 @@ public class SimpleRenderPanelTexShad extends GLRenderPanel {
 	public SimpleRenderPanelTexShad(SceneManagerInterface sceneManager, Shape[] shapes, TransformGroup[] transformGroups){
 		this.sceneManager = sceneManager;	
 		this.shapes = shapes;
-		this.transformGroups = transformGroups;
+		if (transformGroups != null){
+			this.transformGroups = transformGroups;
+		}
+		
 	}
 	
 	/**

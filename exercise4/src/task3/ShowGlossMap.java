@@ -127,7 +127,7 @@ public class ShowGlossMap
 		// Make a render panel. The init function of the renderPanel
 		// will be called back for initialization.
 		Shape[] shapes = {shape1, shape2};
-		renderPanel = new SimpleRenderPanelTexShad(sceneManager,shapes);
+		renderPanel = new SimpleRenderPanelTexShad(sceneManager,shapes,null);
 		
 		// Make the main window of this application and add the renderer to it
 		JFrame jframe = new JFrame("simple");

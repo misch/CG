@@ -104,7 +104,7 @@ public class ShowSubdivision {
 				sceneManager = new GraphSceneManager(world,camera,frustum);
 //				Shape[] shapes = {rotShape,sphereShape};
 				Shape[] shapes = {};
-				renderPanel = new SimpleRenderPanelTexShad(sceneManager,shapes);
+				renderPanel = new SimpleRenderPanelTexShad(sceneManager,shapes,null);
 				setupMainWindow(camera,"Rotational Body");
 			}
 			
