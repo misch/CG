@@ -46,17 +46,14 @@ public class ShowBumpMap {
 		TransformGroup world = new TransformGroup();
 	
 		Shape cubeShape = new Shape(makePlane());
-//		Shape cubeShape = new Cylinder(50,1,1).getShape();
-		cubeShape.setMaterial(new Material("../jrtr/textures/test.png",1));
+		cubeShape.setMaterial(new Material("../jrtr/textures/bump_test_2.jpg",1));
 		cubeShape.getMaterial().setFragmentShaderPath("../jrtr/shaders/bumpShader.frag");
 		cubeShape.getMaterial().setVertexShaderPath("../jrtr/shaders/bumpShader.vert");
-//		cubeShape.getMaterial().setSpecularReflection(200);
-//		cubeShape.getMaterial().setPhongExponent(1000);
 		
 		ShapeNode cubeNode = new ShapeNode(cubeShape);
 		
 		TransformGroup lightPos = new TransformGroup();
-		lightPos.setTranslation(new Vector3f(0,0,-3));
+		lightPos.setTranslation(new Vector3f(0,0,3));
 		PointLight light = new PointLight(20, new Point3f(0,0,0));
 		
 		LightNode lightNode = new LightNode(light);

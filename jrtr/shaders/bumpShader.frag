@@ -22,18 +22,16 @@ uniform vec3 cam_position;
 in vec2 frag_texcoord;
 in vec3 frag_normal;
 in vec4 frag_position;
-//in vec3 frag_bump;
+in vec4 frag_tangent;
+in vec4 frag_bi_tangent;
 
 // Output variable, will be written to framebuffer automatically
 out vec4 frag_shaded;
 
 void main()
 {		
-	//frag_normal = frag_normal;
-	vec3 bump_normal = (normalize(texture(myTexture, frag_texcoord))).xyz;
 	
-	
-	vec3 normal = frag_normal + bump_normal;
+	vec3 normal = (2*texture(myTexture,frag_texcoord)).xzy - vec3(1,1,1);
 	
 	float ambient_light = 0.2;
 	vec3 look_from_direction = - normalize((modelview*frag_position).xyz);
@@ -42,7 +40,7 @@ void main()
 	vec4 specular_light = vec4(0,0,0,0);
 	
 	//vec4 reflection_coeff = texture(myTexture, frag_texcoord);
-	vec4 reflection_coeff = vec4(0.5,0.5,0.5,0);
+	vec4 reflection_coeff = vec4(1,1,1,0);
 	
 	//vec4 ambient = ambient_light * texture(myTexture, frag_texcoord);
 	vec4 ambient = ambient_light * vec4(0.5,0.5,0.5,0);
