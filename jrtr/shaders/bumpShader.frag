@@ -23,8 +23,8 @@ uniform vec3 cam_position;
 in vec2 frag_texcoord;
 in vec3 frag_normal;
 in vec4 frag_position;
-in vec4 frag_tangent;
-in vec4 frag_bi_tangent;
+in vec3 frag_tangent;
+in vec3 frag_bi_tangent;
 in vec2 frag_bump_coord;
 
 // Output variable, will be written to framebuffer automatically
@@ -33,6 +33,10 @@ out vec4 frag_shaded;
 void main()
 {		
 	vec3 normal = (2*texture(bumpMap,frag_texcoord)).xzy - vec3(1,1,1);
+	
+	// changed the order from TBN to BNT... maybe need to do some corrections later.
+	mat3 object_space = mat3(frag_bi_tangent,frag_normal,frag_tangent);
+	normal = object_space * normal;
 	
 	float ambient_light = 0.2;
 	vec3 look_from_direction = - normalize((modelview*frag_position).xyz);
