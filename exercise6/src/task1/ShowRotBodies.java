@@ -40,7 +40,10 @@ public class ShowRotBodies {
 		
 			TransformGroup world = new TransformGroup();
 			TransformGroup sphereGroup = new TransformGroup();
-		
+			Point2f[] floorPoints = {p(0,0),p(10,0),p(50,0),p(100,0)};
+			Shape floor = new RotationalBody(new BezierCurve(1,floorPoints,1),4).getShape();
+			setTexAndShade(floor,"wood.jpg","phongWithTexture");
+			
 			Shape table = new Table(5,4).getShape();
 			setTexAndShade(table,"wood.jpg","phongWithTexture");
 			
@@ -50,8 +53,9 @@ public class ShowRotBodies {
 			sphere.getMaterial().setPhongExponent(1000);
 		
 			Shape snare = new RotCylinder(50,50,1,0.6f).getShape();
-			setTexAndShade(snare, "drums.png","phongWithTexture");
+			setTexAndShade(snare, "drums2.png","bumpShader");
 			float snareHeight = 2.5f;
+			snare.getMaterial().setBumpMapPath("../jrtr/textures/drum_bump.png");
 			
 			Shape snareSupp = new RotCylinder(50,50,0.05f,snareHeight).getShape();
 			setTexAndShade(snareSupp, "silber.png", "phongWithTexture");
@@ -60,10 +64,14 @@ public class ShowRotBodies {
 			
 			float baseDrumRad = 1.5f;
 			Shape baseDrum = new RotCylinder(50,50,baseDrumRad,2.5f).getShape();
-			setTexAndShade(baseDrum, "drums.png","phongWithTexture");
+			setTexAndShade(baseDrum, "drums2.png","bumpShader");
+			baseDrum.getMaterial().setBumpMapPath("../jrtr/textures/drum_bump.png");
 			
 			Shape ride = new Pan(50,50,1.5f,0.3f).getShape();
-			setTexAndShade(ride, "messing.jpg","phongWithTexture");
+			setTexAndShade(ride, "messing.jpg","bumpShader");
+			ride.getMaterial().setBumpMapPath("../jrtr/textures/bump_test_4.png");
+			snareSupp.getMaterial().setSpecularReflection(200);
+			snareSupp.getMaterial().setPhongExponent(100);
 
 			float rideHeight = 3.5f;
 			Shape rideSupp = new RotCylinder(50,50,0.05f,rideHeight).getShape();
@@ -80,7 +88,7 @@ public class ShowRotBodies {
 			
 			float fatHiHatSuppHeight = 3;
 			Shape fatHiHatSupp = new RotCylinder(50,50,0.05f,fatHiHatSuppHeight).getShape();
-			Shape thinHiHatSupp = new RotCylinder(50,50,0.02f,fatHiHatSuppHeight/4f).getShape();
+			Shape thinHiHatSupp = new RotCylinder(50,50,0.02f,fatHiHatSuppHeight/3f).getShape();
 			setTexAndShade(fatHiHatSupp, "silber.png", "phongWithTexture");
 			setTexAndShade(thinHiHatSupp, "silber.png", "phongWithTexture");
 			
@@ -100,15 +108,15 @@ public class ShowRotBodies {
 			
 			lightPos.addChild(light1,light2,light3);
 			
-			ShapeNode table1 = new ShapeNode(table);
-			sphereGroup.setTranslation(new Vector3f(4,0,0));
-			sphereGroup.addChild(new ShapeNode(sphere));
+//			ShapeNode table1 = new ShapeNode(table);
+//			sphereGroup.setTranslation(new Vector3f(4,0,0));
+//			sphereGroup.addChild(new ShapeNode(sphere));
 			
-			TransformGroup tableTop = new TransformGroup();
-			tableTop.setTranslation(new Vector3f(0,5.1f,0));
+//			TransformGroup tableTop = new TransformGroup();
+//			tableTop.setTranslation(new Vector3f(0,5.1f,0));
 			
 			TransformGroup drumPos = new TransformGroup();
-			drumPos.setTranslation(new Vector3f(10,1,0));
+			drumPos.setTranslation(new Vector3f(10,baseDrumRad,0));
 			
 			TransformGroup snarePos = new TransformGroup();
 			snarePos.setTranslation(new Vector3f(0,snareHeight,0));
@@ -152,17 +160,23 @@ public class ShowRotBodies {
 			
 			TransformGroup lowerHiHat = new TransformGroup();
 			lowerHiHat.addChild(new ShapeNode(hiHat));
+			lowerHiHat.setTranslation(new Vector3f(0,0.45f,0));
 			lowerHiHat.setRotation(new Vector3f(0,0,1), (float)Math.PI);
 			
 			thinHiHatSuppPos.addChild(lowerHiHat);
 			
+			TransformGroup upperHiHat = new TransformGroup();
+			upperHiHat.addChild(new ShapeNode(hiHat));
+			upperHiHat.setTranslation(new Vector3f(0,0.6f,0));
+			thinHiHatSuppPos.addChild(upperHiHat);
+			
 			
 			drumPos.addChild(snareSuppPos,basePos,rideSuppPos,crashSuppPos,fatHiHatSuppPos);
 			// build graph	
-			world.addChild(lightPos,table1,sphereGroup,tableTop,drumPos);
+			world.addChild(lightPos,drumPos, new ShapeNode(floor));
 			
 			sceneManager = new GraphSceneManager(world,camera,frustum);
-			Shape[] shapes = {table,sphere,snare,baseDrum,ride,snareSupp,rideSupp,crashSupp,crash,fatHiHatSupp,thinHiHatSupp,hiHat};
+			Shape[] shapes = {table,sphere,snare,baseDrum,ride,snareSupp,rideSupp,crashSupp,crash,fatHiHatSupp,thinHiHatSupp,hiHat,floor};
 			TransformGroup[] transformGroups = {};
 			
 			renderPanel = new SimpleRenderPanelTexShad(sceneManager,shapes,null);

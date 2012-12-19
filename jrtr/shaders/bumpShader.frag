@@ -32,7 +32,7 @@ out vec4 frag_shaded;
 
 void main()
 {		
-	vec3 normal = (2*texture(bumpMap,frag_texcoord)).xzy - vec3(1,1,1);
+	vec3 normal = (2*texture(bumpMap,frag_bump_coord)).xzy - vec3(1,1,1);
 	
 	// changed the order from TBN to BNT... maybe need to do some corrections later.
 	mat3 object_space = mat3(frag_bi_tangent,frag_normal,frag_tangent);

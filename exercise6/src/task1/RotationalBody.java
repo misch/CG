@@ -38,6 +38,10 @@ public class RotationalBody extends AbstractSimpleShape{
 			for(int i = 0; i<pointsToRotate.length; i++){
 				rot.rotY(angle);
 				Point3f point = new Point3f(pointsToRotate[i].x, pointsToRotate[i].y,0);
+				
+				Vector3f tangent = new Vector3f(tangents[i].x,tangents[i].y,0);
+				rot.transform(tangent);
+				
 				Vector3f normal = new Vector3f(-tangents[i].y,tangents[i].x,0);
 				normal.normalize();
 				
@@ -49,6 +53,7 @@ public class RotationalBody extends AbstractSimpleShape{
 				addVertex(this.vertices, point);
 				addColor(this.colors, col);
 				addNormal(this.normals, normal);
+				addTangent(this.tangents,tangent);
 			}
 		}
 	}

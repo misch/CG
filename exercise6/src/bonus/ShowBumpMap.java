@@ -23,7 +23,10 @@ import sceneGraph.GraphSceneManager;
 import sceneGraph.LightNode;
 import sceneGraph.ShapeNode;
 import sceneGraph.TransformGroup;
+import task1.BezierCurve;
+import task1.RotationalBody;
 import task1.SimpleRenderPanelTexShad;
+import task1.Sphere;
 import task3.LandscapeListener;
 
 public class ShowBumpMap {
@@ -44,22 +47,32 @@ public class ShowBumpMap {
 		
 		TransformGroup world = new TransformGroup();
 	
-		Shape cubeShape = new Shape(makePlane());
-		cubeShape.setMaterial(new Material("../jrtr/textures/sand.png",1));
+//		Shape cubeShape = new Shape(makePlane());
+//		Point2f[] points = {new Point2f(1,0), new Point2f(1,0.5f), new Point2f(1,0.75f), new Point2f(1,1)};
+//		Shape cubeShape = new RotationalBody(new BezierCurve(1,points,4),50).getShape();
+		Shape cubeShape = new Sphere(50,50,1,new Point2f(0,0)).getShape();
+		cubeShape.setMaterial(new Material("../jrtr/textures/silber.png",1));
 		cubeShape.getMaterial().setFragmentShaderPath("../jrtr/shaders/bumpShader.frag");
 		cubeShape.getMaterial().setVertexShaderPath("../jrtr/shaders/bumpShader.vert");
-		cubeShape.getMaterial().setBumpMapPath("../jrtr/textures/bump_test_5.jpg");
+		cubeShape.getMaterial().setBumpMapPath("../jrtr/textures/bumpy_thing.png");
 //		cubeShape.getMaterial().setSpecularReflection(10);
 //		cubeShape.getMaterial().setPhongExponent(100);
 		
 		ShapeNode cubeNode = new ShapeNode(cubeShape);
 		
 		TransformGroup lightPos = new TransformGroup();
-		lightPos.setTranslation(new Vector3f(0,3,0));
-		PointLight light = new PointLight(20, new Point3f(0,0,0));
+		lightPos.setTranslation(new Vector3f(0,0,0));
+		PointLight light = new PointLight(7, new Point3f(0,0,0));
 		
-		LightNode lightNode = new LightNode(light);
-		lightPos.addChild(lightNode);
+		LightNode light1 = new LightNode(light);
+		LightNode light2 = new LightNode(light);
+		light2.setTranslation(new Vector3f(-3,1,0));
+		LightNode light3 = new LightNode(light);
+		light3.setTranslation(new Vector3f(-1,-3,0));
+		LightNode light4 = new LightNode(light);
+		light4.setTranslation(new Vector3f(-1,-2,2));
+		
+		lightPos.addChild(light1,light2,light3,light4);
 		// build graph	
 		world.addChild(lightPos,cubeNode);
 		
