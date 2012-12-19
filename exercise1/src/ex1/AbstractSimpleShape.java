@@ -17,6 +17,7 @@ public abstract class AbstractSimpleShape implements IForm {
 	protected ArrayList<Float> normals = new ArrayList<Float>(); 
 	protected ArrayList<Integer> indices = new ArrayList<Integer>();
 	protected ArrayList<Float> texels = new ArrayList<Float>();
+	protected ArrayList<Float> tangents = new ArrayList<Float>();
 	
 	protected float u,v;
 	protected VertexData vertexData;
@@ -32,12 +33,15 @@ public abstract class AbstractSimpleShape implements IForm {
 		vertexData = new VertexData(getVertices().length/3);
 		vertexData.addElement(getVertices(), VertexData.Semantic.POSITION, 3);
 		
+		// add to vertexData only if specified (therefore the size-condition)
 		if (this.colors.size()>0)
 			vertexData.addElement(getColors(),VertexData.Semantic.COLOR, 3);
 		if (this.normals.size() > 0)	
 			vertexData.addElement(getNormals(), VertexData.Semantic.NORMAL,3);
 		if (this.texels.size() > 0)
 			vertexData.addElement(getTexels(),  VertexData.Semantic.TEXCOORD, 2);
+		if (this.tangents.size() > 0)
+			vertexData.addElement(getTangents(),  VertexData.Semantic.TANGENT, 3);
 				
 		
 		vertexData.addIndices(getIndices());
@@ -69,6 +73,16 @@ public abstract class AbstractSimpleShape implements IForm {
 			n[i] = normals.get(i);
 		}
 		return n;
+	}
+	
+	protected float[] getTangents(){
+		float[] tan = new float[tangents.size()];
+		
+		for (int i = 0; i< tan.length; i++){
+			tan[i] = tangents.get(i);
+		}
+		
+		return tan;
 	}
 		protected float[] getColors() {
 		float[] c = new float[colors.size()];
@@ -116,7 +130,13 @@ public abstract class AbstractSimpleShape implements IForm {
 	n.add(normal.x);
 	n.add(normal.y);
 	n.add(normal.z);
-}
+	}
+	
+	protected void addTangent(ArrayList<Float> tan, Vector3f tangent){
+		tan.add(tangent.x);
+		tan.add(tangent.y);
+		tan.add(tangent.z);
+	}
 	
 	protected void addTexel(ArrayList<Float> t, float x, float y){
 		t.add(x);

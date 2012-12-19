@@ -14,7 +14,7 @@ varying float pattern;
 in vec3 normal;
 in vec4 position;
 in vec2 texcoord;
-// in vec3 tangent;
+in vec3 tangent;
 
 // Output variables for fragment shader
 out vec2 frag_texcoord;
@@ -29,8 +29,11 @@ void main()
 	// Pass texture coordinates, normals and vertex positions to fragment shader, OpenGL automatically
 	// interpolates them to each pixel (in a perpectively correct manner)
 	
+	
+	
 	vec4 frag_tangent = modelview*vec4(0,0,1,0);
 	vec4 frag_bi_tangent = modelview*vec4(1,0,0,0);
+	
 	
 	frag_normal = normal;
 	frag_texcoord = texcoord;

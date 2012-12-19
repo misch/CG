@@ -186,6 +186,9 @@ public class GLRenderContext implements RenderContext {
 	        else if(e.getSemantic() == VertexData.Semantic.TEXCOORD) {
 	        	attribIndex = gl.glGetAttribLocation(activeShader.programId(), "texcoord");
 	        }
+	        else if(e.getSemantic() == VertexData.Semantic.TANGENT){
+	        	attribIndex = gl.glGetAttribLocation(activeShader.programId(),  "tangent");
+	        }
         	gl.glVertexAttribPointer(attribIndex, dim, GL3.GL_FLOAT, false, 0, 0);
             gl.glEnableVertexAttribArray(attribIndex);        
 		}

@@ -41,7 +41,6 @@ public class ShowBumpMap {
 	{						
 		Camera 	camera = new Camera(new Vector3f(0,3,-3), new Vector3f(0,0,0), new Vector3f(0,1,0));
 		Frustum	frustum = new Frustum(1,100,1,(float)(Math.PI/3));
-	
 		
 		TransformGroup world = new TransformGroup();
 	
@@ -103,6 +102,8 @@ public class ShowBumpMap {
 		
 		float t[] = {1,0,  1,1,  0,1,  0,0};
 		
+		float tan[] = {0,0,1,  0,0,1,  0,0,1,  0,0,1};
+		
 		// Set up the vertex data
 		VertexData vertexData = new VertexData(4);
 
@@ -116,7 +117,8 @@ public class ShowBumpMap {
 		
 		vertexData.addElement(t, VertexData.Semantic.TEXCOORD, 2);
 		
-
+		vertexData.addElement(tan,  VertexData.Semantic.TANGENT, 3);
+		
 		vertexData.addIndices(indices);
 
 		return vertexData;
