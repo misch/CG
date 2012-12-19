@@ -13,7 +13,6 @@ public class Pan extends RotationalBody {
 	}
 	
 	private static Point2f[] setControlPoints(float radius, float height){
-		float width = 0.05f;
 		Point2f[] controlPoints = {
 				p(0.05,height),
 				p(radius/8,height),
