@@ -20,8 +20,8 @@ in vec3 tangent;
 out vec2 frag_texcoord;
 out vec3 frag_normal;
 out vec4 frag_position;
-out vec4 frag_tangent;
-out vec4 frag_bi_tangent;
+out vec3 frag_tangent;
+out vec3 frag_bi_tangent;
 out vec2 frag_bump_coord;
 
 void main()
@@ -29,13 +29,13 @@ void main()
 	// Pass texture coordinates, normals and vertex positions to fragment shader, OpenGL automatically
 	// interpolates them to each pixel (in a perpectively correct manner)
 	
+	// compute binormal (bi-tangent) vector
+	vec3 bi_tangent = cross(normal,tangent);
 	
-	
-	vec4 frag_tangent = modelview*vec4(0,0,1,0);
-	vec4 frag_bi_tangent = modelview*vec4(1,0,0,0);
-	
-	
-	frag_normal = normal;
+	frag_tangent = modelview * vec4(tangent,0);
+	frag_bi_tangent = modelview * vec4(bi_tangent,0);
+	frag_normal = modelview * vec4(normal,0);
+
 	frag_texcoord = texcoord;
 	frag_position = position;
 	frag_bump_coord = texcoord;
