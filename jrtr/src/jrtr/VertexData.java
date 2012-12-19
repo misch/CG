@@ -10,11 +10,11 @@ import java.util.LinkedList;
 public class VertexData {
 
 	/**
-	 * Vertex data semantic can be position, normal, or texture coordinates. 
+	 * Vertex data semantic can be position, normal, texture coordinates or tangent. 
 	 */
 	public enum Semantic
 	{
-		POSITION, NORMAL, TEXCOORD, COLOR
+		POSITION, NORMAL, TEXCOORD, COLOR, TANGENT;
 	}
 
 	/**
