@@ -44,137 +44,129 @@ public class ShowRotBodies {
 			Shape floor = new RotationalBody(new BezierCurve(1,floorPoints,1),4).getShape();
 			setTexAndShade(floor,"wood.jpg","phongWithTexture");
 			
-			Shape table = new Table(5,4).getShape();
+			float snareHeight = 2.5f,
+				baseDrumRad = 1.5f,
+				rideHeight = 3.5f,
+				crashHeight = 4.5f,
+				fatHiHatSuppHeight = 3;
+			
+			Shape 
+				table = new Table(5,4).getShape(),
+				sphere = new Sphere(100,50,1,new Point2f(0,1)).getShape(),
+				snareSupp = new RotCylinder(50,50,0.05f,snareHeight).getShape(),
+				snare = new RotCylinder(50,50,1,0.6f).getShape(),
+				baseDrum = new RotCylinder(50,50,baseDrumRad,2.5f).getShape(),
+				rideSupp = new RotCylinder(50,50,0.05f,rideHeight).getShape(),
+				ride = new Pan(50,50,1.5f,0.3f).getShape(),
+				crash = new Pan(50,50,1.3f,0.3f).getShape(),
+				crashSupp = new RotCylinder(50,50,0.05f,crashHeight).getShape(),
+				fatHiHatSupp = new RotCylinder(50,50,0.05f,fatHiHatSuppHeight).getShape(),
+				thinHiHatSupp = new RotCylinder(50,50,0.02f,fatHiHatSuppHeight/3f).getShape(),
+				hiHat = new Pan(50,50,1,0.3f).getShape(),
+				tom = new RotCylinder(50,50,0.5f,2.5f).getShape();
+			
+			PointLight light = new PointLight(30, new Point3f(0,0,0));
+			
+			TransformGroup
+				lightPos = new TransformGroup(),
+				drumPos = new TransformGroup(),
+				snarePos = new TransformGroup(),
+				snareSuppPos = new TransformGroup(),
+				basePos = new TransformGroup(),
+				ridePos = new TransformGroup(),
+				rideSuppPos = new TransformGroup(),
+				crashPos = new TransformGroup(),
+				crashSuppPos = new TransformGroup(),
+				fatHiHatSuppPos = new TransformGroup(),
+				thinHiHatSuppPos = new TransformGroup(),
+				lowerHiHat = new TransformGroup(),
+				upperHiHat = new TransformGroup();
+			
+			LightNode 
+				light1 = new LightNode(light),
+				light2 = new LightNode(light),
+				light3 = new LightNode(light);
+			
+			light1.setTranslation(new Vector3f(14,5,2));
+			light2.setTranslation(new Vector3f(0,2,-5));
+			light3.setTranslation(new Vector3f(-5,2,0));
+				
+					
+			// set materials
 			setTexAndShade(table,"wood.jpg","phongWithTexture");
 			
-			Shape sphere = new Sphere(100,50,1,new Point2f(0,1)).getShape();
 			setTexAndShade(sphere,"fussball2.jpg","phongWithTexture");
 			sphere.getMaterial().setSpecularReflection(200);
 			sphere.getMaterial().setPhongExponent(1000);
 		
-			Shape snare = new RotCylinder(50,50,1,0.6f).getShape();
 			setTexAndShade(snare, "drums2.png","bumpShader");
-			float snareHeight = 2.5f;
 			snare.getMaterial().setBumpMapPath("../jrtr/textures/drum_bump.png");
 			
-			Shape snareSupp = new RotCylinder(50,50,0.05f,snareHeight).getShape();
 			setTexAndShade(snareSupp, "silber.png", "phongWithTexture");
 			snareSupp.getMaterial().setSpecularReflection(200);
 			snareSupp.getMaterial().setPhongExponent(1000);
-			
-			float baseDrumRad = 1.5f;
-			Shape baseDrum = new RotCylinder(50,50,baseDrumRad,2.5f).getShape();
+		
 			setTexAndShade(baseDrum, "drums2.png","bumpShader");
 			baseDrum.getMaterial().setBumpMapPath("../jrtr/textures/drum_bump.png");
 			
-			Shape ride = new Pan(50,50,1.5f,0.3f).getShape();
 			setTexAndShade(ride, "messing.jpg","bumpShader");
 			ride.getMaterial().setBumpMapPath("../jrtr/textures/bump_test_4.png");
-			snareSupp.getMaterial().setSpecularReflection(200);
-			snareSupp.getMaterial().setPhongExponent(100);
-
-			float rideHeight = 3.5f;
-			Shape rideSupp = new RotCylinder(50,50,0.05f,rideHeight).getShape();
+					
 			setTexAndShade(rideSupp, "silber.png", "phongWithTexture");
 			rideSupp.getMaterial().setSpecularReflection(200);
 			rideSupp.getMaterial().setPhongExponent(1000);
 			
-			Shape crash = new Pan(50,50,1.3f,0.3f).getShape();
 			setTexAndShade(crash, "messing.jpg","phongWithTexture");
-			
-			float crashHeight = 4.5f;
-			Shape crashSupp = new RotCylinder(50,50,0.05f,crashHeight).getShape();
+		
 			setTexAndShade(crashSupp, "silber.png", "phongWithTexture");
-			
-			float fatHiHatSuppHeight = 3;
-			Shape fatHiHatSupp = new RotCylinder(50,50,0.05f,fatHiHatSuppHeight).getShape();
-			Shape thinHiHatSupp = new RotCylinder(50,50,0.02f,fatHiHatSuppHeight/3f).getShape();
+		
 			setTexAndShade(fatHiHatSupp, "silber.png", "phongWithTexture");
 			setTexAndShade(thinHiHatSupp, "silber.png", "phongWithTexture");
-			
-			Shape hiHat = new Pan(50,50,1,0.3f).getShape();
 			setTexAndShade(hiHat, "messing.jpg","phongWithTexture");
+	
 			
-			TransformGroup lightPos = new TransformGroup();
-			lightPos.setTranslation(new Vector3f(0,0,0));
-			PointLight light = new PointLight(30, new Point3f(0,0,0));
-			
-			LightNode light1 = new LightNode(light);
-			light1.setTranslation(new Vector3f(14,5,2));
-			LightNode light2 = new LightNode(light);
-			light2.setTranslation(new Vector3f(0,2,-5));
-			LightNode light3 = new LightNode(light);
-			light3.setTranslation(new Vector3f(-5,2,0));
-			
+			// build scene graph
 			lightPos.addChild(light1,light2,light3);
-			
-//			ShapeNode table1 = new ShapeNode(table);
-//			sphereGroup.setTranslation(new Vector3f(4,0,0));
-//			sphereGroup.addChild(new ShapeNode(sphere));
-			
-//			TransformGroup tableTop = new TransformGroup();
-//			tableTop.setTranslation(new Vector3f(0,5.1f,0));
-			
-			TransformGroup drumPos = new TransformGroup();
-			drumPos.setTranslation(new Vector3f(10,baseDrumRad,0));
-			
-			TransformGroup snarePos = new TransformGroup();
-			snarePos.setTranslation(new Vector3f(0,snareHeight,0));
-			snarePos.setRotation(new Vector3f(0.5f,0,1), 0.5f);
-			
-			TransformGroup snareSuppPos = new TransformGroup();
-			snareSuppPos.setTranslation(new Vector3f(-0.5f,-baseDrumRad,-2.5f));
 			snareSuppPos.addChild(new ShapeNode(snareSupp),snarePos);
 			snarePos.addChild(new ShapeNode(snare));
-				
-			TransformGroup basePos = new TransformGroup();
 			basePos.addChild(new ShapeNode(baseDrum));
-			basePos.setRotation(new Vector3f(0,0,1), (float)(Math.PI/2));
-			basePos.setTranslation(new Vector3f(2,0,0));
-			
-			TransformGroup ridePos = new TransformGroup();
-			ridePos.setTranslation(new Vector3f(0,rideHeight-0.3f,0));
 			ridePos.addChild(new ShapeNode(ride));
-			ridePos.setRotation(new Vector3f(1,0,1), 0);
-			
-			TransformGroup rideSuppPos = new TransformGroup();
-			rideSuppPos.setTranslation(new Vector3f(-3,-baseDrumRad,3));
-			rideSuppPos.addChild(new ShapeNode(rideSupp),ridePos);
-			
-			TransformGroup crashPos = new TransformGroup();
-			crashPos.setTranslation(new Vector3f(0,crashHeight-0.3f,0));
 			crashPos.addChild(new ShapeNode(crash));
-			
-			TransformGroup crashSuppPos = new TransformGroup();
-			crashSuppPos.setTranslation(new Vector3f(1.5f,-baseDrumRad,-2));
+			rideSuppPos.addChild(new ShapeNode(rideSupp),ridePos);
 			crashSuppPos.addChild(new ShapeNode(crashSupp),crashPos);
-			
-			TransformGroup fatHiHatSuppPos = new TransformGroup();
-			TransformGroup thinHiHatSuppPos = new TransformGroup();
-			
-			fatHiHatSuppPos.setTranslation(new Vector3f(-3,-baseDrumRad,-2));
-			thinHiHatSuppPos.setTranslation(new Vector3f(0,fatHiHatSuppHeight,0));
-			
-			fatHiHatSuppPos.addChild(thinHiHatSuppPos, new ShapeNode(fatHiHatSupp));
-			thinHiHatSuppPos.addChild(new ShapeNode(thinHiHatSupp));
-			
-			TransformGroup lowerHiHat = new TransformGroup();
+			thinHiHatSuppPos.addChild(new ShapeNode(thinHiHatSupp),lowerHiHat);
 			lowerHiHat.addChild(new ShapeNode(hiHat));
-			lowerHiHat.setTranslation(new Vector3f(0,0.45f,0));
-			lowerHiHat.setRotation(new Vector3f(0,0,1), (float)Math.PI);
-			
-			thinHiHatSuppPos.addChild(lowerHiHat);
-			
-			TransformGroup upperHiHat = new TransformGroup();
+			fatHiHatSuppPos.addChild(thinHiHatSuppPos, new ShapeNode(fatHiHatSupp));
 			upperHiHat.addChild(new ShapeNode(hiHat));
-			upperHiHat.setTranslation(new Vector3f(0,0.6f,0));
 			thinHiHatSuppPos.addChild(upperHiHat);
-			
-			
-			drumPos.addChild(snareSuppPos,basePos,rideSuppPos,crashSuppPos,fatHiHatSuppPos);
-			// build graph	
+			drumPos.addChild(snareSuppPos,basePos,rideSuppPos,crashSuppPos,fatHiHatSuppPos);	
 			world.addChild(lightPos,drumPos, new ShapeNode(floor));
 			
+			// set initial transformations
+			drumPos.setTranslation(new Vector3f(10,baseDrumRad,0));
+			
+			snarePos.setTranslation(new Vector3f(0,snareHeight,0));
+			snarePos.setRotation(new Vector3f(0.5f,0,1), 0.5f);
+			snareSuppPos.setTranslation(new Vector3f(-0.5f,-baseDrumRad,-2.5f));
+			
+			basePos.setRotation(new Vector3f(0,0,1), (float)(Math.PI/2));
+			basePos.setTranslation(new Vector3f(2,0,0));
+		
+			ridePos.setTranslation(new Vector3f(0,rideHeight-0.3f,0));
+			ridePos.setRotation(new Vector3f(1,0,1), 0);
+			rideSuppPos.setTranslation(new Vector3f(-3,-baseDrumRad,3));
+			
+			crashPos.setTranslation(new Vector3f(0,crashHeight-0.3f,0));
+			crashSuppPos.setTranslation(new Vector3f(1.5f,-baseDrumRad,-2));
+
+			fatHiHatSuppPos.setTranslation(new Vector3f(-3,-baseDrumRad,-2));
+			thinHiHatSuppPos.setTranslation(new Vector3f(0,fatHiHatSuppHeight,0));
+
+			lowerHiHat.setTranslation(new Vector3f(0,0.45f,0));
+			lowerHiHat.setRotation(new Vector3f(0,0,1), (float)Math.PI);
+			upperHiHat.setTranslation(new Vector3f(0,0.6f,0));
+			
+		
 			sceneManager = new GraphSceneManager(world,camera,frustum);
 			Shape[] shapes = {table,sphere,snare,baseDrum,ride,snareSupp,rideSupp,crashSupp,crash,fatHiHatSupp,thinHiHatSupp,hiHat,floor};
 			TransformGroup[] transformGroups = {};
