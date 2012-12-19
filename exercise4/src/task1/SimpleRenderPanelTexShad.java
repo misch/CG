@@ -2,6 +2,8 @@ package task1;
 
 import java.util.Timer;
 
+import javax.media.opengl.GL3;
+
 import sceneGraph.TransformGroup;
 
 import jrtr.GLRenderPanel;
@@ -18,12 +20,10 @@ import jrtr.Texture;
  */ 
 public class SimpleRenderPanelTexShad extends GLRenderPanel {
 	private RenderContext renderContext;
-//	private SimpleSceneManager sceneManager;
 	private SceneManagerInterface sceneManager;
 	private Shape[] shapes;
 	private TransformGroup[] transformGroups;
 	
-//	public SimpleRenderPanelTexShad(SimpleSceneManager sceneManager, Shape[] shapes){
 	public SimpleRenderPanelTexShad(SceneManagerInterface sceneManager, Shape[] shapes, TransformGroup[] transformGroups){
 		this.sceneManager = sceneManager;	
 		this.shapes = shapes;
@@ -44,17 +44,30 @@ public class SimpleRenderPanelTexShad extends GLRenderPanel {
 		this.renderContext.setSceneManager(this.sceneManager);
 		
 		Texture[] textures = new Texture[shapes.length];
+		Texture[] bumpMaps = new Texture[shapes.length];
 		Shader[] shaders = new Shader[shapes.length];
 		
 		for (int i = 0; i<shapes.length;i++){
 			textures[i] = renderContext.makeTexture(); 
+			bumpMaps[i] = renderContext.makeTexture();
 			shaders[i] = renderContext.makeShader();
 			String vertShaderPath = shapes[i].getMaterial().getVertexShaderPath();
 			String fragShaderPath = shapes[i].getMaterial().getFragmentShaderPath();
+			String bumpMapPath = shapes[i].getMaterial().getBumpMapPath();
 			
 			try{
 				textures[i].load(shapes[i].getMaterial().getTexFile());
 				shapes[i].getMaterial().setTexture(textures[i]);
+				
+				if (bumpMapPath != null){
+					try{
+						bumpMaps[i].load(bumpMapPath);
+						shapes[i].getMaterial().setBumpMap(bumpMaps[i]);
+					}
+					catch(Exception e){
+						System.out.println("Could not load bump map");
+					}
+				}
 			}
 			catch(Exception e){
 				System.out.print("Could not load a texture\n");

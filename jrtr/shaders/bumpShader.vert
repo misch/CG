@@ -4,7 +4,8 @@
 // Uniform variables, set in main program
 uniform mat4 projection; 
 uniform mat4 modelview;
-uniform sampler2D myTexture;
+//uniform sampler2D myTexture;
+uniform sampler2D bumpMap;
 
 varying float pattern;
 
@@ -21,6 +22,7 @@ out vec3 frag_normal;
 out vec4 frag_position;
 out vec4 frag_tangent;
 out vec4 frag_bi_tangent;
+out vec2 frag_bump_coord;
 
 void main()
 {		
@@ -33,6 +35,7 @@ void main()
 	frag_normal = normal;
 	frag_texcoord = texcoord;
 	frag_position = position;
+	frag_bump_coord = texcoord;
 
 	// Transform position, including projection matrix
 	// Note: gl_Position is a default output variable containing

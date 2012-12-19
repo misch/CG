@@ -15,6 +15,8 @@ public class Material {
 	private String vertexShaderPath = "";
 	private String fragmentShaderPath = "";
 	private Shader shader = null;
+	private Texture bumpMap = null;
+	private String bumpMapPath;
 	
 	public Material(float diffuseReflectionCoeff){
 		this(null, diffuseReflectionCoeff);
@@ -57,6 +59,21 @@ public class Material {
 		
 	public void setTexture(Texture tex){
 		this.tex = tex;
+	}
+	
+	public void setBumpMapPath(String bumpMapPath){
+		this.bumpMapPath = bumpMapPath;
+	}
+	public void setBumpMap(Texture bumpMap){
+		this.bumpMap = bumpMap;
+	}
+	
+	public Texture getBumpMap(){
+		return this.bumpMap;
+	}
+	
+	public String getBumpMapPath(){
+		return this.bumpMapPath;
 	}
 
 	public float getDiffuseReflectionCoeff(){

@@ -46,9 +46,10 @@ public class ShowBumpMap {
 		TransformGroup world = new TransformGroup();
 	
 		Shape cubeShape = new Shape(makePlane());
-		cubeShape.setMaterial(new Material("../jrtr/textures/bump_test_4.png",1));
+		cubeShape.setMaterial(new Material("../jrtr/textures/messing.jpg",1));
 		cubeShape.getMaterial().setFragmentShaderPath("../jrtr/shaders/bumpShader.frag");
 		cubeShape.getMaterial().setVertexShaderPath("../jrtr/shaders/bumpShader.vert");
+		cubeShape.getMaterial().setBumpMapPath("../jrtr/textures/bump_test_2.jpg");
 		
 		ShapeNode cubeNode = new ShapeNode(cubeShape);
 		

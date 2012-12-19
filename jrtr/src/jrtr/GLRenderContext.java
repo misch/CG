@@ -218,7 +218,17 @@ public class GLRenderContext implements RenderContext {
 			id = gl.glGetUniformLocation(activeShader.programId(), "myTexture");
 			gl.glUniform1i(id, 0);	// The variable in the shader needs to be set to the desired texture unit, i.e., 0
 		}
-		// else: unable texturing
+		
+		GLTexture bumpMap = (GLTexture)m.getBumpMap();
+		if (bumpMap != null){
+			gl.glActiveTexture(1);
+			gl.glEnable(GL3.GL_TEXTURE_2D);
+			gl.glBindTexture(GL3.GL_TEXTURE_2D, bumpMap.getId());
+			gl.glTexParameteri(GL3.GL_TEXTURE_2D, GL3.GL_TEXTURE_MAG_FILTER, GL3.GL_LINEAR);
+			gl.glTexParameteri(GL3.GL_TEXTURE_2D, GL3.GL_TEXTURE_MIN_FILTER, GL3.GL_LINEAR);
+			id = gl.glGetUniformLocation(activeShader.programId(), "bumpMap");
+			gl.glUniform1i(id,1);	// The variable in the shader needs to be set to the desired texture unit, i.e., 0
+		}
 		
 		id = gl.glGetUniformLocation(activeShader.programId(),  "phong_exponent");
 		gl.glUniform1f(id,  m.getPhongExponent());

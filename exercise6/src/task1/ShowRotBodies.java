@@ -85,7 +85,7 @@ public class ShowRotBodies {
 			setTexAndShade(thinHiHatSupp, "silber.png", "phongWithTexture");
 			
 			Shape hiHat = new Pan(50,50,1,0.3f).getShape();
-			setTexAndShade(crash, "messing.jpg","phongWithTexture");
+			setTexAndShade(hiHat, "messing.jpg","phongWithTexture");
 			
 			TransformGroup lightPos = new TransformGroup();
 			lightPos.setTranslation(new Vector3f(0,0,0));
