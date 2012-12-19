@@ -35,7 +35,7 @@ public class ShowRotBodies {
 		public static void main(String[] args) throws IOException
 		{						
 			// Make a scene manager and add the object
-			Camera 	camera = new Camera(new Vector3f(0,0,10), new Vector3f(0,0,0), new Vector3f(0,1,0));
+			Camera 	camera = new Camera(new Vector3f(0,0,10), new Vector3f(10,0,0), new Vector3f(0,1,0));
 			Frustum	frustum = new Frustum(1,100,1,(float)(Math.PI/3));
 		
 			TransformGroup world = new TransformGroup();
@@ -52,6 +52,7 @@ public class ShowRotBodies {
 			Shape snare = new RotCylinder(50,50,1,0.6f).getShape();
 			setTexAndShade(snare, "drums.png","phongWithTexture");
 			float snareHeight = 2.5f;
+			
 			Shape snareSupp = new RotCylinder(50,50,0.05f,snareHeight).getShape();
 			setTexAndShade(snareSupp, "silber.png", "phongWithTexture");
 			snareSupp.getMaterial().setSpecularReflection(200);
@@ -61,17 +62,28 @@ public class ShowRotBodies {
 			Shape baseDrum = new RotCylinder(50,50,baseDrumRad,2.5f).getShape();
 			setTexAndShade(baseDrum, "drums.png","phongWithTexture");
 			
-			Shape ride = new Pan(50,50,2,0.3f).getShape();
+			Shape ride = new Pan(50,50,1.5f,0.3f).getShape();
 			setTexAndShade(ride, "messing.jpg","phongWithTexture");
+
+			float rideHeight = 3.5f;
+			Shape rideSupp = new RotCylinder(50,50,0.05f,rideHeight).getShape();
+			setTexAndShade(rideSupp, "silber.png", "phongWithTexture");
+			rideSupp.getMaterial().setSpecularReflection(200);
+			rideSupp.getMaterial().setPhongExponent(1000);
 			
+			Shape crash = new Pan(50,50,1.3f,0.3f).getShape();
+			setTexAndShade(crash, "messing.jpg","phongWithTexture");
 			
+			float crashHeight = 4.5f;
+			Shape crashSupp = new RotCylinder(50,50,0.05f,crashHeight).getShape();
+			setTexAndShade(crashSupp, "silber.png", "phongWithTexture");
 			
 			TransformGroup lightPos = new TransformGroup();
-			lightPos.setTranslation(new Vector3f(0,0,3));
+			lightPos.setTranslation(new Vector3f(0,0,0));
 			PointLight light = new PointLight(30, new Point3f(0,0,0));
 			
 			LightNode light1 = new LightNode(light);
-			light1.setTranslation(new Vector3f(10,10,2));
+			light1.setTranslation(new Vector3f(14,5,2));
 			LightNode light2 = new LightNode(light);
 			light2.setTranslation(new Vector3f(0,2,-5));
 			LightNode light3 = new LightNode(light);
@@ -96,7 +108,6 @@ public class ShowRotBodies {
 			TransformGroup snareSuppPos = new TransformGroup();
 			snareSuppPos.setTranslation(new Vector3f(-0.5f,-baseDrumRad,-2.5f));
 			snareSuppPos.addChild(new ShapeNode(snareSupp),snarePos);
-//			snarePos.addChild(new ShapeNode(snare), new ShapeNode(ride));
 			snarePos.addChild(new ShapeNode(snare));
 				
 			TransformGroup basePos = new TransformGroup();
@@ -104,12 +115,29 @@ public class ShowRotBodies {
 			basePos.setRotation(new Vector3f(0,0,1), (float)(Math.PI/2));
 			basePos.setTranslation(new Vector3f(2,0,0));
 			
-			drumPos.addChild(snareSuppPos,basePos);
+			TransformGroup ridePos = new TransformGroup();
+			ridePos.setTranslation(new Vector3f(0,rideHeight-0.3f,0));
+			ridePos.addChild(new ShapeNode(ride));
+			ridePos.setRotation(new Vector3f(1,0,1), 0);
+			
+			TransformGroup rideSuppPos = new TransformGroup();
+			rideSuppPos.setTranslation(new Vector3f(-3,-baseDrumRad,3));
+			rideSuppPos.addChild(new ShapeNode(rideSupp),ridePos);
+			
+			TransformGroup crashPos = new TransformGroup();
+			crashPos.setTranslation(new Vector3f(0,crashHeight-0.3f,0));
+			crashPos.addChild(new ShapeNode(crash));
+			
+			TransformGroup crashSuppPos = new TransformGroup();
+			crashSuppPos.setTranslation(new Vector3f(1.5f,-baseDrumRad,-2));
+			crashSuppPos.addChild(new ShapeNode(crashSupp),crashPos);
+			
+			drumPos.addChild(snareSuppPos,basePos,rideSuppPos,crashSuppPos);
 			// build graph	
 			world.addChild(lightPos,table1,sphereGroup,tableTop,drumPos);
 			
 			sceneManager = new GraphSceneManager(world,camera,frustum);
-			Shape[] shapes = {table,sphere,snare,baseDrum,ride,snareSupp};
+			Shape[] shapes = {table,sphere,snare,baseDrum,ride,snareSupp,rideSupp,crashSupp,crash};
 			TransformGroup[] transformGroups = {};
 			
 			renderPanel = new SimpleRenderPanelTexShad(sceneManager,shapes,null);
