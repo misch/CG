@@ -210,7 +210,7 @@ public class GLRenderContext implements RenderContext {
 		
 		GLTexture tex = (GLTexture)m.getTexture();
 		if (tex != null){
-			gl.glActiveTexture(0);	// Work with texture unit 0
+			gl.glActiveTexture(GL3.GL_TEXTURE0);	// Work with texture unit 0
 			gl.glEnable(GL3.GL_TEXTURE_2D);
 			gl.glBindTexture(GL3.GL_TEXTURE_2D, tex.getId());
 			gl.glTexParameteri(GL3.GL_TEXTURE_2D, GL3.GL_TEXTURE_MAG_FILTER, GL3.GL_LINEAR);
@@ -221,13 +221,13 @@ public class GLRenderContext implements RenderContext {
 		
 		GLTexture bumpMap = (GLTexture)m.getBumpMap();
 		if (bumpMap != null){
-			gl.glActiveTexture(1);
+			gl.glActiveTexture(GL3.GL_TEXTURE0+2);
 			gl.glEnable(GL3.GL_TEXTURE_2D);
 			gl.glBindTexture(GL3.GL_TEXTURE_2D, bumpMap.getId());
 			gl.glTexParameteri(GL3.GL_TEXTURE_2D, GL3.GL_TEXTURE_MAG_FILTER, GL3.GL_LINEAR);
 			gl.glTexParameteri(GL3.GL_TEXTURE_2D, GL3.GL_TEXTURE_MIN_FILTER, GL3.GL_LINEAR);
 			id = gl.glGetUniformLocation(activeShader.programId(), "bumpMap");
-			gl.glUniform1i(id,1);	// The variable in the shader needs to be set to the desired texture unit, i.e., 0
+			gl.glUniform1i(id,2);	// The variable in the shader needs to be set to the desired texture unit, i.e., 0
 		}
 		
 		id = gl.glGetUniformLocation(activeShader.programId(),  "phong_exponent");
