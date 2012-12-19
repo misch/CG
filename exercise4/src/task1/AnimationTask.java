@@ -36,15 +36,15 @@ public class AnimationTask extends TimerTask
 		// Update transformation
 		if (transformGroups != null){
 			TransformGroup light = transformGroups[0];
-			angleSum += 0.01;
+			angleSum += 0.05;
 		
 		
-			if (angleSum > 3){
-				angleSum = 0;
+			if (angleSum > 7){
+				angleSum = -7;
 				this.translationStep *= -1;
 			}
 	
-			light.setTranslation(new Vector3f(2*translationStep,0,0));
+			light.setTranslation(new Vector3f(translationStep,0,0));
 		}
 	// Trigger redrawing of the render window
 		renderPanel.getCanvas().repaint(); 

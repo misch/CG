@@ -32,9 +32,9 @@ void main()
 	// compute binormal (bi-tangent) vector
 	vec3 bi_tangent = cross(normal,tangent);
 	
-	frag_tangent = (modelview * vec4(tangent,0)).xyz;
-	frag_bi_tangent = (modelview * vec4(bi_tangent,0)).xyz;
-	frag_normal = (modelview * vec4(normal,0)).xyz;
+	frag_tangent = tangent;
+	frag_bi_tangent = bi_tangent;
+	frag_normal = normal;
 
 	frag_texcoord = texcoord;
 	frag_position = position;

@@ -47,7 +47,7 @@ void main()
 	vec4 reflection_coeff = texture(myTexture, frag_texcoord);
 	//vec4 reflection_coeff = vec4(1,1,1,0);
 	
-	vec4 ambient = ambient_light * texture(bumpMap, frag_texcoord);
+	vec4 ambient = ambient_light * texture(myTexture, frag_texcoord);
 	//vec4 ambient = ambient_light * vec4(0.5,0.5,0.5,0);
 	
 	for (int i = 0; i<MAX_LIGHTS; i++){
