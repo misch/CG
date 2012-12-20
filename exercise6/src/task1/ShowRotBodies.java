@@ -15,6 +15,7 @@ import jrtr.PointLight;
 import jrtr.RenderContext;
 import jrtr.RenderPanel;
 import jrtr.Shape;
+import jrtr.VertexData;
 import sceneGraph.GraphSceneManager;
 import sceneGraph.LightNode;
 import sceneGraph.ShapeNode;
@@ -35,14 +36,16 @@ public class ShowRotBodies {
 		public static void main(String[] args) throws IOException
 		{						
 			// Make a scene manager and add the object
-			Camera 	camera = new Camera(new Vector3f(0,0,10), new Vector3f(10,0,0), new Vector3f(0,1,0));
+			Camera 	camera = new Camera(new Vector3f(10,2,10), new Vector3f(20,0,20), new Vector3f(0,1,0));
 			Frustum	frustum = new Frustum(1,100,1,(float)(Math.PI/3));
 		
 			TransformGroup world = new TransformGroup();
 			TransformGroup sphereGroup = new TransformGroup();
-			Point2f[] floorPoints = {p(0,0),p(10,0),p(50,0),p(100,0)};
-			Shape floor = new RotationalBody(new BezierCurve(1,floorPoints,1),4).getShape();
-			setTexAndShade(floor,"wood.jpg","phongWithTexture");
+			Point2f[] floorPoints = {p(0,0),p(10,0),p(20,0),p(50,0)};
+//			Shape floor = new RotationalBody(new BezierCurve(1,floorPoints,1),4).getShape();
+			Shape floor = new Shape(makePlane());
+			setTexAndShade(floor,"sand.png","bumpShader");
+			floor.getMaterial().setBumpMapPath("../jrtr/textures/terrain.png");
 			
 			float snareHeight = 2.2f,
 				baseDrumRad = 1.3f,
@@ -143,7 +146,7 @@ public class ShowRotBodies {
 			setTexAndShade(bigTomSupp, "silber.png", "phongWithTexture");
 			
 			setTexAndShade(moon, "silber.png", "bumpShader");
-			moon.getMaterial().setBumpMapPath("../jrtr/textures/moon_bump.png");
+			moon.getMaterial().setBumpMapPath("../jrtr/textures/terrain.png");
 			
 			// build scene graph
 			lightPos.addChild(light1,light2,light3);
@@ -241,4 +244,39 @@ public class ShowRotBodies {
 			shape.getMaterial().setFragmentShaderPath("../jrtr/shaders/"+shader+".frag");
 			shape.getMaterial().setVertexShaderPath("../jrtr/shaders/"+shader+".vert");
 		}
+		
+		private static VertexData makePlane(){
+			
+			float v[] = { 	50,0,50, 		50,0,-50, 	-50,0,-50, 	-50,0,50};
+			
+			float c[] = {	1,0,0,	1,1,0, 	1,0,0, 	1,1,0}; 
+		
+			float normals[] = {0,1,0,  0,1,0,  0,1,0,  0,1,0};
+			
+			int indices[] = {0,2,3,  0,1,2};
+			
+			float t[] = {1,0,  1,1,  0,1,  0,0};
+			
+			float tan[] = {0,0,1,  0,0,1,  0,0,1,  0,0,1};
+			
+			// Set up the vertex data
+			VertexData vertexData = new VertexData(4);
+
+			// Specify the elements of the vertex data:
+			// - one element for vertex positions
+			vertexData.addElement(v, VertexData.Semantic.POSITION, 3);
+			// - one element for vertex colors
+			vertexData.addElement(c, VertexData.Semantic.COLOR, 3);
+			// - one element for vertex normals
+			vertexData.addElement(normals, VertexData.Semantic.NORMAL, 3);
+			
+			vertexData.addElement(t, VertexData.Semantic.TEXCOORD, 2);
+			
+			vertexData.addElement(tan,  VertexData.Semantic.TANGENT, 3);
+			
+			vertexData.addIndices(indices);
+
+			return vertexData;
+		}
+
 	}

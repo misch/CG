@@ -47,14 +47,14 @@ public class ShowBumpMap {
 		
 		TransformGroup world = new TransformGroup();
 	
-//		Shape cubeShape = new Shape(makePlane());
+		Shape cubeShape = new Shape(makePlane());
 //		Point2f[] points = {new Point2f(1,0), new Point2f(1,0.5f), new Point2f(1,0.75f), new Point2f(1,1)};
 //		Shape cubeShape = new RotationalBody(new BezierCurve(1,points,4),50).getShape();
-		Shape cubeShape = new Sphere(50,50,1,new Point2f(0,0)).getShape();
-		cubeShape.setMaterial(new Material("../jrtr/textures/silber.png",1));
+//		Shape cubeShape = new Sphere(50,50,1,new Point2f(0,0)).getShape();
+		cubeShape.setMaterial(new Material("../jrtr/textures/sand.png",1));
 		cubeShape.getMaterial().setFragmentShaderPath("../jrtr/shaders/bumpShader.frag");
 		cubeShape.getMaterial().setVertexShaderPath("../jrtr/shaders/bumpShader.vert");
-		cubeShape.getMaterial().setBumpMapPath("../jrtr/textures/bumpy_thing.png");
+		cubeShape.getMaterial().setBumpMapPath("../jrtr/textures/terrain.png");
 //		cubeShape.getMaterial().setSpecularReflection(10);
 //		cubeShape.getMaterial().setPhongExponent(100);
 		
