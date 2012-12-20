@@ -103,13 +103,13 @@ public class CamAndLightListener implements KeyListener, MouseListener, MouseMot
 			}
 			break;
 			
-		case KeyEvent.VK_M:
+		case KeyEvent.VK_J:
 			if (light != null){
 				moveLight(0,0,-0.1);
 			}
 			break;
 			
-		case KeyEvent.VK_J:
+		case KeyEvent.VK_K:
 			if (light != null){
 				moveLight(0,0,0.1);
 			}

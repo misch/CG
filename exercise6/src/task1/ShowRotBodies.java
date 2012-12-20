@@ -36,13 +36,11 @@ public class ShowRotBodies {
 		public static void main(String[] args) throws IOException
 		{						
 			// Make a scene manager and add the object
-			Camera 	camera = new Camera(new Vector3f(10,2,10), new Vector3f(20,0,20), new Vector3f(0,1,0));
+			Camera 	camera = new Camera(new Vector3f(0,10,25), new Vector3f(20,4,20), new Vector3f(0,1,0));
 			Frustum	frustum = new Frustum(1,100,1,(float)(Math.PI/3));
 		
 			TransformGroup world = new TransformGroup();
 			TransformGroup sphereGroup = new TransformGroup();
-			Point2f[] floorPoints = {p(0,0),p(10,0),p(20,0),p(50,0)};
-//			Shape floor = new RotationalBody(new BezierCurve(1,floorPoints,1),4).getShape();
 			Shape floor = new Shape(makePlane());
 			setTexAndShade(floor,"sand.png","bumpShader");
 			floor.getMaterial().setBumpMapPath("../jrtr/textures/terrain.png");
@@ -112,8 +110,10 @@ public class ShowRotBodies {
 			sphere.getMaterial().setSpecularReflection(200);
 			sphere.getMaterial().setPhongExponent(1000);
 		
-			setTexAndShade(snare, "drums2.png","bumpShader");
+			setTexAndShade(snare, "drums3.png","bumpShader");
 			snare.getMaterial().setBumpMapPath("../jrtr/textures/drum_bump.png");
+			snare.getMaterial().setSpecularReflection(200);
+			snare.getMaterial().setPhongExponent(1000);
 			
 			setTexAndShade(snareSupp, "silber.png", "phongWithTexture");
 			snareSupp.getMaterial().setSpecularReflection(200);
@@ -163,7 +163,8 @@ public class ShowRotBodies {
 			upperHiHat.addChild(new ShapeNode(hiHat));
 			thinHiHatSuppPos.addChild(upperHiHat);
 			drumPos.addChild(snareSuppPos,basePos,rideSuppPos,crashSuppPos,fatHiHatSuppPos,bigTomSuppPos);	
-			world.addChild(lightPos,drumPos, new ShapeNode(floor),moonPos);
+//			world.addChild(lightPos,drumPos, new ShapeNode(floor),moonPos);
+			world.addChild(lightPos,drumPos, new ShapeNode(floor));
 			littleToms.addChild(tom1,tom2);
 			tom1.addChild(new ShapeNode(littleTom));
 			tom2.addChild(new ShapeNode(littleTom));
@@ -207,6 +208,7 @@ public class ShowRotBodies {
 			bigTomPos.setTranslation(new Vector3f(0,bigTomHeight,0));
 			bigTomPos.setRotation(new Vector3f(1,0,0),-0.3f);
 			
+			lightPos.setTranslation(new Vector3f(10,0,10));
 			moonPos.setTranslation(new Vector3f(5,3,0));
 		
 			sceneManager = new GraphSceneManager(world,camera,frustum);
