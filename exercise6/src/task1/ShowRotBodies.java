@@ -149,7 +149,7 @@ public class ShowRotBodies {
 			moon.getMaterial().setBumpMapPath("../jrtr/textures/terrain.png");
 			
 			// build scene graph
-			lightPos.addChild(light1,light2,light3);
+			lightPos.addChild(light1);
 			snareSuppPos.addChild(new ShapeNode(snareSupp),snarePos);
 			snarePos.addChild(new ShapeNode(snare));
 			basePos.addChild(new ShapeNode(baseDrum), littleToms);
@@ -214,7 +214,7 @@ public class ShowRotBodies {
 			TransformGroup[] transformGroups = {};
 			
 			renderPanel = new SimpleRenderPanelTexShad(sceneManager,shapes,null);
-			setupMainWindow(camera,"Rotational Body");
+			setupMainWindow(camera,"Rotational Body",lightPos);
 		}
 		
 		private static Point2f p(double x, double y){
@@ -222,13 +222,14 @@ public class ShowRotBodies {
 			return point;
 		}
 		
-		private static void setupMainWindow(Camera camera, String name) {
+		private static void setupMainWindow(Camera camera, String name,TransformGroup light) {
 			JFrame jframe = new JFrame(name);
 			jframe.setSize(700, 700);
 			jframe.setLocationRelativeTo(null); // center of screen
 			jframe.getContentPane().add(renderPanel.getCanvas());// put the canvas into a JFrame window
 			
-			LandscapeListener listener = new LandscapeListener(camera, renderPanel);
+//			LandscapeListener listener = new LandscapeListener(camera, renderPanel);
+			CamAndLightListener listener = new CamAndLightListener(camera,renderPanel,light);
 			
 			Component canvas = renderPanel.getCanvas();
 			canvas.addMouseListener(listener);
@@ -247,7 +248,7 @@ public class ShowRotBodies {
 		
 		private static VertexData makePlane(){
 			
-			float v[] = { 	50,0,50, 		50,0,-50, 	-50,0,-50, 	-50,0,50};
+			float v[] = { 	50,0,50, 		50,0,0, 	0,0,0, 	0,0,50};
 			
 			float c[] = {	1,0,0,	1,1,0, 	1,0,0, 	1,1,0}; 
 		
