@@ -43,7 +43,7 @@ public class ShowRotBodies {
 			TransformGroup sphereGroup = new TransformGroup();
 			Shape floor = new Shape(makePlane());
 			setTexAndShade(floor,"sand.png","bumpShader");
-			floor.getMaterial().setBumpMapPath("../jrtr/textures/terrain.png");
+			floor.getMaterial().setBumpMapPath("../jrtr/textures/bump_test_5.jpg");
 			
 			float snareHeight = 2.2f,
 				baseDrumRad = 1.3f,
@@ -107,13 +107,13 @@ public class ShowRotBodies {
 			setTexAndShade(table,"wood.jpg","phongWithTexture");
 			
 			setTexAndShade(sphere,"fussball2.jpg","phongWithTexture");
-			sphere.getMaterial().setSpecularReflection(200);
-			sphere.getMaterial().setPhongExponent(1000);
+			sphere.getMaterial().setSpecularReflection(20);
+			sphere.getMaterial().setPhongExponent(200);
 		
-			setTexAndShade(snare, "drums3.png","bumpShader");
-			snare.getMaterial().setBumpMapPath("../jrtr/textures/drum_bump.png");
-			snare.getMaterial().setSpecularReflection(200);
-			snare.getMaterial().setPhongExponent(1000);
+			setTexAndShade(snare, "drums2.png","bumpShader");
+			snare.getMaterial().setBumpMapPath("../jrtr/textures/drum_bump_2.png");
+//			snare.getMaterial().setSpecularReflection(20);
+//			snare.getMaterial().setPhongExponent(200);
 			
 			setTexAndShade(snareSupp, "silber.png", "phongWithTexture");
 			snareSupp.getMaterial().setSpecularReflection(200);
@@ -121,6 +121,8 @@ public class ShowRotBodies {
 		
 			setTexAndShade(baseDrum, "drums2.png","bumpShader");
 			baseDrum.getMaterial().setBumpMapPath("../jrtr/textures/drum_bump.png");
+//			baseDrum.getMaterial().setSpecularReflection(20);
+//			baseDrum.getMaterial().setPhongExponent(200);
 			
 			setTexAndShade(ride, "messing.jpg","bumpShader");
 			ride.getMaterial().setBumpMapPath("../jrtr/textures/bump_test_4.png");
@@ -129,19 +131,25 @@ public class ShowRotBodies {
 			rideSupp.getMaterial().setSpecularReflection(200);
 			rideSupp.getMaterial().setPhongExponent(1000);
 			
-			setTexAndShade(crash, "messing.jpg","phongWithTexture");
+			setTexAndShade(crash, "messing.jpg","bumpShader");
+			crash.getMaterial().setBumpMapPath("../jrtr/textures/bump_test_4.png");
 		
 			setTexAndShade(crashSupp, "silber.png", "phongWithTexture");
 		
 			setTexAndShade(fatHiHatSupp, "silber.png", "phongWithTexture");
 			setTexAndShade(thinHiHatSupp, "silber.png", "phongWithTexture");
-			setTexAndShade(hiHat, "messing.jpg","phongWithTexture");
+			setTexAndShade(hiHat, "messing.jpg","bumpShader");
+			hiHat.getMaterial().setBumpMapPath("../jrtr/textures/bump_test_4.png");
 			
 			setTexAndShade(littleTom, "drums2.png","bumpShader");
-			littleTom.getMaterial().setBumpMapPath("../jrtr/textures/drum_bump.png");
+			littleTom.getMaterial().setBumpMapPath("../jrtr/textures/drum_bump_2.png");
+//			littleTom.getMaterial().setSpecularReflection(20);
+//			littleTom.getMaterial().setPhongExponent(200);
 			
 			setTexAndShade(bigTom, "drums2.png","bumpShader");
-			bigTom.getMaterial().setBumpMapPath("../jrtr/textures/drum_bump.png");
+			bigTom.getMaterial().setBumpMapPath("../jrtr/textures/drum_bump_2.png");
+//			bigTom.getMaterial().setSpecularReflection(20);
+//			bigTom.getMaterial().setPhongExponent(200);
 			
 			setTexAndShade(bigTomSupp, "silber.png", "phongWithTexture");
 			
