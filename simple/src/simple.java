@@ -5,6 +5,10 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 import javax.vecmath.*;
+
+import ex1.Cylinder;
+import ex1.Torus;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -123,7 +127,10 @@ public class simple
 				
 		// Make a scene manager and add the object
 		sceneManager = new SimpleSceneManager();
-		shape = new Shape(vertexData);
+//		shape = new Shape(vertexData);
+//		shape = new Cylinder(50,2,1).getShape();
+		shape = new Torus(50,2).getShape();
+		
 
 		sceneManager.addShape(shape);
 

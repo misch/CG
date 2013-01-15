@@ -1,5 +1,4 @@
 package ex1;
-import java.util.ArrayList;
 
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3f;
@@ -28,21 +27,21 @@ public class Cylinder extends AbstractSimpleShape{
 	}
 	
 	protected void setVertices() {
-		ArrayList<Float> v = new ArrayList<Float>();
-		ArrayList<Integer> indices = new ArrayList<Integer>();
-		ArrayList<Float> t = new ArrayList<Float>();
-		ArrayList<Float> n = new ArrayList<Float>();
+//		ArrayList<Float> v = new ArrayList<Float>();
+//		ArrayList<Integer> indices = new ArrayList<Integer>();
+//		ArrayList<Float> t = new ArrayList<Float>();
+//		ArrayList<Float> n = new ArrayList<Float>();
 	
 		Point3f upperCenter = new Point3f(0,height,0);
 		Point3f lowerCenter = new Point3f(0,0,0);
 				
-		int indexUpperCenter = addVertex(v, upperCenter);
-		addTexel(t, 0.5f,1);
-		addNormal(n,new Vector3f(0,1,0));
+		int indexUpperCenter = addVertex(upperCenter);
+		addTexel(0.5f,1);
+		addNormal(new Vector3f(0,1,0));
 		
-		int indexLowerCenter = addVertex(v, lowerCenter);
-		addTexel(t, 0.5f,0.01f);
-		addNormal(n,new Vector3f(0,-1,0));
+		int indexLowerCenter = addVertex(lowerCenter);
+		addTexel(0.5f,0.01f);
+		addNormal(new Vector3f(0,-1,0));
 		
 		for (float angle = 0; angle<2*PI; angle += (2*PI)/segments){
 			Point3f upperPoint = new Point3f(x(angle,radius),height,z(angle,radius));	
@@ -50,47 +49,33 @@ public class Cylinder extends AbstractSimpleShape{
 			Point3f nextUpperPoint = new Point3f(x(angle+(2*PI)/segments,radius), height, z(angle+(2*PI)/segments,radius));
 			Point3f nextLowerPoint = new Point3f(x(angle+(2*PI)/segments,radius), 0, z(angle+(2*PI)/segments,radius));
 			
-			int indexUpperPoint = addVertex(v,upperPoint);
-			addTexel(t, angle/(2*PI), 1);
-			addNormal(n, computeNormal(upperPoint, upperCenter));
+			int indexUpperPoint = addVertex(upperPoint);
+			addTexel(angle/(2*PI), 1);
+			addNormal(computeNormal(upperPoint, upperCenter));
 			
-			int indexNextUpperPoint = addVertex(v,nextUpperPoint);
-			addTexel(t, (angle + 2*PI/segments)/(2*PI), 1);
-//			addNormal(n, computeNormal(upperCenter,nextUpperPoint));
-			addNormal(n, computeNormal(nextUpperPoint, upperCenter));
+			int indexNextUpperPoint = addVertex(nextUpperPoint);
+			addTexel((angle + 2*PI/segments)/(2*PI), 1);
+			addNormal(computeNormal(nextUpperPoint, upperCenter));
 			
-			int indexLowerPoint = addVertex(v,lowerPoint);
-			addTexel(t, angle/(2*PI), 0);
-			addNormal(n, computeNormal(lowerPoint,lowerCenter));
+			int indexLowerPoint = addVertex(lowerPoint);
+			addTexel(angle/(2*PI), 0);
+			addNormal(computeNormal(lowerPoint,lowerCenter));
 			
-			int indexNextLowerPoint = addVertex(v,nextLowerPoint);
-			addTexel(t, (angle+(2*PI/segments))/(2*PI), 0);
-//			addNormal(n, computeNormal(nextLowerPoint,lowerCenter));
-			addNormal(n, computeNormal(nextLowerPoint, lowerCenter));
-//			addNormal(n, new Vector3f(0,-1,0));
+			int indexNextLowerPoint = addVertex(nextLowerPoint);
+			addTexel((angle+(2*PI/segments))/(2*PI), 0);
+			addNormal(computeNormal(nextLowerPoint, lowerCenter));
 			
-			addTriangle(indices, indexUpperPoint,indexNextUpperPoint,indexUpperCenter);
-			addTriangle(indices, indexLowerPoint,indexNextLowerPoint,indexLowerCenter);
-			
-			addTriangle(indices, indexUpperPoint, indexLowerPoint, indexNextUpperPoint);
-			addTriangle(indices, indexLowerPoint, indexNextLowerPoint, indexNextUpperPoint);
+			addRectangle(indexLowerPoint,indexUpperPoint,indexNextLowerPoint,indexNextUpperPoint);
+			addTriangle(indexUpperPoint,indexNextUpperPoint,indexUpperCenter);
+			addTriangle(indexLowerPoint,indexNextLowerPoint,indexLowerCenter);
 		}
-		
-		this.vertices = v;
-		this.indices = indices;
-		this.texels = t;
-		this.normals = n;
 	}
 
 	protected void setColors(){
-		
-		ArrayList<Float> c = new ArrayList<Float>();
-		
 		for(int i=0;i<vertices.size()/3;i++){
 			Color3f col = new Color3f((i/4)%2,(i/4)%2,(i/4)%2);
-			addColor(c,col);
+			addColor(col);
 		}
-		this.colors = c;
 	}
 	private Vector3f computeNormal(Point3f cylinderPoint, Point3f centerPoint){
 		Vector3f normal = new Vector3f(cylinderPoint);

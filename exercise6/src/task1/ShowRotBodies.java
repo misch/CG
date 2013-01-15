@@ -120,7 +120,7 @@ public class ShowRotBodies {
 			snareSupp.getMaterial().setPhongExponent(1000);
 		
 			setTexAndShade(baseDrum, "drums2.png","bumpShader");
-			baseDrum.getMaterial().setBumpMapPath("../jrtr/textures/drum_bump.png");
+			baseDrum.getMaterial().setBumpMapPath("../jrtr/textures/drum_bump_2.png");
 //			baseDrum.getMaterial().setSpecularReflection(20);
 //			baseDrum.getMaterial().setPhongExponent(200);
 			

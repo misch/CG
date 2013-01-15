@@ -1,6 +1,5 @@
 package ex1;
 
-import java.awt.Point;
 import java.util.ArrayList;
 
 import javax.vecmath.Color3f;
@@ -11,7 +10,7 @@ import jrtr.Shape;
 import jrtr.VertexData;
 
 
-public abstract class AbstractSimpleShape implements IForm {
+public abstract class AbstractSimpleShape{
 	protected ArrayList<Float> vertices = new ArrayList<Float>();
 	protected ArrayList<Float> colors = new ArrayList<Float>(); 
 	protected ArrayList<Float> normals = new ArrayList<Float>(); 
@@ -102,47 +101,51 @@ public abstract class AbstractSimpleShape implements IForm {
 		return ind;
 	}
 	
-	protected int addVertex(ArrayList<Float> v, Point3f point) {
+	protected int addVertex(Point3f point) {
 		int indexOfVertex;
 		
-		v.add(point.x);
-		v.add(point.y);
-		v.add(point.z);
+		this.vertices.add(point.x);
+		this.vertices.add(point.y);
+		this.vertices.add(point.z);
 		
-		indexOfVertex = (v.size()-1)/3; 
+		indexOfVertex = (this.vertices.size()-1)/3; 
 		
 		return indexOfVertex;
 	}
 	
-	protected void addColor(ArrayList<Float> c, Color3f col){
-		c.add(col.x);
-		c.add(col.y);
-		c.add(col.z);
+	protected void addColor(Color3f col){
+		this.colors.add(col.x);
+		this.colors.add(col.y);
+		this.colors.add(col.z);
 	}
 	
-	protected void addTriangle(ArrayList<Integer> indices, int upperPoint, int lowerPoint, int nextUpperPoint) {
-		indices.add(upperPoint);
-		indices.add(lowerPoint);
-		indices.add(nextUpperPoint);
+	protected void addTriangle(int upperPoint, int lowerPoint, int nextUpperPoint) {
+		this.indices.add(upperPoint);
+		this.indices.add(lowerPoint);
+		this.indices.add(nextUpperPoint);
 	}
 	
-	protected void addNormal(ArrayList<Float> n, Vector3f normal) {
-	n.add(normal.x);
-	n.add(normal.y);
-	n.add(normal.z);
+	protected void addNormal(Vector3f normal) {
+	this.normals.add(normal.x);
+	this.normals.add(normal.y);
+	this.normals.add(normal.z);
 	}
 	
-	protected void addTangent(ArrayList<Float> tan, Vector3f tangent){
-		tan.add(tangent.x);
-		tan.add(tangent.y);
-		tan.add(tangent.z);
+	protected void addTangent(Vector3f tangent){
+		this.tangents.add(tangent.x);
+		this.tangents.add(tangent.y);
+		this.tangents.add(tangent.z);
 	}
 	
-	protected void addTexel(ArrayList<Float> t, float x, float y){
-		t.add(x);
-		t.add(y);
+	protected void addTexel(float x, float y){
+		this.texels.add(x);
+		this.texels.add(y);
 	}
 	
+	protected void addRectangle(int botLeft, int topLeft, int botRight, int topRight){
+		addTriangle(topLeft,botLeft,topRight);
+		addTriangle(topRight,botLeft,botRight);
+	}
 	
 	protected float x(float u, float v){return 0;}
 	protected float y(float u, float v){return 0;}

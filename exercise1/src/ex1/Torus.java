@@ -20,13 +20,7 @@ public class Torus extends AbstractSimpleShape {
 	}
 	
 	protected void setVertices() {
-		ArrayList<Float> v = new ArrayList<Float>();
-		ArrayList<Integer> indices = new ArrayList<Integer>();
-//		ArrayList<Float> c = new ArrayList<Float>();
-		
-		float deltaAngle = (2*pi)/segments;
-//		Color3f col1 = new Color3f(1,0,0);
-//		Color3f col2 = new Color3f(0,1,0);		
+		float deltaAngle = (2*pi)/segments;	
 		
 		for(float phi = 0; phi<2*pi; phi += deltaAngle){
 			for(float theta = 0; theta<2*pi; theta += deltaAngle){
@@ -35,28 +29,23 @@ public class Torus extends AbstractSimpleShape {
 				Point3f point3 = new Point3f(x(phi+deltaAngle,theta),y(phi+deltaAngle,theta),z(phi+deltaAngle,theta));
 				Point3f point4 = new Point3f(x(phi+deltaAngle,theta+deltaAngle),y(phi+deltaAngle,theta+deltaAngle),z(phi+deltaAngle,theta+deltaAngle));
 						
-				int indexPoint1 = addVertex(v,point1);
-				int indexPoint2 = addVertex(v,point2);
-				int indexPoint3 = addVertex(v,point3);
-				int indexPoint4 = addVertex(v,point4);
+				int indexPoint1 = addVertex(point1);
+				int indexPoint2 = addVertex(point2);
+				int indexPoint3 = addVertex(point3);
+				int indexPoint4 = addVertex(point4);
 				
-				addTriangle(indices,indexPoint1,indexPoint2,indexPoint3);
-				addTriangle(indices,indexPoint3,indexPoint2,indexPoint4);
+				addTriangle(indexPoint1,indexPoint2,indexPoint3);
+				addTriangle(indexPoint3,indexPoint2,indexPoint4);
 			}
 		}
-		this.vertices = v;
-		this.indices = indices;
 	}
 
 protected void setColors(){
 		
-		ArrayList<Float> c = new ArrayList<Float>();
-		
 		for(int i=0;i<vertices.size()/3;i++){
 			Color3f col = new Color3f((i/4)%2,(i/4)%2,(i/4)%2);
-			addColor(c,col);
+			addColor(col);
 		}
-		this.colors = c;
 	}
 
 	@Override

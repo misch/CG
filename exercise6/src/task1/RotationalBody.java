@@ -75,12 +75,7 @@ public class RotationalBody extends AbstractSimpleShape{
 		}
 		this.indices = ind;
 	}
-	
-	private void addRectangle(ArrayList<Integer> ind, int botLeft, int topLeft, int botRight, int topRight){
-		addTriangle(ind,topLeft,botLeft,topRight);
-		addTriangle(ind,topRight,botLeft,botRight);
-	}
-	
+		
 	protected static Point2f p(double x, double y){
 		Point2f point = new Point2f((float)x,(float)y);
 		return point;
