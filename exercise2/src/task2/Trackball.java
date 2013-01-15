@@ -1,20 +1,13 @@
 package task2;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.io.IOException;
 
 import javax.swing.JFrame;
-import javax.vecmath.AxisAngle4f;
-import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 
-import jogamp.graph.math.MathFloat;
 import jrtr.Camera;
 import jrtr.Frustum;
 import jrtr.GLRenderPanel;
-import jrtr.ObjReader;
 import jrtr.RenderContext;
 import jrtr.RenderPanel;
 import jrtr.SWRenderPanel;
@@ -45,79 +38,7 @@ public class Trackball {
 			renderContext.setSceneManager(sceneManager);
 		}		
 	}
-		
-	/**
-	* A mouse listener for the main window of this application. This can be
-	* used to process mouse events.
-	*/
-	public static class SimpleMouseListener implements MouseListener, MouseMotionListener
-	{
-	    private Vector3f initialVec; 	
-		public void mousePressed(MouseEvent e) {
-			initialVec = projectMousePositionToSphere(e.getX(), e.getY());
-		}
-	    public void mouseReleased(MouseEvent e) {
-	    	initialVec = null;
-	    }
-	    public void mouseEntered(MouseEvent e) {}
-	    public void mouseExited(MouseEvent e) {}
-	    public void mouseClicked(MouseEvent e) {}
-		
-
-		public void mouseDragged(MouseEvent e) {
-	    	Vector3f newVec = projectMousePositionToSphere(e.getX(),e.getY());
-			
-	    	executeRotation(newVec);
-		}
-		@Override
-		public void mouseMoved(MouseEvent arg0) {}
-		
-		private Vector3f projectMousePositionToSphere(float posX, float posY){ // should be something with the mouse :-)
-			float width = renderPanel.getCanvas().getWidth();
-			float height = renderPanel.getCanvas().getHeight();
-			
-			float uniformScale = Math.min(width,height);
-			float uniformWidth = width/uniformScale;
-			float uniformHeight = height/uniformScale;
-				
-			float sphereX = (2*posX/uniformScale)- uniformWidth;
-			float sphereY = uniformHeight- 2*posY/uniformScale;
-			float sphereZ = 1-sphereX*sphereX-sphereY*sphereY;
-			
-			if (sphereZ > 0){
-				sphereZ = MathFloat.sqrt(sphereZ);
-			}
-			else{
-				sphereZ = 0;
-//				System.exit(0);	// :-)
-			}
-			
-			Vector3f sphereVector = new Vector3f(sphereX,sphereY,sphereZ);
-			sphereVector.normalize();
-			
-			return sphereVector;
-		}
-		
-		private void executeRotation(Vector3f newVec){
-			Vector3f rotAxis = new Vector3f();
-			initialVec.normalize();
-			newVec.normalize();
-			
-			rotAxis.cross(initialVec, newVec);
-			rotAxis.normalize();
-			float angle = (float)(Math.acos(initialVec.dot(newVec)));
-			
-			Matrix4f initMatrix = shape.getTransformation();
-			Matrix4f rotMatrix = new Matrix4f();
-			rotMatrix.setIdentity();
-			rotMatrix.setRotation(new AxisAngle4f(rotAxis,angle));
-			
-			initMatrix.mul(rotMatrix,initMatrix);
-			renderPanel.getCanvas().repaint();
-
-			initialVec = newVec;
-		}
-	}
+	
 	
 	/**
 	* The main function opens a 3D rendering window, constructs a simple 3D
@@ -146,7 +67,7 @@ public class Trackball {
 		jframe.getContentPane().add(renderPanel.getCanvas());// put the canvas into a JFrame window
 
 		// Add a mouse listener
-		SimpleMouseListener ml = new SimpleMouseListener();
+		TrackballListener ml = new TrackballListener(renderPanel,shape);
 		renderPanel.getCanvas().addMouseListener(ml);
 		renderPanel.getCanvas().addMouseMotionListener(ml);
 		renderPanel.getCanvas().repaint();
