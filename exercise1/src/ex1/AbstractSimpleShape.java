@@ -146,8 +146,4 @@ public abstract class AbstractSimpleShape{
 		addTriangle(topLeft,botLeft,topRight);
 		addTriangle(topRight,botLeft,botRight);
 	}
-	
-	protected float x(float u, float v){return 0;}
-	protected float y(float u, float v){return 0;}
-	protected float z(float u, float v){return 0;}
 }

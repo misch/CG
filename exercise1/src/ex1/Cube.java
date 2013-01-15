@@ -1,8 +1,6 @@
 package ex1;
 import java.util.ArrayList;
 
-
-
 public class Cube extends AbstractSimpleShape{
 	public Cube(){
 		setVertices();
@@ -59,17 +57,5 @@ public class Cube extends AbstractSimpleShape{
 			col.add(colors[i]);
 		
 		this.colors = col;
-	}
-	
-	protected float x(float u, float v){
-		return 0;
-	}
-	
-	protected float y(float u, float v){
-		return 0;
-	}
-	
-	protected float z(float u, float v){
-		return 0;
 	}
 }

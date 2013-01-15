@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import javax.vecmath.*;
 
+import ex1.Cube;
 import ex1.Cylinder;
 import ex1.Torus;
 
@@ -129,7 +130,8 @@ public class simple
 		sceneManager = new SimpleSceneManager();
 //		shape = new Shape(vertexData);
 //		shape = new Cylinder(50,2,1).getShape();
-		shape = new Torus(50,2).getShape();
+//		shape = new Torus(50,2).getShape();
+		shape = new Cube().getShape();
 		
 
 		sceneManager.addShape(shape);

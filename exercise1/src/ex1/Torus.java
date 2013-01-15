@@ -1,5 +1,4 @@
 package ex1;
-import java.util.ArrayList;
 
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3f;
@@ -48,22 +47,16 @@ protected void setColors(){
 		}
 	}
 
-	@Override
-	protected float x(float phi, float theta) {
-		float xCoord = (float)((R+r*Math.cos(phi))*Math.sin(theta));
-		return xCoord;	
+	private float x(float phi, float theta) {
+		return (float)((R+r*Math.cos(phi))*Math.sin(theta));	
 	}
 
-	@Override
-	protected float y(float phi, float theta) {
-		float yCoord = (float)(r*Math.sin(phi));
-		return yCoord;
+	private float y(float phi, float theta) {
+		return (float)(r*Math.sin(phi));
 	}
 
-	@Override
-	protected float z(float phi, float theta) {
-		float zCoord = (float)((R+r*Math.cos(phi))*Math.cos(theta));
-		return zCoord;
+	private float z(float phi, float theta) {
+		return (float)((R+r*Math.cos(phi))*Math.cos(theta));
 	}
 
 }

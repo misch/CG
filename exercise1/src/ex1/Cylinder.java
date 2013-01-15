@@ -83,18 +83,16 @@ public class Cylinder extends AbstractSimpleShape{
 		normal.normalize();
 		return new Vector3f(cylinderPoint);
 	}
-	@Override
-	protected float x(float phi,float r){
+	
+	private float x(float phi,float r){
 		return (float)(radius*Math.sin(phi));
 	}
 	
-	@Override
-	protected float y(float phi, float r){
+	private float y(float phi, float r){
 		return 0;
 	}
 	
-	@Override
-	protected float z(float phi, float r){
+	private float z(float phi, float r){
 		return (float)(radius*Math.cos(phi));
 	}
 }
