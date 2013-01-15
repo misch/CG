@@ -79,7 +79,7 @@ public class LandscapeListener implements KeyListener, MouseListener, MouseMotio
 		private void go(Vector3f direction){
 			camSittingAt = new Vector3f(cam.getCenterOfProjection());
 			camLookingAt = new Vector3f(cam.getLookAtPoint());
-			float speed = 0.2f;
+			float speed = 1;
 			direction.scale(speed);
 			camSittingAt.add(direction);
 			camLookingAt.add(direction);

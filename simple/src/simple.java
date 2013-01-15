@@ -129,9 +129,9 @@ public class simple
 		// Make a scene manager and add the object
 		sceneManager = new SimpleSceneManager();
 //		shape = new Shape(vertexData);
-//		shape = new Cylinder(50,2,1).getShape();
+		shape = new Cylinder(50,2,1).getShape();
 //		shape = new Torus(50,2).getShape();
-		shape = new Cube().getShape();
+//		shape = new Cube().getShape();
 		
 
 		sceneManager.addShape(shape);

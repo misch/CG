@@ -1,7 +1,5 @@
 package task1;
 
-import java.util.ArrayList;
-
 import javax.vecmath.Color3f;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Point2f;
@@ -49,18 +47,16 @@ public class RotationalBody extends AbstractSimpleShape{
 				rot.transform(normal);
 				
 				float texelX = (angle<PI)? angle/PI : (2*PI - angle)/PI; // to avoid interruptions in the texture
-				addTexel(this.texels, texelX, (float)i/pointsToRotate.length);
-				addVertex(this.vertices, point);
-				addColor(this.colors, col);
-				addNormal(this.normals, normal);
-				addTangent(this.tangents,tangent);
+				addTexel(texelX, (float)i/pointsToRotate.length);
+				addVertex(point);
+				addColor(col);
+				addNormal(normal);
+				addTangent(tangent);
 			}
 		}
 	}
 	
 	private void createTriangleMesh(){
-		ArrayList<Integer> ind = new ArrayList<Integer>();
-	
 		int vertN = this.vertices.size()/3;
 		int heightVertN = vertN/numberOfAngleSteps; // Anzahl Vertices übereinander
 		
@@ -70,10 +66,9 @@ public class RotationalBody extends AbstractSimpleShape{
 				int topLeft = botLeft+1;
 				int botRight = (botLeft+heightVertN)%vertN;
 				int topRight = botRight+1;
-				addRectangle(ind, botLeft, topLeft, botRight, topRight);
+				addRectangle(botLeft, topLeft, botRight, topRight);
 			}			
 		}
-		this.indices = ind;
 	}
 		
 	protected static Point2f p(double x, double y){

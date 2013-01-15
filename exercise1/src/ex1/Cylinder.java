@@ -88,10 +88,6 @@ public class Cylinder extends AbstractSimpleShape{
 		return (float)(radius*Math.sin(phi));
 	}
 	
-	private float y(float phi, float r){
-		return 0;
-	}
-	
 	private float z(float phi, float r){
 		return (float)(radius*Math.cos(phi));
 	}

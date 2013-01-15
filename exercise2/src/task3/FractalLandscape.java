@@ -117,37 +117,29 @@ public class FractalLandscape extends AbstractSimpleShape{
 	}
 
 	private void composeVertexData(){
-		ArrayList<Float> v = new ArrayList<Float>();
-		ArrayList<Integer> ind = new ArrayList<Integer>();
-		ArrayList<Float> c = new ArrayList<Float>();
-		ArrayList<Float> n = new ArrayList<Float>();
 		
 		for(int i = 0; i<this.size-1; i++){
 			for(int j = 0; j<this.size-1;j++){
-				int indTopLeft = addVertex(v, new Point3f(i,heights[i][j],j));
-				addColor(c,getCol(heights[i][j]));
-				addNormal(n, computeNormal(i,j));
+				int indTopLeft = addVertex(new Point3f(i,heights[i][j],j));
+				addColor(getCol(heights[i][j]));
+				addNormal(computeNormal(i,j));
 				
-				int indBottomLeft = addVertex(v, new Point3f(i,heights[i][j+1],j+1));
-				addColor(c,getCol(heights[i][j+1]));
-				addNormal(n, computeNormal(i,j+1));
+				int indBottomLeft = addVertex(new Point3f(i,heights[i][j+1],j+1));
+				addColor(getCol(heights[i][j+1]));
+				addNormal(computeNormal(i,j+1));
 				
-				int indBottomRight = addVertex(v, new Point3f(i+1,heights[i+1][j+1], j+1));
-				addColor(c,getCol(heights[i+1][j+1]));
-				addNormal(n, computeNormal(i+1,j+1));
+				int indBottomRight = addVertex(new Point3f(i+1,heights[i+1][j+1], j+1));
+				addColor(getCol(heights[i+1][j+1]));
+				addNormal(computeNormal(i+1,j+1));
 				
-				int indTopRight = addVertex(v, new Point3f(i+1, heights[i+1][j],j));
-				addColor(c,getCol(heights[i+1][j]));
-				addNormal(n, computeNormal(i+1,j));
+				int indTopRight = addVertex(new Point3f(i+1, heights[i+1][j],j));
+				addColor(getCol(heights[i+1][j]));
+				addNormal(computeNormal(i+1,j));
 				
-				addTriangle(ind, indTopLeft, indBottomLeft, indTopRight);
-				addTriangle(ind, indTopRight, indBottomRight, indBottomLeft);
+				addTriangle(indTopLeft, indBottomLeft, indTopRight);
+				addTriangle(indTopRight, indBottomRight, indBottomLeft);
 			}
 		}
-		this.vertices = v;
-		this.indices = ind;
-		this.colors = c;
-		this.normals = n;
 	}
 
 	private Color3f getCol(float f) {
@@ -187,9 +179,4 @@ public class FractalLandscape extends AbstractSimpleShape{
 			return new Vector3f(0,1,0);
 		}
 	}
-
-	@Override
-	protected float x(float u, float v) {return 0;}
-	protected float y(float u, float v) {return 0;}
-	protected float z(float u, float v) {return 0;}
 }
