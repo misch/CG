@@ -40,7 +40,6 @@ public class ShowRotBodies {
 			Frustum	frustum = new Frustum(1,100,1,(float)(Math.PI/3));
 		
 			TransformGroup world = new TransformGroup();
-			TransformGroup sphereGroup = new TransformGroup();
 			Shape floor = new Shape(makePlane());
 			setTexAndShade(floor,"sand.png","bumpShader");
 			floor.getMaterial().setBumpMapPath("../jrtr/textures/bump_test_5.jpg");
@@ -112,8 +111,6 @@ public class ShowRotBodies {
 		
 			setTexAndShade(snare, "drums2.png","bumpShader");
 			snare.getMaterial().setBumpMapPath("../jrtr/textures/drum_bump_2.png");
-//			snare.getMaterial().setSpecularReflection(20);
-//			snare.getMaterial().setPhongExponent(200);
 			
 			setTexAndShade(snareSupp, "silber.png", "phongWithTexture");
 			snareSupp.getMaterial().setSpecularReflection(200);
@@ -121,8 +118,6 @@ public class ShowRotBodies {
 		
 			setTexAndShade(baseDrum, "drums2.png","bumpShader");
 			baseDrum.getMaterial().setBumpMapPath("../jrtr/textures/drum_bump_2.png");
-//			baseDrum.getMaterial().setSpecularReflection(20);
-//			baseDrum.getMaterial().setPhongExponent(200);
 			
 			setTexAndShade(ride, "messing.jpg","bumpShader");
 			ride.getMaterial().setBumpMapPath("../jrtr/textures/bump_test_4.png");
@@ -143,13 +138,9 @@ public class ShowRotBodies {
 			
 			setTexAndShade(littleTom, "drums2.png","bumpShader");
 			littleTom.getMaterial().setBumpMapPath("../jrtr/textures/drum_bump_2.png");
-//			littleTom.getMaterial().setSpecularReflection(20);
-//			littleTom.getMaterial().setPhongExponent(200);
 			
 			setTexAndShade(bigTom, "drums2.png","bumpShader");
 			bigTom.getMaterial().setBumpMapPath("../jrtr/textures/drum_bump_2.png");
-//			bigTom.getMaterial().setSpecularReflection(20);
-//			bigTom.getMaterial().setPhongExponent(200);
 			
 			setTexAndShade(bigTomSupp, "silber.png", "phongWithTexture");
 			
@@ -171,7 +162,6 @@ public class ShowRotBodies {
 			upperHiHat.addChild(new ShapeNode(hiHat));
 			thinHiHatSuppPos.addChild(upperHiHat);
 			drumPos.addChild(snareSuppPos,basePos,rideSuppPos,crashSuppPos,fatHiHatSuppPos,bigTomSuppPos);	
-//			world.addChild(lightPos,drumPos, new ShapeNode(floor),moonPos);
 			world.addChild(lightPos,drumPos, new ShapeNode(floor));
 			littleToms.addChild(tom1,tom2);
 			tom1.addChild(new ShapeNode(littleTom));
@@ -225,11 +215,6 @@ public class ShowRotBodies {
 			
 			renderPanel = new SimpleRenderPanelTexShad(sceneManager,shapes,null);
 			setupMainWindow(camera,"Rotational Body",lightPos);
-		}
-		
-		private static Point2f p(double x, double y){
-			Point2f point = new Point2f((float)x,(float)y);
-			return point;
 		}
 		
 		private static void setupMainWindow(Camera camera, String name,TransformGroup light) {

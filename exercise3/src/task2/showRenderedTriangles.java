@@ -3,14 +3,9 @@ package task2;
 import jrtr.*;
 
 import javax.swing.*;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 import javax.vecmath.*;
-
-import ex1.Cube;
-import ex1.Cylinder;
 import ex1.Torus;
 
 import java.util.Timer;

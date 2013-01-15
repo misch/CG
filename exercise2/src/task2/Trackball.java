@@ -4,8 +4,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.IOException;
-//import java.util.Timer;
-//import java.util.TimerTask;
 
 import javax.swing.JFrame;
 import javax.vecmath.AxisAngle4f;
@@ -22,7 +20,6 @@ import jrtr.RenderPanel;
 import jrtr.SWRenderPanel;
 import jrtr.Shape;
 import jrtr.SimpleSceneManager;
-//import jrtr.VertexData;
 import jrtr.VertexData;
 
 public class Trackball {
@@ -30,7 +27,6 @@ public class Trackball {
 	static RenderContext renderContext;
 	static SimpleSceneManager sceneManager;
 	static Shape shape;
-//	static float angle;
 	
 	/**
 	* An extension of {@link GLRenderPanel} or {@link SWRenderPanel} to
@@ -47,26 +43,9 @@ public class Trackball {
 		{
 			renderContext = r;
 			renderContext.setSceneManager(sceneManager);
-
-			// Register a timer task
-//			Timer timer = new Timer();
-//			angle = 0.01f;
-//			timer.scheduleAtFixedRate(new AnimationTask(), 0, 10);
 		}		
 	}
-	
-	/**
-	* A timer task that generates an animation. This task triggers
-	* the redrawing of the 3D scene every time it is executed.
-	*/
-//	public static class AnimationTask extends TimerTask
-//	{
-//		public void run()
-//		{  
-////			renderPanel.getCanvas().repaint();
-//		}
-//	}
-	
+		
 	/**
 	* A mouse listener for the main window of this application. This can be
 	* used to process mouse events.
@@ -100,10 +79,6 @@ public class Trackball {
 			float uniformScale = Math.min(width,height);
 			float uniformWidth = width/uniformScale;
 			float uniformHeight = height/uniformScale;
-			
-//			float sphereX = (2*posX/width)-1;
-//			float sphereY = 1- 2*posY/height;
-//			float sphereZ = 1-sphereX*sphereX-sphereY*sphereY;
 				
 			float sphereX = (2*posX/uniformScale)- uniformWidth;
 			float sphereY = uniformHeight- 2*posY/uniformScale;
